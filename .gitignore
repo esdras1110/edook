@@ -1,0 +1,49 @@
+# Arquivos do computador
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Arquivos de IDE
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+*.sublime-workspace
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Varáveis de ambiente
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Pastas de log
+*.log
+logs/
+
+# BACKEND
+backend/target/
+backend/build/
+backend/out/
+
+backend/.gradle/
+backend/build-src/
+
+# FRONTEND
+frontend/node_modules/
+
+frontend/dist/
+frontend/build/
+frontend/.next/
+frontend/out/
+
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
