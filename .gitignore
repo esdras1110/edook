@@ -35,6 +35,11 @@ backend/out/
 backend/.gradle/
 backend/build-src/
 
+# DOCKER
+postgres_data/
+postgres_data_novo/
+pgadmin_data/
+
 # FRONTEND
 frontend/node_modules/
 
