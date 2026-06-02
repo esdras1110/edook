@@ -112,27 +112,3 @@ CREATE TABLE UTILIZA (
 		FOREIGN KEY (prefixo_equipamento, numero_equipamento) REFERENCES EQUIPAMENTO(prefixo, numero)
 			ON DELETE SET NULL ON UPDATE CASCADE
 );
-
-INSERT INTO FUNCIONARIO (
-    matricula, 
-    cpf, 
-    nome, 
-    email, 
-    ddd, 
-    numero, 
-    cargo, 
-    senha, 
-    cpf_cadastro, 
-    email_verificado
-) VALUES (
-    'ADM0001', 
-    '12345678901', 
-    'Administrador Inicial', 
-    'admin@teste.com', 
-    '11', 
-    '999999999', 
-    'Administrativo', 
-    '$2a$12$N7IkG0bSCYUap/uo8s1tyu6PxENNefBqvV9gvqS2jKTIzd7kfHfUi', 
-    NULL, 
-    TRUE
-);
