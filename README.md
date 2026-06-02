@@ -1,7 +1,7 @@
 # Edook
 
 ## Sobre o Projeto
-Sistema automatizado semelhante onde todos os professores podem registrar previamente os instrumentos que utilizarão, contando depois com recursos de fácil acesso ao campo de reservas para saber quais e quantos itens estão disponíveis e controle para impedirem reservas simultâneas ao mesmo item no mesmo horário.
+Sistema automatizado onde todos os professores podem registrar previamente os instrumentos que utilizarão, contando depois com recursos de fácil acesso ao campo de reservas para saber quais e quantos itens estão disponíveis e controle para impedirem reservas simultâneas ao mesmo item no mesmo horário.
 
 ---
 
