@@ -27,7 +27,7 @@ Sistema automatizado onde todos os professores podem registrar previamente os in
    \q
 2. Para parar o banco e remover os containers execute:
    ```bash
-   docker compose down -v -> para e remove os containers
+   docker compose down -v
 
 ---
 
