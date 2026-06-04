@@ -14,7 +14,7 @@ Sistema automatizado onde todos os professores podem registrar previamente os in
 1. Abra o terminal na pasta do banco de dados:
    ```bash
    cd Edook\backend\banco_de_dados
-2. Execute esse comando para iniciar o container do banco de dados
+2. Execute esse comando para iniciar o container do banco de dados:
    ```bash
    docker compose up -d
 3. Para executar comandos SQL pelo terminal execute esse comando:
@@ -27,7 +27,7 @@ Sistema automatizado onde todos os professores podem registrar previamente os in
    \q
 2. Para parar o banco e remover os containers execute:
    ```bash
-   docker compose down -v -> para e remove os containers
+   docker compose down -v
 
 ---
 
