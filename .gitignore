@@ -16,7 +16,7 @@ desktop.ini
 *.njsproj
 *.sln
 
-# Varáveis de ambiente
+# Variáveis de ambiente
 .env
 .env.local
 .env.development.local
@@ -34,6 +34,11 @@ backend/out/
 
 backend/.gradle/
 backend/build-src/
+
+backend/.apt_generated
+backend/.factorypath
+backend/.springBeans
+backend/.sts4-cache
 
 # DOCKER
 postgres_data/
