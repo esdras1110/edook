@@ -29,17 +29,10 @@ public class OpenApiExporter {
                     HttpResponse.BodyHandlers.ofString()
             );
 
-            System.out.println("Status: " + response.statusCode());
-            System.out.println("Resposta recebida:");
-            System.out.println(response.body());
-
             Path output = Path.of("..", "docs", "openapi.json");
 
             Files.createDirectories(output.getParent());
             Files.writeString(output, response.body());
-
-            System.out.println("OpenAPI exportado para: "
-                    + output.toAbsolutePath());
 
         } catch (Exception e) {
             System.err.println("Erro ao exportar OpenAPI");
