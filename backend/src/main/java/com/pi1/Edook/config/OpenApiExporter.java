@@ -29,7 +29,7 @@ public class OpenApiExporter {
                     HttpResponse.BodyHandlers.ofString()
             );
 
-            Path output = Path.of("..", "docs", "openapi.json");
+            Path output = Path.of("./docs/openapi.json");
 
             Files.createDirectories(output.getParent());
             Files.writeString(output, response.body());
