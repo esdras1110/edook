@@ -7,6 +7,11 @@ import com.pi1.Edook.dto.FuncionarioResponseDto;
 import com.pi1.Edook.service.EmailService;
 import com.pi1.Edook.service.FuncionarioService;
 
+import jakarta.validation.Valid;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +37,7 @@ public class FuncionarioController {
     }
 
     @PostMapping
-    public ResponseEntity<FuncionarioResponseDto> criar(@RequestBody FuncionarioCreateDto dto) {
+    public ResponseEntity<FuncionarioResponseDto> criar(@Valid @RequestBody FuncionarioCreateDto dto) {
 
         System.out.println("================================");
         System.out.println("Nome: " + dto.getNome());
@@ -64,9 +69,40 @@ public class FuncionarioController {
             return ResponseEntity.status(400).body("Token inválido");
         }
 
-        funcionario.setEmail_verificado(true);
+        if(funcionario.getTokenExpiracao().isBefore(LocalDateTime.now())){
+            return ResponseEntity.badRequest()
+                    .body("Token expirado");
+        }
+
+        funcionario.setEmailVerificado(true);
         funcionario.setTokenVerificacao(null);
+        repository.save(funcionario);
         return ResponseEntity.ok("Email confirmado com sucesso");
+    }
+
+    @PostMapping("/reenviar-confirmacao")
+    public ResponseEntity<String> reenviarConfirmacao(@RequestParam String email){
+        Funcionario f = repository.findByEmail(email);
+
+        if(f == null){
+            return ResponseEntity.status(400).body("Email não encontrado");
+        }
+
+        if (f.isEmailVerificado()) {
+            return ResponseEntity.badRequest()
+                    .body("Email já confirmado");
+        }
+
+        String token = UUID.randomUUID().toString();
+        f.setTokenVerificacao(token);
+        f.setTokenExpiracao(LocalDateTime.now().plusHours(24));
+
+        repository.save(f);
+
+        serviceEmail.enviarConfirmacaoEmail(email, token);
+
+        return ResponseEntity.ok().body("Novo email de confirmação enviado");
+
     }
 
     @GetMapping("/teste-email")

@@ -1,5 +1,7 @@
 package com.pi1.Edook.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -38,6 +40,7 @@ public class Funcionario {
     @Column(nullable = false)
     private String senha;
     private String cpf_cadastro;
-    private boolean email_verificado;
+    private boolean emailVerificado;
     private String tokenVerificacao;
+    private LocalDateTime tokenExpiracao;
 }

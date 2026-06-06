@@ -1,5 +1,6 @@
 package com.pi1.Edook.service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -61,10 +62,11 @@ public class FuncionarioService {
         f.setNumero(dto.getNumero());
         f.setCargo(dto.getCargo());
         f.setMatricula(dto.getMatricula());
-        f.setEmail_verificado(false);
+        f.setEmailVerificado(false);
         String token = UUID.randomUUID().toString();
 
         f.setTokenVerificacao(token);
+        f.setTokenExpiracao(LocalDateTime.now().plusHours(24));
         return repository.save(f);
     }
 }

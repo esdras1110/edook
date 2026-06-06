@@ -11,6 +11,7 @@ CREATE TABLE FUNCIONARIO (
 	cpf_cadastro CHAR(11) DEFAULT NULL,
 	email_verificado BOOLEAN DEFAULT FALSE,
 	token_verificacao VARCHAR(255),
+	token_expiracao TIMESTAMP,
 
 	CONSTRAINT pk_cpf_funcionario
 		PRIMARY KEY (cpf),
