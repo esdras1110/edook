@@ -10,6 +10,7 @@ CREATE TABLE FUNCIONARIO (
 	senha VARCHAR(100) NOT NULL,
 	cpf_cadastro CHAR(11) DEFAULT NULL,
 	email_verificado BOOLEAN DEFAULT FALSE,
+	token_verificacao VARCHAR(255),
 
 	CONSTRAINT pk_cpf_funcionario
 		PRIMARY KEY (cpf),

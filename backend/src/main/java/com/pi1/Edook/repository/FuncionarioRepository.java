@@ -7,4 +7,5 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, String
     boolean existsByEmail(String email);   
     boolean existsByMatricula(String matricula);   
     boolean existsByCpf(String cpf);
+    Funcionario findByTokenVerificacao(String token);
 }

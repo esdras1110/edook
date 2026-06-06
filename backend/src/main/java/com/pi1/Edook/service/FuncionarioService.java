@@ -1,5 +1,7 @@
 package com.pi1.Edook.service;
 
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -60,6 +62,9 @@ public class FuncionarioService {
         f.setCargo(dto.getCargo());
         f.setMatricula(dto.getMatricula());
         f.setEmail_verificado(false);
+        String token = UUID.randomUUID().toString();
+
+        f.setTokenVerificacao(token);
         return repository.save(f);
     }
 }

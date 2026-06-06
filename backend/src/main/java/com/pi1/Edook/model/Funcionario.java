@@ -39,4 +39,5 @@ public class Funcionario {
     private String senha;
     private String cpf_cadastro;
     private boolean email_verificado;
+    private String tokenVerificacao;
 }
