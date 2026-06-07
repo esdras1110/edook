@@ -46,6 +46,13 @@ public class FuncionarioService {
                     HttpStatus.BAD_REQUEST
             );
         }
+
+        if (repository.existsByCpf(dto.getCpf())) {
+            throw new BusinessException(
+                    "CPF já cadastrado",
+                    HttpStatus.BAD_REQUEST
+            );
+        }
     }
 
     public Funcionario criar(FuncionarioCreateDto dto){
