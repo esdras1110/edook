@@ -21,26 +21,35 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Funcionario {
-    @Column(unique = true)
-    private String matricula;
+
     @Id
-    @Pattern(regexp = "\\d{11}")
+    @Column(length = 11)
     private String cpf;
-    @NotBlank
+
+    @Column(unique = true, nullable = false)
+    private String matricula;
+
+    @Column(nullable = false)
     private String nome;
-    @NotBlank
-    @Email
+
+    @Column(nullable = false, unique = true)
     private String email;
-    @Pattern(regexp = "\\d{2}")
+
+    @Column(length = 2)
     private String ddd;
-    @Pattern(regexp = "\\d{8,9}")
+
+    @Column(length = 9)
     private String numero;
+
     @Column(nullable = false)
     private String cargo;
+
     @Column(nullable = false)
     private String senha;
-    private String cpf_cadastro;
+
     private boolean emailVerificado;
+
     private String tokenVerificacao;
+
     private LocalDateTime tokenExpiracao;
 }
