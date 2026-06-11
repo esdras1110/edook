@@ -1,0 +1,43 @@
+.txt {
+    -fx-font-family: 'Inter 28pt Regular';
+    -fx-font-weight: normal;
+    -fx-font-size: 14px;
+    -fx-text-fill: #111827;
+}
+
+.h1 {
+    -fx-font-family: 'Poppins';
+    -fx-font-weight: bold;
+    -fx-font-size: 36px;
+}
+
+.h2-Inter {
+    -fx-font-family: 'Inter 28pt Bold';
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
+}
+
+.h3 {
+    -fx-font-family: 'Inter 28pt Semibold';
+    -fx-font-weight: 600;
+    -fx-font-size: 18px;
+}
+
+.subtitulo {
+    -fx-font-family: 'Inter 28pt Regular';
+    -fx-font-weight: normal;
+    -fx-font-size: 18px;
+}
+
+.botao {
+    -fx-background-color: #1A56DB;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-font-family: 'Inter 28pt Bold';
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
+}
+
+.botao:hover {
+    -fx-background-color: #1546b8;
+}
