@@ -6,26 +6,31 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// indica que a classe representa uma tabela no banco
 @Entity
+// nome da tabela no banco
 @Table(name = "funcionario")
+// cria os metodos de getter para cada atributo
 @Getter
+// cria os metodos de setter para cada atributo
 @Setter
+// cria um construtor vazio
 @NoArgsConstructor
+// cria um construtor com todos os atributos
 @AllArgsConstructor
 public class Funcionario {
 
+    // indica qual a chave primaria do banco
     @Id
     @Column(length = 11)
     private String cpf;
 
+    // não permite valor nulo e precisa ser unico
     @Column(unique = true, nullable = false)
     private String matricula;
 

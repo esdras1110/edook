@@ -7,8 +7,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+// o globalexception serve para gerenciar todas as excessões lançadas
+// retornando mensagens padronizadas 
 @RestControllerAdvice
 public class GlobalExceptionHandler{
+    // esse metodo captura todas as excessões lançadas pelo BusinessException e retorna o primeiro erro
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
 
@@ -24,6 +27,7 @@ public class GlobalExceptionHandler{
                 .body(error);
     }
 
+    // esse metodo captura todas as excessões lançadas pela validação do jakarta
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
 

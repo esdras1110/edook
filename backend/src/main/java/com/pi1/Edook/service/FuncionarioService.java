@@ -25,6 +25,7 @@ public class FuncionarioService {
 
     private void validar(FuncionarioCreateDto dto){
 
+        // se cargo for diferente de docente e admonistrativo eu gero uma exceção
         if (!dto.getCargo().equals("Docente")
                 && !dto.getCargo().equals("Administrativo")) {
             throw new BusinessException(
@@ -33,6 +34,7 @@ public class FuncionarioService {
             );
         }
 
+        // checo se esse email ja foi cadastrado
         if (repository.existsByEmail(dto.getEmail())) {
             throw new BusinessException(
                     "Email já cadastrado",
@@ -40,6 +42,7 @@ public class FuncionarioService {
             );
         }
 
+        // checo se a matricula ja foi cadastrada
         if (repository.existsByMatricula(dto.getMatricula())) {
             throw new BusinessException(
                     "Matrícula já cadastrada",
@@ -47,6 +50,7 @@ public class FuncionarioService {
             );
         }
 
+        // checo se o cpf ja foi cadastrado
         if (repository.existsByCpf(dto.getCpf())) {
             throw new BusinessException(
                     "CPF já cadastrado",
@@ -56,7 +60,7 @@ public class FuncionarioService {
     }
 
     public Funcionario criar(FuncionarioCreateDto dto){
-        
+        // chama a função para validar as regras de negocio
         validar(dto);
 
         Funcionario f = new Funcionario();
@@ -64,11 +68,13 @@ public class FuncionarioService {
         f.setNome(dto.getNome());
         f.setCpf(dto.getCpf());
         f.setEmail(dto.getEmail());
+        // passo a minha senha ja criptografada
         f.setSenha(encoder.encode(dto.getSenha()));
         f.setDdd(dto.getDdd());
         f.setNumero(dto.getNumero());
         f.setCargo(dto.getCargo());
         f.setMatricula(dto.getMatricula());
+        
         f.setEmailVerificado(false);
         String token = UUID.randomUUID().toString();
 

@@ -5,29 +5,45 @@ Sistema automatizado onde todos os professores podem registrar previamente os in
 
 ---
 
-## Como Rodar o Banco de Dados (Docker) pelo CMD
+## Como rodar o Docker e testar pelo Swagger
 
-### Pré-requisitos
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado e aberto durante o processo.
+### Compilar a API
+Para que o Docker consiga executar, ele precisa acessar o JAR contendo todas as informações que ele precisa para rodar.
 
-### Inicialização
-1. Abra o terminal na pasta do banco de dados:
+1. Para gerar esse JAR abra o terminal na pasta do backend e execute:
    ```bash
-   cd Edook\backend\banco_de_dados
-2. Execute esse comando para iniciar o container do banco de dados:
+   mvnw.cmd clean package -DskipTests
+   ```
+### Executar o Docker
+Com o JAR da API gerado é possivel executar o docker
+1. Na pasta do backend, execute:
    ```bash
-   docker compose up -d
-3. Para executar comandos SQL pelo terminal execute esse comando:
+   docker compose up -d --build
+   ```
+2. É possivel executar comandos SQL pelo proprio terminal. Para isso, execute esse comando na mesma pasta:
    ```bash
    docker exec -it postgres_sistema psql -U admin_sistema -d Edook
+   ```
+
+### Como acessar o Swagger
+Com o docker rodando, acesse pelo seu navegador: http://localhost:8080/swagger-ui/index.html#.
+
 
 ### Finalizar Docker
 1. Para sair do terminal do PostgreSQL execute:
    ```bash
    \q
-2. Para parar o banco e remover os containers execute:
+   ```
+2. Para apenas parar o docker e manter os dados do banco execute:
+   ```bash
+   docker compose down
+   ```
+3. Para parar e remover os dados execute:
    ```bash
    docker compose down -v
+   ```
+### Pré-requisitos
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado e aberto durante o processo.
 
 ---
 

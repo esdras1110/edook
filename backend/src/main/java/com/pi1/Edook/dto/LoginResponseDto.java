@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
+// utilizado para retornar apenas dados essenciais 
 public class LoginResponseDto {
     private String nome;
     private String cargo;

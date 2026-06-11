@@ -39,12 +39,7 @@ public class FuncionarioController {
     @PostMapping
     public ResponseEntity<FuncionarioResponseDto> criar(@Valid @RequestBody FuncionarioCreateDto dto) {
 
-        System.out.println("================================");
-        System.out.println("Nome: " + dto.getNome());
-        System.out.println("Cpf: " + dto.getCpf());
-        System.out.println("Email: " + dto.getEmail());
-        System.out.println("================================");
-
+        // chama a função para salvar no banco
         Funcionario f = serviceFuncionario.criar(dto);
         serviceEmail.enviarConfirmacaoEmail(f.getEmail(), f.getTokenVerificacao());
 
@@ -105,14 +100,4 @@ public class FuncionarioController {
 
     }
 
-    @GetMapping("/teste-email")
-    public ResponseEntity<String> testeEmail() {
-
-        serviceEmail.enviarConfirmacaoEmail(
-            "oesdras709@gmail.com",
-            "token-teste-123"
-        );
-
-        return ResponseEntity.ok("Email de teste enviado (se SMTP estiver certo)");
-    }
 }

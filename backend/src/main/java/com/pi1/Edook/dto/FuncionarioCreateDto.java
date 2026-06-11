@@ -14,8 +14,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+// esse dto é usado para transportar dados entre as camadas sem expor dados importantes ao frontend
 public class FuncionarioCreateDto {
 
+    // @NotBlank indica que o campo não pode  ser nulo, vazio ou conter apenas espaços
+    // o message permite mostrar uma mensagem caso o campo viole alguma regra
     @NotBlank(message = "Nome é obrigatório")
     private String nome;
 
