@@ -30,7 +30,7 @@
                     <children>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                             <children>
-                                <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
                                         <Image url="@Images/Logo.png" />
                                     </image>
@@ -43,7 +43,7 @@
                                         <Insets top="20.0" />
                                     </VBox.margin>
                                 </Label>
-                                <Label styleClass="subtitulo" text="Sistema de reserva de equipamentos" textFill="#6b7280">
+                                <Label styleClass="subtitulo" text="Recuperação de senha" textFill="#6b7280">
                                     <VBox.margin>
                                         <Insets top="20.0" />
                                     </VBox.margin>
@@ -53,45 +53,166 @@
                                 </Label>
                             </children>
                         </VBox>
-                        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
-                            <children>
-                                <Label styleClass="h3" text="CPF ou E-mail" textFill="#111827">
-                                    <VBox.margin>
-                                        <Insets />
-                                    </VBox.margin>
-                                </Label>
-                                <TextField id="campoEmailLogin" fx:id="campoTextLogin" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" promptText="exemplo@dominio.com" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
-                                    <VBox.margin>
-                                        <Insets top="10.0" />
-                                    </VBox.margin>
-                                </TextField>
-                            </children>
-                            <VBox.margin>
-                                <Insets top="20.0" />
-                            </VBox.margin>
+                  <VBox fx:id="vboxFormulario" alignment="CENTER" managed="true">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="360.0" styleClass="txt" text="Enviaremos um código de redefinição de senha para seu email cadastrado no sistema." textAlignment="CENTER" wrapText="true">
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </Label>
+                              <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+                                  <children>
+                                      <Label styleClass="h3" text="E-mail" textFill="#111827">
+                                          <VBox.margin>
+                                              <Insets />
+                                          </VBox.margin>
+                                      </Label>
+                                      <TextField id="campoEmailLogin" fx:id="campoTextRecuperacaoSenha" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" promptText="exemplo@dominio.com" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
+                                          <VBox.margin>
+                                              <Insets top="10.0" />
+                                          </VBox.margin>
+                                      </TextField>
+                                  </children>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                              </VBox>
+                              <VBox alignment="CENTER">
+                                  <children>
+                                      <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickEnviar" prefHeight="56.0" prefWidth="168.0" styleClass="botao" text="Enviar" textAlignment="CENTER" textFill="#f9fafb">
+                                          <cursor>
+                                              <Cursor fx:constant="HAND" />
+                                          </cursor>
+                                      </Button>
+                                      <Hyperlink onAction="#onClickVoltar1" text="Voltar" textFill="#1a56db">
+                                          <VBox.margin>
+                                              <Insets top="20.0" />
+                                          </VBox.margin>
+                                      </Hyperlink>
+                                  </children>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                              </VBox>
+                              <Label id="labelErro" fx:id="labelErroEmail" styleClass="txt" textFill="#111827" />
+                     </children>
+                  </VBox>
+                  <VBox fx:id="vboxCodigo" alignment="TOP_CENTER" managed="false" visible="false">
+                     <children>
+                        <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Images/Icone%20Envio.png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="360.0" styleClass="txt" text="Um código de redefinição de senha foi enviado para o seu e-mail cadastrado, verifique sua caixa de entrada." textAlignment="CENTER" wrapText="true">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+                           <children>
+                              <Label styleClass="h3" text="Código" textFill="#111827">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Label>
+                              <TextField id="campoEmailLogin" fx:id="campoTextRecuperacaoSenha1" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="168.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
                         </VBox>
                         <VBox alignment="CENTER">
-                            <children>
-                                <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="56.0" prefWidth="168.0" styleClass="botao" text="Enviar" textAlignment="CENTER" textFill="#f9fafb">
-                                    <cursor>
-                                        <Cursor fx:constant="HAND" />
-                                    </cursor>
-                                </Button>
-                                <Hyperlink styleClass="h3" text="Voltar" textFill="#1a56db">
-                                    <VBox.margin>
-                                        <Insets top="20.0" />
-                                    </VBox.margin>
-                                </Hyperlink>
-                            </children>
-                            <VBox.margin>
-                                <Insets top="20.0" />
-                            </VBox.margin>
+                           <children>
+                              <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickEnviar" prefHeight="56.0" prefWidth="168.0" styleClass="botao" text="Verificar" textAlignment="CENTER" textFill="#f9fafb">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Button>
+                              <Hyperlink onAction="#onClickVoltar2" styleClass="h3" text="Voltar" textFill="#1a56db">
+                                 <VBox.margin>
+                                    <Insets top="20.0" />
+                                 </VBox.margin>
+                              </Hyperlink>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
                         </VBox>
-                        <Label id="labelErro" fx:id="labelErro" styleClass="txt" textFill="#111827">
-                            <VBox.margin>
-                                <Insets top="20.0" />
-                            </VBox.margin>
+                        <Label styleClass="txt" text="Se não recebeu o código em 5 minutos,">
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
                         </Label>
+                        <Hyperlink styleClass="h3" text="Reenvie o código de redefinição." textAlignment="CENTER" textFill="#1a56db">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin></Hyperlink>
+                        <Label id="labelErro" fx:id="labelErroCodigo" styleClass="txt" textAlignment="CENTER" textFill="#111827">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </VBox>
+                  <VBox fx:id="vboxNovaSenha" alignment="CENTER" managed="false" visible="false">
+                     <children>
+                        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+                           <children>
+                              <Label styleClass="h3" text="Nova Senha" textFill="#111827">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Label>
+                              <TextField id="campoEmailLogin" fx:id="campoTextRecuperacaoSenha2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <VBox fx:id="vBoxNovaSenha" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+                           <children>
+                              <Label styleClass="h3" text="Confirmar Nova Senha" textFill="#111827">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Label>
+                              <TextField id="campoEmailLogin" fx:id="campoTextRecuperacaoSenha21" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </TextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickEnviar" prefHeight="56.0" prefWidth="168.0" styleClass="botao" text="Redefinir" textAlignment="CENTER" textFill="#f9fafb">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <Label id="labelErro" fx:id="labelErroEmail1" styleClass="txt" textFill="#111827" />
+                     </children>
+                  </VBox>
                         <Label alignment="CENTER" styleClass="txt" text="© Divos de Programa. Todos os direitos reservados!">
                             <font>
                                 <Font size="14.0" />
