@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<HBox style="-fx-background-color: #F9FAFB;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.edook.frontend.controllers.InicioController">
+   <padding>
+      <Insets bottom="20.0" left="24.0" right="24.0" top="20.0" />
+   </padding>
+   <children>
+      <VBox alignment="TOP_CENTER" spacing="20.0" style="-fx-background-color: #F9FAFB; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #1E1E1E; -fx-border-image-width: 1px;" HBox.hgrow="ALWAYS">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+         <children>
+            <Label styleClass="h2-Inter" text="Reservas" textAlignment="CENTER" textFill="#1a56db" />
+            <HBox alignment="TOP_CENTER" spacing="24.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="552.0" spacing="42.0" styleClass="campo-busca">
+                     <children>
+                        <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Images/Icone%20Lupa.png" />
+                           </image>
+                        </ImageView>
+                        <TextField prefHeight="41.0" prefWidth="438.0" promptText="Busca" style="-fx-background-color: transparent; -fx-background-insets: 0; -fx-border-color: transparent;" styleClass="h3">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </TextField>
+                     </children>
+                     <padding>
+                        <Insets bottom="7.0" left="18.0" right="18.0" top="7.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="72.0" styleClass="campo-busca">
+                     <children>
+                        <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Images/Icone%20Filtro.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                     <padding>
+                        <Insets bottom="7.0" left="18.0" right="18.0" top="7.0" />
+                     </padding>
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <TableView prefHeight="200.0" prefWidth="200.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="C1" />
+                <TableColumn prefWidth="75.0" text="C2" />
+              </columns>
+            </TableView>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="96.0" right="96.0" top="20.0" />
+         </padding>
+      </VBox>
+   </children>
+</HBox>

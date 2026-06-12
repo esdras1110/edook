@@ -1,9 +1,11 @@
-package com.edook.frontend;
+package com.edook.frontend.controllers;
 
+import com.edook.frontend.session.UserSession;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -12,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class LoginController {
     @FXML
@@ -22,6 +25,15 @@ public class LoginController {
 
     @FXML
     private TextField campoTextRecuperacaoSenha;
+
+    @FXML
+    private TextField campoTextCodigo;
+
+    @FXML
+    private TextField campoTextNovaSenha;
+
+    @FXML
+    private TextField campoTextConfirmarNovaSenha;
 
     @FXML
     private Label labelErroLogin;
@@ -47,20 +59,23 @@ public class LoginController {
     @FXML
     private VBox vboxNovaSenha;
 
+    private String emailTemporario;
+    private String codigo;
+
     @FXML
     void onClickEntrar(ActionEvent event) {
-        String texto = campoTextLogin.getText().trim();
+        String emailCPF = campoTextLogin.getText().trim();
         String senha = campoSenhaLogin.getText().trim();
 
         labelErroLogin.setText("");
 
-        if (texto.isEmpty() || senha.isEmpty()) {
+        if (emailCPF.isEmpty() || senha.isEmpty()) {
             labelErroLogin.setText("Por favor, preencha todos os campos obrigatórios.");
             labelErroLogin.setStyle("-fx-text-fill: red;");
             return;
         }
 
-        if (!texto.matches("\\d+") && !texto.contains("@")) {
+        if (!emailCPF.matches("\\d+") && !emailCPF.contains("@")) {
             labelErroLogin.setText("Por favor, insira um e-mail válido ou CPF.");
             labelErroLogin.setStyle("-fx-text-fill: red;");
             return;
@@ -74,6 +89,26 @@ public class LoginController {
 
         labelErroLogin.setText("Enviando dados...");
         labelErroLogin.setStyle("-fx-text-fill: green;");
+
+//        UserSession.getInstance().setEmail(emailDoBanco);
+//        UserSession.getInstance().setCpf(cpfDoBanco);
+//        UserSession.getInstance().setCargo(cargoDoBanco);
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/MainLayout-view.fxml"));
+            Parent root = loader.load();
+            Stage mainStage = new Stage();
+            mainStage.setTitle("edook - Sistema de Reserva de Equipamentos");
+            Scene scene = new Scene(root, 1440, 1024);
+            scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
+            mainStage.setScene(scene);
+            mainStage.show();
+            Stage loginStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            loginStage.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Erro ao carregar a tela principal: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -86,21 +121,28 @@ public class LoginController {
 
     @FXML
     void onClickEnviar(ActionEvent event) {
-        String texto = campoTextRecuperacaoSenha.getText().trim();
+        String email = campoTextRecuperacaoSenha.getText().trim();
 
         labelErroEmail.setText("");
 
-        if (texto.isEmpty()) {
+        if (email.isEmpty()) {
             labelErroEmail.setText("Por favor, preencha o campo obrigatório.");
             labelErroEmail.setStyle("-fx-text-fill: red;");
             return;
         }
 
-        if (!texto.contains("@")) {
+        if (!email.contains("@")) {
             labelErroEmail.setText("Por favor, insira um e-mail válido.");
             labelErroEmail.setStyle("-fx-text-fill: red;");
             return;
         }
+
+        this.emailTemporario = email;
+
+        Random gerador = new Random();
+        this.codigo = String.valueOf(gerador.nextInt(900000) + 100000);
+
+        //chamar função de enviar email
 
         vboxEsqueceuSenha.setVisible(false);
         vboxEsqueceuSenha.setManaged(false);
@@ -114,6 +156,22 @@ public class LoginController {
         vboxEsqueceuSenha.setManaged(false);
         vboxLogin.setVisible(true);
         vboxLogin.setManaged(true);
+    }
+
+    @FXML
+    void onClickVerificar(ActionEvent event) {
+        String codigoUsuario = campoTextCodigo.getText().trim();
+
+        if(!codigo.equals(codigoUsuario)){
+            labelErroCodigo.setText("Código Inválido.");
+            labelErroCodigo.setStyle("-fx-text-fill: red;");
+            return;
+        }
+
+        vboxCodigo.setVisible(false);
+        vboxCodigo.setManaged(false);
+        vboxNovaSenha.setVisible(true);
+        vboxNovaSenha.setManaged(true);
     }
 
     @FXML

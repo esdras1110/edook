@@ -5,4 +5,6 @@ module com.edook.frontend {
 
     opens com.edook.frontend to javafx.fxml;
     exports com.edook.frontend;
+    exports com.edook.frontend.controllers;
+    opens com.edook.frontend.controllers to javafx.fxml;
 }
