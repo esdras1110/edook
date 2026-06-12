@@ -18,7 +18,7 @@ public class HelloApplication extends Application {
         Font.loadFont(getClass().getResourceAsStream("/com/edook/frontend/Fonts/Inter/Inter_28pt-SemiBold.ttf"), 14);
 
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Login-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1440, 1024);
+        Scene scene = new Scene(fxmlLoader.load(), 1024, 1024);
 
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 

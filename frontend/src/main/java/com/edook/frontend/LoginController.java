@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,52 +21,107 @@ public class LoginController {
     private PasswordField campoSenhaLogin;
 
     @FXML
-    private Label labelErro;
+    private TextField campoTextRecuperacaoSenha;
+
+    @FXML
+    private Label labelErroLogin;
+
+    @FXML
+    private Label labelErroEmail;
+
+    @FXML
+    private Label labelErroCodigo;
+
+    @FXML
+    private Label labelErroSenha;
+
+    @FXML
+    private VBox vboxLogin;
+
+    @FXML
+    private VBox vboxEsqueceuSenha;
+
+    @FXML
+    private VBox vboxCodigo;
+
+    @FXML
+    private VBox vboxNovaSenha;
 
     @FXML
     void onClickEntrar(ActionEvent event) {
         String texto = campoTextLogin.getText().trim();
         String senha = campoSenhaLogin.getText().trim();
 
-        labelErro.setText("");
+        labelErroLogin.setText("");
 
         if (texto.isEmpty() || senha.isEmpty()) {
-            labelErro.setText("Por favor, preencha todos os campos obrigatórios.");
-            labelErro.setStyle("-fx-text-fill: red;");
+            labelErroLogin.setText("Por favor, preencha todos os campos obrigatórios.");
+            labelErroLogin.setStyle("-fx-text-fill: red;");
             return;
         }
 
         if (!texto.matches("\\d+") && !texto.contains("@")) {
-            labelErro.setText("Por favor, insira um e-mail válido ou CPF.");
-            labelErro.setStyle("-fx-text-fill: red;");
+            labelErroLogin.setText("Por favor, insira um e-mail válido ou CPF.");
+            labelErroLogin.setStyle("-fx-text-fill: red;");
             return;
         }
 
         if (senha.length() < 6) {
-            labelErro.setText("A senha deve conter pelo menos 6 caracteres.");
-            labelErro.setStyle("-fx-text-fill: red;");
+            labelErroLogin.setText("A senha deve conter pelo menos 6 caracteres.");
+            labelErroLogin.setStyle("-fx-text-fill: red;");
             return;
         }
 
-        labelErro.setText("Enviando dados...");
-        labelErro.setStyle("-fx-text-fill: green;");
+        labelErroLogin.setText("Enviando dados...");
+        labelErroLogin.setStyle("-fx-text-fill: green;");
     }
 
     @FXML
     void onClickEsqueceuSenha(ActionEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RecuperacaoSenha-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-
-            Stage stage = new Stage();
-            stage.setTitle("edook - Recuperar Senha");
-            stage.setScene(scene);
-            stage.show();
-
-            Stage stageLogin = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stageLogin.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        vboxLogin.setVisible(false);
+        vboxLogin.setManaged(false);
+        vboxEsqueceuSenha.setVisible(true);
+        vboxEsqueceuSenha.setManaged(true);
     }
+
+    @FXML
+    void onClickEnviar(ActionEvent event) {
+        String texto = campoTextRecuperacaoSenha.getText().trim();
+
+        labelErroEmail.setText("");
+
+        if (texto.isEmpty()) {
+            labelErroEmail.setText("Por favor, preencha o campo obrigatório.");
+            labelErroEmail.setStyle("-fx-text-fill: red;");
+            return;
+        }
+
+        if (!texto.contains("@")) {
+            labelErroEmail.setText("Por favor, insira um e-mail válido.");
+            labelErroEmail.setStyle("-fx-text-fill: red;");
+            return;
+        }
+
+        vboxEsqueceuSenha.setVisible(false);
+        vboxEsqueceuSenha.setManaged(false);
+        vboxCodigo.setVisible(true);
+        vboxCodigo.setManaged(true);
+    }
+
+    @FXML
+    void onClickVoltarLogin(ActionEvent event) {
+        vboxEsqueceuSenha.setVisible(false);
+        vboxEsqueceuSenha.setManaged(false);
+        vboxLogin.setVisible(true);
+        vboxLogin.setManaged(true);
+    }
+
+    @FXML
+    void onClickVoltarEsqueceuSenha(ActionEvent event) {
+        vboxCodigo.setVisible(false);
+        vboxCodigo.setManaged(false);
+        vboxEsqueceuSenha.setVisible(true);
+        vboxEsqueceuSenha.setManaged(true);
+    }
+
 }
