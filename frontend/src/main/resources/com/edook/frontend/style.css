@@ -72,3 +72,77 @@
     -fx-background-color: #e8e8e8;
     -fx-border-color: #b8b8b8;
 }
+
+.tabela {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.tabela .column-header-background,
+.tabela .column-header-background .nested-column-header,
+.tabela .column-header,
+.tabela .filler,
+.tabela .corner {
+    -fx-background-color: transparent !important;
+    -fx-border-color: transparent !important;
+}
+
+.tabela .column-header .label {
+    -fx-text-fill: #111827;
+    -fx-font-family: "Inter 28pt Semibold";
+    -fx-font-size: 18;
+    -fx-alignment: CENTER;
+}
+
+.tabela .table-row-cell {
+    -fx-cell-size: 45px;
+    -fx-background-color: transparent;
+}
+
+.tabela .table-row-cell:selected,
+.tabela .table-row-cell:selected .table-cell {
+    -fx-background-color: #e8e8e8 !important;
+}
+
+.tabela .table-row-cell:hover,
+.tabela .table-row-cell:hover .table-cell {
+    -fx-background-color: #e8e8e8;
+}
+
+.tabela .table-cell {
+    -fx-border-color: transparent transparent #111827 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-font-family: "Inter 28pt Regular";
+    -fx-font-size: 14;
+    -fx-text-fill: #111827;
+    -fx-alignment: CENTER;
+}
+
+.tabela .table-cell .text {
+    -fx-bounds-type: VISUAL;
+}
+
+.tabela .table-row-cell:empty .table-cell {
+    -fx-border-color: transparent;
+}
+
+.lembretes {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-fit-to-width: true;
+}
+
+.lembretes .virtual-flow {
+    -fx-background-color: transparent;
+}
+
+.lembretes .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 10 0;
+}
+
+.lembretes .list-cell:filled:hover,
+.lembretes .list-cell:filled:selected {
+    -fx-background-color: transparent;
+}

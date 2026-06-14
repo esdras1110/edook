@@ -72,7 +72,7 @@
                         <Insets left="20.0" right="20.0" />
                      </padding>
                   </Button>
-                  <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="80.0" prefWidth="264.0" styleClass="botao-navbar" text="  Sair" textFill="#f9fafb">
+                  <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#onClickSair" prefHeight="80.0" prefWidth="264.0" styleClass="botao-navbar" text="  Sair" textFill="#f9fafb">
                      <graphic>
                         <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
                            <image>

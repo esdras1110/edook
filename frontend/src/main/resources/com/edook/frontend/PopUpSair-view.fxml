@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="24.0" style="-fx-background-color: #F9FAFB; -fx-background-radius: 24; -fx-border-radius: 24; -fx-border-color: #E5E7EB; -fx-border-width: 1;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.edook.frontend.controllers.PopUpSairController">
+    <children>
+        <ImageView fx:id="iconeSaida" fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Images/Icone%20Sair%20Azul.png" />
+         </image></ImageView>
+
+        <VBox alignment="CENTER" spacing="8.0">
+            <children>
+                <Label styleClass="subtitulo" text="Confirmação de saída" textFill="#6b7280" />
+                <Label styleClass="txt" text="Realmente deseja sair do sistema edook?" textAlignment="CENTER" />
+            </children>
+        </VBox>
+
+        <HBox alignment="CENTER" spacing="24.0">
+            <children>
+                <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#onClickCancelar" styleClass="botao" text="Cancelar" textFill="#f9fafb" HBox.hgrow="ALWAYS" />
+                <Button fx:id="btnSairAgora" mnemonicParsing="false" onAction="#onClickSairAgora" styleClass="botao" text="Sair Agora" textFill="#f9fafb" HBox.hgrow="ALWAYS" />
+            </children>
+        </HBox>
+    </children>
+    <padding>
+        <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+    </padding>
+</VBox>

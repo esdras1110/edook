@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox alignment="CENTER" spacing="24.0" style="-fx-background-color: #F9FAFB;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.edook.frontend.controllers.CadastroController">
+    <padding>
+        <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+    </padding>
+    <children>
+        <VBox alignment="CENTER" spacing="24.0" style="-fx-background-color: #F9FAFB; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #1E1E1E; -fx-border-image-width: 1px;" HBox.hgrow="ALWAYS">
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+            <HBox.margin>
+                <Insets />
+            </HBox.margin>
+            <padding>
+                <Insets bottom="96.0" left="96.0" right="96.0" top="96.0" />
+            </padding>
+         <children>
+            <HBox alignment="CENTER" spacing="216.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Button alignment="CENTER" contentDisplay="TOP" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="360.0" prefWidth="360.0" styleClass="botao" text="Cadastrar Usuário" textFill="#f9fafb">
+                     <graphic>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Images/Icone%20Cadatrar%20Usuário.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+                     </padding>
+                  </Button>
+                  <Button alignment="CENTER" contentDisplay="TOP" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="360.0" prefWidth="360.0" styleClass="botao" text="Cadastrar Equipamento" textFill="#f9fafb">
+                     <graphic>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Images/Icone%20Cadastro%20de%20Equipamento.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+                     </padding>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" spacing="216.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Button alignment="CENTER" contentDisplay="TOP" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="360.0" prefWidth="360.0" styleClass="botao" text="Excluir Usuário" textFill="#f9fafb">
+                     <graphic>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Images/Icone%20Exclusão%20de%20Usuário.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+                     </padding>
+                  </Button>
+                  <Button alignment="CENTER" contentDisplay="TOP" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="360.0" prefWidth="360.0" styleClass="botao" text="Gerenciar Equipamento" textFill="#f9fafb">
+                     <graphic>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Images/Icone%20Gerencimento%20de%20Equipamento.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+                     </padding>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+        </VBox>
+    </children>
+</HBox>
