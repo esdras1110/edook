@@ -36,10 +36,25 @@
     -fx-font-family: 'Inter 28pt Bold';
     -fx-font-weight: bold;
     -fx-font-size: 24px;
+    -fx-text-fill: #f9fafb;
 }
 
 .botao:hover {
     -fx-background-color: #1546b8;
+}
+
+.botao-var {
+    -fx-background-color: #6B7280;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-font-family: 'Inter 28pt Bold';
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
+    -fx-text-fill: #f9fafb;
+}
+
+.botao-var:hover {
+    -fx-background-color: #4B5563;
 }
 
 .botao-navbar {

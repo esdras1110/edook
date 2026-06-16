@@ -1,12 +1,11 @@
 package com.edook.frontend.controllers;
 
+import com.edook.frontend.models.Equipamento;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -19,6 +18,9 @@ public class CadastroController implements Initializable {
 
     @FXML
     private VBox vboxCadastro;
+
+    @FXML
+    private VBox vboxGerenciarEquipamentos;
 
     @FXML
     private TextField campoNome;
@@ -47,6 +49,21 @@ public class CadastroController implements Initializable {
     @FXML
     private Label lblErro;
 
+    @FXML
+    private TableView<Equipamento> tabelaEquipamentos;
+
+    @FXML
+    private TableColumn<Equipamento, String> colPrefixo;
+
+    @FXML
+    private TableColumn<Equipamento, String> colID;
+
+    @FXML
+    private TableColumn<Equipamento, String> colNome;
+
+    @FXML
+    private TableColumn<Equipamento, String> colTipo;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         aplicarMascaraTelefone(campoTelefone);
@@ -57,6 +74,27 @@ public class CadastroController implements Initializable {
                 "Administrativo"
         );
         campoCargo.getSelectionModel().select("Docente");
+
+        inicializaTabela();
+    }
+
+    private void inicializaTabela(){
+        tabelaEquipamentos.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        colPrefixo.setCellValueFactory(new PropertyValueFactory<>("prefixo"));
+        colID.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+
+        Equipamento teste1 = new Equipamento("NT", "002", "Notebook Dell Inspiron", "Informática");
+        Equipamento teste2 = new Equipamento("CX", "003", "Caixa de Som JBL", "Áudio");
+        Equipamento teste3 = new Equipamento("PR", "004", "Projetor BenQ", "Vídeo");
+        Equipamento teste4 = new Equipamento("TL", "005", "Smart TV LG 55'", "Vídeo");
+        Equipamento teste5 = new Equipamento("NT", "006", "MacBook Air M2", "Informática");
+
+        if (tabelaEquipamentos != null) {
+            tabelaEquipamentos.getItems().addAll(teste1, teste2, teste3, teste4, teste5);
+        }
     }
 
     private boolean validarFormulario() {
@@ -216,6 +254,22 @@ public class CadastroController implements Initializable {
         vboxBotoes.setManaged(false);
         vboxCadastro.setVisible(true);
         vboxCadastro.setManaged(true);
+    }
+
+    @FXML
+    private void onClickGerenciarEquipamento(ActionEvent event) {
+        vboxBotoes.setVisible(false);
+        vboxBotoes.setManaged(false);
+        vboxGerenciarEquipamentos.setVisible(true);
+        vboxGerenciarEquipamentos.setManaged(true);
+    }
+
+    @FXML
+    private void onClickVoltar(ActionEvent event) {
+        vboxGerenciarEquipamentos.setVisible(false);
+        vboxGerenciarEquipamentos.setManaged(false);
+        vboxBotoes.setVisible(true);
+        vboxBotoes.setManaged(true);
     }
 
     @FXML

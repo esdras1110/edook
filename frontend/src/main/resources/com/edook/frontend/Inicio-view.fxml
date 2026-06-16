@@ -65,18 +65,22 @@
                   <Insets />
                </VBox.margin>
             </HBox>
-            <TableView fx:id="tabelaInicio" styleClass="tabela" VBox.vgrow="ALWAYS">
-              <columns>
-                <TableColumn fx:id="colData" prefWidth="75.0" text="Data" />
-                <TableColumn fx:id="colHorario" prefWidth="75.0" text="Horário" />
-                  <TableColumn fx:id="colEquipamento" prefWidth="75.0" text="Equipamento" />
-                  <TableColumn fx:id="colLocal" prefWidth="75.0" text="Local" />
-                  <TableColumn fx:id="colStatus" prefWidth="75.0" text="Status" />
-              </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-            </TableView>
+            <VBox alignment="CENTER" VBox.vgrow="ALWAYS">
+               <children>
+                  <TableView fx:id="tabelaInicio" styleClass="tabela" VBox.vgrow="ALWAYS">
+                    <columns>
+                      <TableColumn fx:id="colData" prefWidth="75.0" text="Data" />
+                      <TableColumn fx:id="colHorario" prefWidth="75.0" text="Horário" />
+                        <TableColumn fx:id="colEquipamento" prefWidth="75.0" text="Equipamento" />
+                        <TableColumn fx:id="colLocal" prefWidth="75.0" text="Local" />
+                        <TableColumn fx:id="colStatus" prefWidth="75.0" text="Status" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+               </children>
+            </VBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="24.0">
                <children>
                   <Button fx:id="btnAdicionarReserva" mnemonicParsing="false" styleClass="botao" text="  Adicionar Reserva" textFill="#f9fafb">
