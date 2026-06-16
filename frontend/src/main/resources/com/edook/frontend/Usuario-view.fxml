@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.edook.frontend.controllers.UsuarioController">
+   <children>
+      <VBox fx:id="vboxDados" alignment="CENTER" managed="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="12.0" style="-fx-background-color: #F9FAFB; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-width: 1px; -fx-border-color: #1E1E1E;" visible="true" StackPane.alignment="CENTER">
+         <children>
+            <Label styleClass="h2-Inter" text="Dados do Usuário" textFill="#1a56db" />
+            <VBox spacing="12.0">
+               <children>
+                  <VBox spacing="6.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label styleClass="h3" text="Nome:" />
+                        <Label fx:id="lblNome" styleClass="txt" />
+                     </children>
+                  </VBox>
+                  <VBox layoutX="10.0" layoutY="10.0" spacing="6.0">
+                     <children>
+                        <Label styleClass="h3" text="CPF:" />
+                        <Label fx:id="lblNome1" styleClass="txt" />
+                     </children>
+                  </VBox>
+                  <VBox layoutX="10.0" layoutY="75.0" spacing="6.0">
+                     <children>
+                        <Label styleClass="h3" text="Cargo:" />
+                        <Label fx:id="lblNome11" styleClass="txt" />
+                     </children>
+                  </VBox>
+                  <VBox layoutX="10.0" layoutY="140.0" spacing="6.0">
+                     <children>
+                        <Label styleClass="h3" text="Matrícula:" />
+                        <Label fx:id="lblNome111" styleClass="txt" />
+                     </children>
+                  </VBox>
+                  <VBox layoutX="10.0" layoutY="205.0" spacing="6.0">
+                     <children>
+                        <Label styleClass="h3" text="Telefone:" />
+                        <Label fx:id="lblNome1111" styleClass="txt" />
+                     </children>
+                  </VBox>
+                  <VBox layoutX="10.0" layoutY="270.0" spacing="6.0">
+                     <children>
+                        <Label styleClass="h3" text="E-mail:" />
+                        <Label fx:id="lblNome11111" styleClass="txt" />
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            <HBox spacing="24.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onClickEditar" styleClass="botao" text="Editar" textFill="#f9fafb" />
+                  <Button mnemonicParsing="false" styleClass="botao" text="Redefinir Senha" textFill="#f9fafb" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+         </padding>
+      </VBox>
+      <VBox fx:id="vboxEdicao" alignment="CENTER" managed="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="12.0" style="-fx-background-color: #F9FAFB; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-width: 1px; -fx-border-color: #1E1E1E;" visible="false" StackPane.alignment="CENTER">
+         <children>
+            <Label styleClass="h2-Inter" text="Edição de Usuário" textFill="#1a56db" />
+            <VBox alignment="CENTER" spacing="12.0">
+               <children>
+                  <VBox fx:id="vboxLogin" alignment="CENTER" spacing="12.0">
+                     <children>
+                        <VBox spacing="6.0">
+                           <children>
+                              <Label styleClass="h3" text="Nome" textFill="#111827">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Label>
+                              <TextField id="campoEmailLogin" fx:id="campoNome" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </TextField>
+                           </children>
+                        </VBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="24.0">
+                           <children>
+                              <VBox spacing="6.0">
+                                 <children>
+                                    <Label styleClass="h3" text="CPF" textFill="#111827">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextField id="campoEmailLogin" fx:id="campoCPF" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </TextField>
+                                 </children>
+                              </VBox>
+                              <VBox layoutX="10.0" layoutY="10.0" spacing="6.0">
+                                 <children>
+                                    <Label styleClass="h3" text="Matrícula" textFill="#111827">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextField id="campoEmailLogin" fx:id="campoMatricula" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </TextField>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="24.0">
+                           <children>
+                              <VBox spacing="6.0">
+                                 <children>
+                                    <Label styleClass="h3" text="Telefone" textFill="#111827">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextField id="campoEmailLogin" fx:id="campoTelefone" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </TextField>
+                                 </children>
+                              </VBox>
+                              <VBox layoutX="10.0" layoutY="10.0" spacing="6.0">
+                                 <children>
+                                    <Label styleClass="h3" text="E-mail" textFill="#111827">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextField id="campoEmailLogin" fx:id="campoEmail" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" promptText="exemplo@dominio.com" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </TextField>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <Label fx:id="lblErro" styleClass="txt" />
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </VBox>
+               </children></VBox>
+            <HBox alignment="CENTER" spacing="24.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onClickCancelar" style="-fx-background-color: #6B7280;" styleClass="botao" text="Cancelar" textFill="#f9fafb" />
+                  <Button mnemonicParsing="false" onAction="#onClickAtualizar" styleClass="botao" text="Atualizar" textFill="#f9fafb" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+         </padding>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+   </padding>
+</StackPane>

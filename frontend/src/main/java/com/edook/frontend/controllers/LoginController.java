@@ -60,6 +60,7 @@ public class LoginController {
     private VBox vboxNovaSenha;
 
     private String emailTemporario;
+
     private String codigo;
 
     @FXML
@@ -75,7 +76,8 @@ public class LoginController {
             return;
         }
 
-        if (!emailCPF.matches("\\d+") && !emailCPF.contains("@")) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        if (!emailCPF.matches(emailRegex)) {
             labelErroLogin.setText("Por favor, insira um e-mail válido ou CPF.");
             labelErroLogin.setStyle("-fx-text-fill: red;");
             return;

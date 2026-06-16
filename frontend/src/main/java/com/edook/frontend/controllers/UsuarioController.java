@@ -3,7 +3,6 @@ package com.edook.frontend.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -13,12 +12,16 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
-public class CadastroController implements Initializable {
-    @FXML
-    private VBox vboxBotoes;
+public class UsuarioController implements Initializable {
 
     @FXML
-    private VBox vboxCadastro;
+    private VBox vboxDados;
+
+    @FXML
+    private VBox vboxEdicao;
+
+    @FXML
+    private Label lblErro;
 
     @FXML
     private TextField campoNome;
@@ -30,33 +33,17 @@ public class CadastroController implements Initializable {
     private TextField campoMatricula;
 
     @FXML
-    private ComboBox<String> campoCargo;
-
-    @FXML
     private TextField campoTelefone;
 
     @FXML
     private TextField campoEmail;
-
-    @FXML
-    private TextField campoSenha;
-
-    @FXML
-    private TextField campoConfirmacaoSenha;
-
-    @FXML
-    private Label lblErro;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         aplicarMascaraTelefone(campoTelefone);
         aplicarMascaraCPF(campoCPF);
         aplicarMascaraMatricula(campoMatricula);
-        campoCargo.getItems().addAll(
-                "Docente",
-                "Administrativo"
-        );
-        campoCargo.getSelectionModel().select("Docente");
+
     }
 
     private boolean validarFormulario() {
@@ -64,12 +51,9 @@ public class CadastroController implements Initializable {
         String cpf = campoCPF.getText().replaceAll("[^0-9]", "");
         String telefone = campoTelefone.getText().replaceAll("[^0-9]", "");
         String matricula = campoMatricula.getText().trim();
-        String cargo = campoCargo.getValue();
         String email = campoEmail.getText().trim();
-        String senha = campoSenha.getText().trim();
-        String confirmacaoSenha = campoConfirmacaoSenha.getText().trim();
 
-        if (nome.isEmpty() || cpf.isEmpty() || matricula.isEmpty() || cargo.isEmpty() || telefone.isEmpty() || email.isEmpty() || senha.isEmpty() || confirmacaoSenha.isEmpty()) {
+        if (nome.isEmpty() || cpf.isEmpty() || matricula.isEmpty() || telefone.isEmpty() || email.isEmpty()) {
             lblErro.setText("Todos os campos devem ser preenchidos!");
             lblErro.setStyle("-fx-text-fill: red;");
             return false;
@@ -211,21 +195,23 @@ public class CadastroController implements Initializable {
     }
 
     @FXML
-    private void onClickCadastrarUsuario(ActionEvent event) {
-        vboxBotoes.setVisible(false);
-        vboxBotoes.setManaged(false);
-        vboxCadastro.setVisible(true);
-        vboxCadastro.setManaged(true);
+    private void onClickEditar(ActionEvent event) {
+        vboxDados.setVisible(false);
+        vboxDados.setManaged(false);
+        vboxEdicao.setVisible(true);
+        vboxEdicao.setManaged(true);
     }
 
     @FXML
     private void onClickCancelar(ActionEvent event) {
-        vboxCadastro.setVisible(false);
-        vboxCadastro.setManaged(false);
-        vboxBotoes.setVisible(true);
-        vboxBotoes.setManaged(true);
+        vboxEdicao.setVisible(false);
+        vboxEdicao.setManaged(false);
+        vboxDados.setVisible(true);
+        vboxDados.setManaged(true);
     }
 
     @FXML
-    private void onClickCadastrar(ActionEvent event) { validarFormulario(); }
+    private void onClickAtualizar(ActionEvent event) {
+        validarFormulario();
+    }
 }

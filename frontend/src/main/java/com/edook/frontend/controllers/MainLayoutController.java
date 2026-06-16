@@ -142,7 +142,15 @@ public class MainLayoutController {
 
     @FXML
     private void onClickUsuario(ActionEvent event) {
-        destacarBotao(btnUsuario);
-        // carregarPagina("/views/Usuario.fxml");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/Usuario-view.fxml"));
+            Parent UsuarioView = loader.load();
+
+            mainLayout.setCenter(UsuarioView);
+
+            destacarBotao(btnUsuario);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
