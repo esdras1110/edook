@@ -73,6 +73,31 @@
     -fx-border-color: #b8b8b8;
 }
 
+.combo-box-editavel {
+    -fx-background-color: transparent;
+    -fx-background-radius: 20;
+    -fx-border-color: #6B7280;
+    -fx-border-radius: 20;
+    -fx-border-width: 1px;
+}
+
+.combo-box-editavel .list-cell {
+    -fx-font-family: 'Inter 28pt Regular';
+    -fx-font-weight: normal;
+    -fx-font-size: 18px;
+    -fx-text-fill: #111827;
+}
+
+.combo-box-editavel .list-cell:hover {
+    -fx-background-color: #1A56DB;
+    -fx-text-fill: #f9fafb;
+}
+
+.combo-box-editavel .list-cell:hover {
+    -fx-background-color: #1A56DB;
+    -fx-text-fill: #f9fafb;
+}
+
 .tabela {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
