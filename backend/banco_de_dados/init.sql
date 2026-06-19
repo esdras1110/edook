@@ -58,6 +58,7 @@ CREATE TABLE EQUIPAMENTO(
 	prefixo CHAR(2),
 	numero SMALLSERIAL,
 	descricao VARCHAR(100),
+	tipo VARCHAR(100),
 	cpf_cadastro CHAR(11),
 	
 	CONSTRAINT pk_prefixo_numero_equipamento
@@ -113,4 +114,198 @@ CREATE TABLE UTILIZA (
 	CONSTRAINT fk_utiliza_equipamento
 		FOREIGN KEY (prefixo_equipamento, numero_equipamento) REFERENCES EQUIPAMENTO(prefixo, numero)
 			ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+
+-- 1. Cadastro do primeiro funcionário (Carlos - Administrador)
+INSERT INTO FUNCIONARIO (
+    matricula, 
+    cpf, 
+    nome, 
+    email, 
+    ddd, 
+    numero, 
+    cargo, 
+    senha, 
+    cpf_cadastro, 
+    email_verificado, 
+    token_verificacao, 
+    token_expiracao
+) VALUES (
+    'M12345', 
+    '12345678901', 
+    'Carlos Silva', 
+    'carlos.silva@escola.com', 
+    '11', 
+    '999998888', 
+    'Administrativo', 
+    '$2b$12$K196WbXWExKfZU.r10G9v.bNfeH5I/qH3.0e9N5Xw9pBeG7E5Z/Ki', -- Senha original: Admin@2026
+    NULL,
+    TRUE,
+    NULL, 
+    NULL
+);
+
+-- 2. Cadastro da segunda funcionária (Ana - Docente, cadastrada pelo Carlos)
+INSERT INTO FUNCIONARIO (
+    matricula, 
+    cpf, 
+    nome, 
+    email, 
+    ddd, 
+    numero, 
+    cargo, 
+    senha, 
+    cpf_cadastro, 
+    email_verificado, 
+    token_verificacao, 
+    token_expiracao
+) VALUES (
+    'M67890', 
+    '98765432100', 
+    'Ana Souza', 
+    'ana.souza@escola.com', 
+    '21', 
+    '988887777', 
+    'Docente', 
+    '$2b$12$R9Z1XmY7VbK1O8gZ3wPqEeL2N4F5J6H7I8K9L0M1N2O3P4Q5R6S7T', -- Senha original: Prof@2026
+    '12345678901',
+    TRUE,
+    NULL, 
+    NULL
+);
+
+-- 1. Inserção da primeira disciplina
+INSERT INTO DISCIPLINA (
+    nome, 
+    turma, 
+    horario, 
+    dias, 
+    cpf_docente
+) VALUES (
+    'Português', 
+    'INF-2026.1', 
+    '08:00:00', 
+    'Segunda e Quarta', 
+    '98765432100' -- CPF da Ana Souza (Docente)
+);
+
+-- 2. Inserção da segunda disciplina
+INSERT INTO DISCIPLINA (
+    nome, 
+    turma, 
+    horario, 
+    dias, 
+    cpf_docente
+) VALUES (
+    'Redação', 
+    'INF-2026.2', 
+    '10:00:00', 
+    'Terça e Quinta', 
+    '98765432100' -- CPF da Ana Souza (Docente)
+);
+
+-- 1. Inserção do primeiro equipamento (Projetor)
+INSERT INTO EQUIPAMENTO (
+    prefixo, 
+    descricao,
+	tipo,
+    cpf_cadastro
+) VALUES (
+    'PR', 
+    'Projetor Epson X41',
+	'Projetor',
+    '12345678901' -- CPF do Carlos Silva (Administrativo)
+);
+
+-- 2. Inserção do segundo equipamento (Notebook)
+INSERT INTO EQUIPAMENTO (
+    prefixo, 
+    descricao,
+	tipo,
+    cpf_cadastro
+) VALUES (
+    'NT', 
+    'Notebook Dell Latitude',
+	'Notebook',
+    '12345678901' -- CPF do Carlos Silva (Administrativo)
+);
+
+-- 1. Inserção da primeira reserva (Concluída)
+INSERT INTO RESERVA (
+    nome,
+    localidade, 
+    horario_inicio, 
+    horario_fim, 
+    dia, 
+    status, 
+    cpf_funcionario
+) VALUES (
+    'Aula de Português',
+    'Auditório Principal', 
+    '08:00:00', 
+    '10:00:00', 
+    '2026-06-22', 
+    'Concluída', -- Respeita o CHECK ('Concluída', 'Pendente', 'Cancelada')
+    '98765432100'  -- CPF da Ana Souza
+);
+
+-- 2. Inserção da segunda reserva (Pendente)
+INSERT INTO RESERVA (
+    nome,
+    localidade, 
+    horario_inicio, 
+    horario_fim, 
+    dia, 
+    status, 
+    cpf_funcionario
+) VALUES (
+    'Aula de Redação',
+    'Sala 01', 
+    '10:00:00', 
+    '12:00:00', 
+    '2026-06-23', 
+    'Pendente', 
+    '98765432100'  -- CPF da Ana Souza
+);
+
+-- 3. Reserva Cancelada (Carlos Silva)
+INSERT INTO RESERVA (
+    nome,
+    localidade, 
+    horario_inicio, 
+    horario_fim, 
+    dia, 
+    status, 
+    cpf_funcionario
+) VALUES (
+    'Reunião Pedagógica',
+    'Sala de Reuniões', 
+    '14:00:00', 
+    '16:00:00', 
+    '2026-06-24', 
+    'Cancelada',
+    '12345678901'  -- CPF do Carlos Silva (Administrativo)
+);
+
+-- 1. Alocando o Projetor (PR 1) para a Reserva 1
+INSERT INTO UTILIZA (
+    id_reserva, 
+    prefixo_equipamento, 
+    numero_equipamento
+) VALUES (
+    1,
+    'PR',
+    1 
+);
+
+-- 2. Alocando o Notebook (NT 2) para a Reserva 2
+INSERT INTO UTILIZA (
+    id_reserva, 
+    prefixo_equipamento, 
+    numero_equipamento
+) VALUES (
+    2,
+    'NT',
+    2 
 );
