@@ -1,10 +1,10 @@
 
 CREATE TABLE FUNCIONARIO (
 	matricula VARCHAR(20),
-	cpf CHAR(11),
+	cpf VARCHAR(11),
 	nome VARCHAR(100),
 	email VARCHAR(100) NOT NULL,
-	ddd CHAR(2),
+	ddd VARCHAR(2),
 	numero VARCHAR(9),
 	cargo VARCHAR(20) NOT NULL,
 	senha VARCHAR(100) NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE DISCIPLINA (
 	turma VARCHAR(20),
 	horario TIME(0),
 	dias VARCHAR(20),
-	cpf_docente CHAR(11),
+	cpf_docente VARCHAR(11),
 
 	CONSTRAINT pk_nome_turma_disciplina
 		PRIMARY KEY (nome, turma),
@@ -55,11 +55,11 @@ CREATE TABLE DISCIPLINA (
 );
 
 CREATE TABLE EQUIPAMENTO(
-	prefixo CHAR(2),
+	prefixo VARCHAR(2),
 	numero SMALLSERIAL,
 	descricao VARCHAR(100),
 	tipo VARCHAR(100),
-	cpf_cadastro CHAR(11),
+	cpf_cadastro VARCHAR(11),
 	
 	CONSTRAINT pk_prefixo_numero_equipamento
 		PRIMARY KEY (prefixo, numero),
@@ -86,7 +86,7 @@ CREATE TABLE RESERVA (
 	horario_fim TIME,
 	dia DATE,
 	status VARCHAR(30),
-	cpf_funcionario CHAR(11),
+	cpf_funcionario VARCHAR(11),
 
 	CONSTRAINT pk_id_reserva
 		PRIMARY KEY (id),
@@ -101,7 +101,7 @@ CREATE TABLE RESERVA (
 
 CREATE TABLE UTILIZA (
 	id_reserva INTEGER,
-	prefixo_equipamento CHAR(2),
+	prefixo_equipamento VARCHAR(2),
 	numero_equipamento SMALLINT,
 
 	CONSTRAINT pk_id_reserva_equipamento
@@ -307,5 +307,5 @@ INSERT INTO UTILIZA (
 ) VALUES (
     2,
     'NT',
-    2 
+    2
 );
