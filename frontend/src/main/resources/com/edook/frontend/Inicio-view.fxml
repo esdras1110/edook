@@ -35,7 +35,7 @@
                               <Image url="@Images/Icone%20Lupa.png" />
                            </image>
                         </ImageView>
-                        <TextField prefHeight="41.0" prefWidth="438.0" promptText="Busca" style="-fx-background-color: transparent; -fx-background-insets: 0; -fx-border-color: transparent;" styleClass="h3">
+                        <TextField fx:id="campoBusca" prefHeight="41.0" prefWidth="438.0" promptText="Busca" style="-fx-background-color: transparent; -fx-background-insets: 0; -fx-border-color: transparent;" styleClass="h3">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -48,7 +48,7 @@
                         <Insets />
                      </HBox.margin>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="72.0" styleClass="campo-busca">
+                  <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onClickFiltros" prefHeight="56.0" prefWidth="72.0" styleClass="campo-busca">
                      <children>
                         <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
                            <image>
