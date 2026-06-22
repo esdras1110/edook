@@ -80,7 +80,7 @@ GROUP BY
 
 CREATE TABLE RESERVA (
 	id SERIAL,
-	nome VARCHAR(20),
+	nome VARCHAR(50),
 	localidade VARCHAR(30),
 	horario_inicio TIME,
 	horario_fim TIME,

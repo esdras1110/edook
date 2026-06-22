@@ -31,10 +31,9 @@ public class EquipamentoController {
             equipamento.getId().getPrefixo(),
         equipamento.getId().getNumero(),
         equipamento.getDescricao(),
-        equipamento.getTipo(),
-        equipamento.getFuncionario().getCpf()
+        equipamento.getTipo()
         );
         return ResponseEntity.status(HttpStatus.CREATED)
-                                .body(response);
+                                .body(response); 
     }
 }

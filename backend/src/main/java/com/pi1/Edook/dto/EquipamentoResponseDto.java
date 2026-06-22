@@ -13,5 +13,4 @@ public class EquipamentoResponseDto {
     private Short numero;
     private String descricao;
     private String tipo;
-    private String cpfCadastro;
 }
