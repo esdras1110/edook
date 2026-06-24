@@ -201,4 +201,47 @@ public class ReservaService {
             LocalTime.now()
     	);
 	}
+
+	public void cancelar(Integer idReserva, String cpfFuncionario) {
+		Reserva reserva = reservaRepository.findById(idReserva)
+			.orElseThrow(() ->
+				new BusinessException(
+					"Reserva não encontrada",
+					HttpStatus.NOT_FOUND
+			));
+		
+		Funcionario funcionario =
+        funcionarioRepository.findById(cpfFuncionario)
+			.orElseThrow(() ->
+				new BusinessException(
+					"Funcionário não encontrado",
+					HttpStatus.NOT_FOUND
+			));
+
+		if (reserva.getStatus().equals("Cancelada")) {
+			throw new BusinessException(
+				"A reserva já está cancelada",
+				HttpStatus.BAD_REQUEST
+			);
+		}
+
+		if (reserva.getStatus().equals("Concluída")) {
+			throw new BusinessException(
+				"Não é possível cancelar uma reserva concluída",
+				HttpStatus.BAD_REQUEST
+			);
+		}
+
+		if (funcionario.getCargo().equals("Docente") && !reserva.getFuncionario()
+			.getCpf()
+			.equals(funcionario.getCpf())) {
+
+			throw new BusinessException(
+				"Você não possui permissão para cancelar esta reserva",
+				HttpStatus.FORBIDDEN
+			);
+		}
+
+		reserva.setStatus("Cancelada");
+	}
 }

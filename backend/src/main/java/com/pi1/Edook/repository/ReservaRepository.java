@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.pi1.Edook.model.Reserva;
 
 @Repository
-public interface ReservaRepository extends JpaRepository<Reserva, Long> {
+public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
     List<Reserva> findByStatus(String status);
 
     @Query("""
