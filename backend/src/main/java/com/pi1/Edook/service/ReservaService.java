@@ -1,6 +1,7 @@
 package com.pi1.Edook.service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -132,42 +133,72 @@ public class ReservaService {
     }
 
     private Equipamento validarEquipamento(EquipamentoReservaDto dtoEquip, EquipamentoId id, ReservaCreateDto dto){
-        Equipamento equipamento =
-                    equipamentoRepository.findById(id)
-                    .orElseThrow(() ->
-                            new BusinessException(
+        Equipamento equipamento = equipamentoRepository.findById(id)
+                    .orElseThrow(() -> new BusinessException(
                                     "Equipamento não encontrado: "
                                             + dtoEquip.getPrefixo()
                                             + dtoEquip.getNumero(),
                                     HttpStatus.NOT_FOUND
                             ));
 
-            String chave = dtoEquip.getPrefixo() + "-" + dtoEquip.getNumero();
+        String chave = dtoEquip.getPrefixo() + "-" + dtoEquip.getNumero();
 
-            if (!equipamentosUnicos.add(chave)) {
-                throw new BusinessException(
-                        "Equipamento repetido na reserva",
-                        HttpStatus.BAD_REQUEST
+        if (!equipamentosUnicos.add(chave)) {
+        throw new BusinessException(
+                "Equipamento repetido na reserva",
+                HttpStatus.BAD_REQUEST
+        );
+        }
+        boolean conflito = utilizaRepository.existeConflito(
+                        dtoEquip.getPrefixo(),
+                        dtoEquip.getNumero(),
+                        dto.getDia(),
+                        dto.getHorarioInicio(),
+                        dto.getHorarioFim()
                 );
-            }
-            boolean conflito = utilizaRepository.existeConflito(
-                            dtoEquip.getPrefixo(),
-                            dtoEquip.getNumero(),
-                            dto.getDia(),
-                            dto.getHorarioInicio(),
-                            dto.getHorarioFim()
-                    );
 
-            if (conflito) {
-                throw new BusinessException(
-                        "Equipamento "
-                                + dtoEquip.getPrefixo()
-                                + dtoEquip.getNumero()
-                                + " já está reservado nesse horário",
-                        HttpStatus.BAD_REQUEST
-                );
-            }
+        if (conflito) {
+        throw new BusinessException(
+                "Equipamento "
+                        + dtoEquip.getPrefixo()
+                        + dtoEquip.getNumero()
+                        + " já está reservado nesse horário",
+                HttpStatus.BAD_REQUEST
+        );
+        }
 
-            return equipamento;
+        return equipamento;
     }
+
+    private void atualizarReservasConcluidas() {
+
+        List<Reserva> reservas = reservaRepository.findByStatus("Pendente");
+
+        LocalDate hoje = LocalDate.now();
+        LocalTime agora = LocalTime.now();
+
+        for (Reserva reserva : reservas) {
+
+			boolean terminou =
+					reserva.getDia().isBefore(hoje)
+					||
+					(
+					reserva.getDia().equals(hoje)
+					&& reserva.getHorarioFim().isBefore(agora)
+					);
+
+			if (terminou) {
+				reserva.setStatus("Concluída");
+			}
+        }
+	}
+
+	public List<Reserva> listarProximasReservas() {
+    	atualizarReservasConcluidas();
+
+    	return reservaRepository.buscarProximasReservas(
+            LocalDate.now(),
+            LocalTime.now()
+    	);
+	}
 }

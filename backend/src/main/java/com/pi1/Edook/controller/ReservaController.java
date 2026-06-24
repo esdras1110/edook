@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,4 +76,55 @@ public class ReservaController {
                 .status(HttpStatus.CREATED)
                 .body(response);
     }
+    
+    @GetMapping
+	public ResponseEntity<List<ReservaResponseDto>> listar() {
+
+	List<ReservaResponseDto> reservas =
+		reservaService.listarProximasReservas()
+			.stream()
+			.map(reserva -> {
+
+				List<EquipamentoResponseDto> equipamentos = utilizaRepository.findByReservaId(reserva.getId())
+					.stream()
+					.map(utiliza -> {
+						Equipamento e = utiliza.getEquipamento();
+
+						return new EquipamentoResponseDto(
+							e.getId().getPrefixo(),
+							e.getId().getNumero(),
+							e.getDescricao(),
+							e.getTipo()
+						);
+					})
+					.toList();
+
+					ReservaResponseDto response = new ReservaResponseDto();
+
+					response.setId(reserva.getId());
+					response.setNome(reserva.getNome());
+					response.setLocalidade(reserva.getLocalidade());
+					response.setDia(reserva.getDia());
+					response.setHorarioInicio(
+							reserva.getHorarioInicio()
+					);
+					response.setHorarioFim(
+							reserva.getHorarioFim()
+					);
+					response.setStatus(
+							reserva.getStatus()
+					);
+					response.setCpfFuncionario(
+							reserva.getFuncionario().getCpf()
+					);
+					response.setEquipamentos(
+							equipamentos
+					);
+
+					return response;
+			})
+			.toList();
+
+	return ResponseEntity.ok(reservas);
+	}
 }

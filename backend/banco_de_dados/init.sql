@@ -245,7 +245,7 @@ INSERT INTO RESERVA (
     'Auditório Principal', 
     '08:00:00', 
     '10:00:00', 
-    '2026-06-22', 
+    '2026-08-22', 
     'Concluída', -- Respeita o CHECK ('Concluída', 'Pendente', 'Cancelada')
     '98765432100'  -- CPF da Ana Souza
 );
@@ -264,7 +264,7 @@ INSERT INTO RESERVA (
     'Sala 01', 
     '10:00:00', 
     '12:00:00', 
-    '2026-06-23', 
+    '2026-08-23', 
     'Pendente', 
     '98765432100'  -- CPF da Ana Souza
 );
@@ -283,7 +283,7 @@ INSERT INTO RESERVA (
     'Sala de Reuniões', 
     '14:00:00', 
     '16:00:00', 
-    '2026-06-24', 
+    '2026-08-24', 
     'Cancelada',
     '12345678901'  -- CPF do Carlos Silva (Administrativo)
 );
