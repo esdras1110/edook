@@ -107,15 +107,17 @@ public class InicioController implements Initializable, Filtravel {
 
             if (filtrosAvancados != null) {
                 if (filtrosAvancados.equipamento != null && !filtrosAvancados.equipamento.isEmpty()) {
-                    if (reserva.getEquipamento() == null || !reserva.getEquipamento().equalsIgnoreCase(filtrosAvancados.equipamento))
+                    if (reserva.getEquipamento() == null || !reserva.getEquipamento().toLowerCase().contains(filtrosAvancados.equipamento.toLowerCase())) {
                         return false;
+                    }
+                }
+                if (filtrosAvancados.status != null && !filtrosAvancados.status.isEmpty()) {
+                    if (reserva.getStatus() == null || !reserva.getStatus().toLowerCase().contains(filtrosAvancados.status.toLowerCase())) {
+                        return false;
+                    }
                 }
                 if (filtrosAvancados.local != null && !filtrosAvancados.local.isEmpty()) {
                     if (reserva.getLocal() == null || !reserva.getLocal().equalsIgnoreCase(filtrosAvancados.local))
-                        return false;
-                }
-                if (filtrosAvancados.status != null && !filtrosAvancados.status.isEmpty()) {
-                    if (reserva.getStatus() == null || !reserva.getStatus().equalsIgnoreCase(filtrosAvancados.status))
                         return false;
                 }
                 if (filtrosAvancados.horarioInicio != null && !filtrosAvancados.horarioInicio.trim().isEmpty()) {
@@ -154,6 +156,10 @@ public class InicioController implements Initializable, Filtravel {
 
             FiltroReservasController popupController = loader.getController();
             popupController.setTelaPai(this);
+
+            if (this.filtrosAvancados != null) {
+                popupController.carregarFiltrosSalvos(this.filtrosAvancados);
+            }
 
             Stage popupStage = new Stage();
             Stage donoDaJanela = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();

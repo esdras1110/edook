@@ -47,7 +47,6 @@ public class FiltroReservasController implements Initializable {
         aplicarMascaraHorario(txtHoraInicio);
         aplicarMascaraHorario(txtHoraFim);
 
-        // Preenchimento dos ComboBox com opções estáticas
         cbEquipamento.setItems(javafx.collections.FXCollections.observableArrayList(
                 "Projetor",
                 "Notebook",
@@ -137,5 +136,17 @@ public class FiltroReservasController implements Initializable {
 
             return null;
         }));
+    }
+
+    public void carregarFiltrosSalvos(FiltroReservaDTO filtro) {
+        if (filtro == null) return;
+
+        cbEquipamento.setValue(filtro.equipamento);
+        cbLocal.setValue(filtro.local);
+        dpDataInicio.setValue(filtro.dataInicio);
+        dpDataFim.setValue(filtro.dataFim);
+        txtHoraInicio.setText(filtro.horarioInicio);
+        txtHoraFim.setText(filtro.horarioFim);
+        cbEstado.setValue(filtro.status);
     }
 }

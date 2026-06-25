@@ -119,7 +119,11 @@ public class ReservasController implements Initializable, Filtravel {
             Parent root = loader.load();
 
             FiltroReservasController popupController = loader.getController();
-            popupController.setTelaPai(this); //
+            popupController.setTelaPai(this);
+
+            if (this.filtrosAvancados != null) {
+                popupController.carregarFiltrosSalvos(this.filtrosAvancados);
+            }
 
             Stage popupStage = new Stage();
             Stage donoDaJanela = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -160,76 +164,54 @@ public class ReservasController implements Initializable, Filtravel {
         String termoBusca = (campoBusca.getText() == null) ? "" : campoBusca.getText().toLowerCase().trim();
 
         dadosFiltrados.setPredicate(reserva -> {
-
-            if (filtrarApenasMinhas) {
-                if (reserva.getFuncionario() == null || !reserva.getFuncionario().equalsIgnoreCase(USUARIO_LOGADO)) {
-                    return false;
-                }
-            }
-
             if (!termoBusca.isEmpty()) {
                 boolean bateComTexto = false;
-                if (reserva.getFuncionario() != null && reserva.getFuncionario().toLowerCase().contains(termoBusca)) bateComTexto = true;
-                if (reserva.getTitulo() != null && reserva.getTitulo().toLowerCase().contains(termoBusca)) bateComTexto = true;
-                if (reserva.getEquipamento() != null && reserva.getEquipamento().toLowerCase().contains(termoBusca)) bateComTexto = true;
-                if (reserva.getLocal() != null && reserva.getLocal().toLowerCase().contains(termoBusca)) bateComTexto = true;
-                if (!bateComTexto) {
-                    return false;
-                }
+                if (reserva.getEquipamento() != null && reserva.getEquipamento().toLowerCase().contains(termoBusca))
+                    bateComTexto = true;
+                if (reserva.getLocal() != null && reserva.getLocal().toLowerCase().contains(termoBusca))
+                    bateComTexto = true;
+                if (!bateComTexto) return false;
             }
 
             if (filtrosAvancados != null) {
-
                 if (filtrosAvancados.equipamento != null && !filtrosAvancados.equipamento.isEmpty()) {
-                    if (reserva.getEquipamento() == null || !reserva.getEquipamento().equalsIgnoreCase(filtrosAvancados.equipamento)) {
+                    if (reserva.getEquipamento() == null || !reserva.getEquipamento().toLowerCase().contains(filtrosAvancados.equipamento.toLowerCase())) {
                         return false;
                     }
                 }
-
-                if (filtrosAvancados.local != null && !filtrosAvancados.local.isEmpty()) {
-                    if (reserva.getLocal() == null || !reserva.getLocal().equalsIgnoreCase(filtrosAvancados.local)) {
-                        return false;
-                    }
-                }
-
                 if (filtrosAvancados.status != null && !filtrosAvancados.status.isEmpty()) {
-                    if (reserva.getStatus() == null || !reserva.getStatus().equalsIgnoreCase(filtrosAvancados.status)) {
+                    if (reserva.getStatus() == null || !reserva.getStatus().toLowerCase().contains(filtrosAvancados.status.toLowerCase())) {
                         return false;
                     }
                 }
-
+                if (filtrosAvancados.local != null && !filtrosAvancados.local.isEmpty()) {
+                    if (reserva.getLocal() == null || !reserva.getLocal().equalsIgnoreCase(filtrosAvancados.local))
+                        return false;
+                }
                 if (filtrosAvancados.horarioInicio != null && !filtrosAvancados.horarioInicio.trim().isEmpty()) {
-                    if (reserva.getHorario() == null || reserva.getHorario().compareTo(filtrosAvancados.horarioInicio) < 0) {
+                    if (reserva.getHorario() == null || reserva.getHorario().compareTo(filtrosAvancados.horarioInicio) < 0)
                         return false;
-                    }
                 }
-
                 if (filtrosAvancados.horarioFim != null && !filtrosAvancados.horarioFim.trim().isEmpty()) {
-                    if (reserva.getHorario() == null || reserva.getHorario().compareTo(filtrosAvancados.horarioFim) > 0) {
+                    if (reserva.getHorario() == null || reserva.getHorario().compareTo(filtrosAvancados.horarioFim) > 0)
                         return false;
-                    }
                 }
-
                 if (filtrosAvancados.dataInicio != null || filtrosAvancados.dataFim != null) {
                     if (reserva.getData() == null) return false;
-
                     try {
                         String dataCompletaStr = reserva.getData() + "/" + java.time.Year.now().getValue();
                         java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("d/M/yyyy");
                         java.time.LocalDate dataReserva = java.time.LocalDate.parse(dataCompletaStr, formatter);
 
-                        if (filtrosAvancados.dataInicio != null && dataReserva.isBefore(filtrosAvancados.dataInicio)) {
+                        if (filtrosAvancados.dataInicio != null && dataReserva.isBefore(filtrosAvancados.dataInicio))
                             return false;
-                        }
-                        if (filtrosAvancados.dataFim != null && dataReserva.isAfter(filtrosAvancados.dataFim)) {
+                        if (filtrosAvancados.dataFim != null && dataReserva.isAfter(filtrosAvancados.dataFim))
                             return false;
-                        }
                     } catch (Exception e) {
                         return false;
                     }
                 }
             }
-
             return true;
         });
     }
