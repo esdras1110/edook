@@ -113,7 +113,7 @@ CREATE TABLE UTILIZA (
 
 	CONSTRAINT fk_utiliza_equipamento
 		FOREIGN KEY (prefixo_equipamento, numero_equipamento) REFERENCES EQUIPAMENTO(prefixo, numero)
-			ON DELETE SET NULL ON UPDATE CASCADE
+			ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -283,7 +283,7 @@ INSERT INTO RESERVA (
     'Sala de Reuniões', 
     '14:00:00', 
     '16:00:00', 
-    '2026-08-24', 
+    '2026-06-24', 
     'Cancelada',
     '12345678901'  -- CPF do Carlos Silva (Administrativo)
 );

@@ -35,5 +35,18 @@ public interface UtilizaRepository
             @Param("fim") LocalTime fim
     );
 
+    @Query("""
+        SELECT COUNT(u) > 0
+        FROM Utiliza u
+        WHERE
+            u.equipamento.id.prefixo = :prefixo
+            AND u.equipamento.id.numero = :numero
+            AND u.reserva.status = 'Pendente'
+    """)
+    boolean existeReservaPendente(
+            @Param("prefixo") String prefixo,
+            @Param("numero") Short numero
+    );
+
     List<Utiliza> findByReservaId(Integer reservaId);
 }
