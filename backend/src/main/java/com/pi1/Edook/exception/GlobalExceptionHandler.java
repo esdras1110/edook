@@ -2,7 +2,9 @@ package com.pi1.Edook.exception;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -46,4 +48,18 @@ public class GlobalExceptionHandler{
 
         return ResponseEntity.badRequest().body(response);
     }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleJsonError(HttpMessageNotReadableException ex) {
+    ErrorResponse error = new ErrorResponse(
+        "Erro ao interpretar JSON",
+        HttpStatus.BAD_REQUEST.value(),
+        HttpStatus.BAD_REQUEST.getReasonPhrase(),
+        List.of(
+                "Verifique o formato dos campos enviados. Datas devem estar no formato yyyy-MM-dd."
+        )
+    );
+
+    return ResponseEntity.badRequest().body(error);
+}
 }
