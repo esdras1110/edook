@@ -41,10 +41,10 @@ public class CadastroController implements Initializable {
     private TextField campoEmail;
 
     @FXML
-    private TextField campoSenha;
+    private PasswordField campoSenha;
 
     @FXML
-    private TextField campoConfirmacaoSenha;
+    private PasswordField campoConfirmacaoSenha;
 
     @FXML
     private Label lblErro;
@@ -137,6 +137,22 @@ public class CadastroController implements Initializable {
             lblErro.setStyle("-fx-text-fill: red;");
             return false;
         }
+
+        String senhaRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*(),.?\":{}|<>])(?=.{6,}).+$";
+        if (!senha.matches(senhaRegex)) {
+            lblErro.setText("Senha inválida, deve conter no mínimo 6 caracteres, 1 letra maiúscula, 1 letra minúscula e 1 caractere especial!");
+            lblErro.setStyle("-fx-text-fill: red;");
+            return false;
+        }
+
+        if (!senha.equals(confirmacaoSenha)) {
+            lblErro.setText("Senha e confirmação de senha não coincidem!");
+            lblErro.setStyle("-fx-text-fill: red;");
+            return false;
+        }
+
+        lblErro.setText("Tudo certo!");
+        lblErro.setStyle("-fx-text-fill: green;");
 
         return true;
     }
