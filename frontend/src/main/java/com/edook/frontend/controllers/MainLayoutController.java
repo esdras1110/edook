@@ -1,5 +1,6 @@
 package com.edook.frontend.controllers;
 
+import com.edook.frontend.session.UserSession;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -39,6 +40,14 @@ public class MainLayoutController {
     @FXML
     public void initialize() {
         botoesMenu = Arrays.asList(btnInicio, btnReservas, btnCadastro, btnUsuario);
+
+        String cargoUsuario = UserSession.getInstance().getCargo();
+
+        if ("DOCENTE".equalsIgnoreCase(cargoUsuario)) {
+            btnCadastro.setVisible(false);
+            btnCadastro.setManaged(false);
+            System.out.println("Acesso Docente: Botão de Cadastro ocultado com sucesso.");
+        }
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/Inicio-view.fxml"));

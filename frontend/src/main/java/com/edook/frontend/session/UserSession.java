@@ -3,9 +3,11 @@ package com.edook.frontend.session;
 public class UserSession {
     private static UserSession instance;
 
+    private String nome;
     private String email;
     private String cpf;
     private String cargo;
+    private String token;
 
     private UserSession() {}
 
@@ -16,9 +18,15 @@ public class UserSession {
         return instance;
     }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getNome() { return nome; }
+
+    public void setNome(String nome) { this.nome = nome; }
+
+    public String getToken() { return token; }
+
+    public void setToken(String token) { this.token = token; }
+
+    public String getEmail() { return email; }
 
     public void setEmail(String email) {
         this.email = email;

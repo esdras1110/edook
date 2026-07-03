@@ -1,6 +1,7 @@
 package com.edook.frontend.controllers;
 
 import com.edook.frontend.session.UserSession;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,11 +13,17 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import javafx.application.Platform;
 import java.util.Random;
 
 public class LoginController {
+    private static final HttpClient httpClient = HttpClient.newHttpClient();
+
     @FXML
     private TextField campoTextLogin;
 
@@ -77,7 +84,9 @@ public class LoginController {
         }
 
         String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
-        if (!emailCPF.matches(emailRegex)) {
+        String cpfRegex = "^\\d{11}$";
+
+        if (!emailCPF.matches(emailRegex) && !emailCPF.matches(cpfRegex)) {
             labelErroLogin.setText("Por favor, insira um e-mail válido ou CPF.");
             labelErroLogin.setStyle("-fx-text-fill: red;");
             return;
@@ -89,27 +98,89 @@ public class LoginController {
             return;
         }
 
-        labelErroLogin.setText("Enviando dados...");
-        labelErroLogin.setStyle("-fx-text-fill: green;");
+        labelErroLogin.setText("Autenticando...");
+        labelErroLogin.setStyle("-fx-text-fill: #1a56db;");
 
-//        UserSession.getInstance().setEmail(emailDoBanco);
-//        UserSession.getInstance().setCpf(cpfDoBanco);
-//        UserSession.getInstance().setCargo(cargoDoBanco);
+        String jsonBody = String.format("{\"identificador\":\"%s\",\"senha\":\"%s\"}", emailCPF, senha);
 
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/auth/login"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
+
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(response -> {
+                    if (response.statusCode() == 200) {
+                        String respostaJson = response.body();
+                        System.out.println("Login bem-sucedido! Dados: " + respostaJson);
+
+                        String nome = extrairValorJson(respostaJson, "nome");
+                        String cargo = extrairValorJson(respostaJson, "cargo");
+                        String token = extrairValorJson(respostaJson, "token");
+
+                        UserSession sessao = UserSession.getInstance();
+                        sessao.setNome(nome);
+                        sessao.setCargo(cargo);
+                        sessao.setToken(token);
+
+                        if (emailCPF.contains("@")) {
+                            sessao.setEmail(emailCPF);
+                        } else {
+                            sessao.setCpf(emailCPF);
+                        }
+
+                        System.out.println("Sessão Iniciada: " + sessao.getNome() + " [" + sessao.getCargo() + "]");
+
+                        Platform.runLater(() -> {
+                            try {
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/MainLayout-view.fxml"));
+                                Parent root = loader.load();
+                                Stage mainStage = new Stage();
+                                mainStage.setTitle("edook - Sistema de Reserva de Equipamentos");
+                                Scene scene = new Scene(root, 1440, 1024);
+                                scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
+                                mainStage.setScene(scene);
+                                mainStage.show();
+
+                                Stage loginStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                                loginStage.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                labelErroLogin.setText("Erro ao carregar o layout principal.");
+                                labelErroLogin.setStyle("-fx-text-fill: red;");
+                            }
+                        });
+
+                    } else if (response.statusCode() == 403 || response.statusCode() == 401 || response.statusCode() == 404) {
+                        Platform.runLater(() -> {
+                            labelErroLogin.setText("CPF/E-mail ou senha incorretos.");
+                            labelErroLogin.setStyle("-fx-text-fill: red;");
+                        });
+                    } else {
+                        Platform.runLater(() -> {
+                            labelErroLogin.setText("Erro no servidor. Tente novamente mais tarde.");
+                            labelErroLogin.setStyle("-fx-text-fill: red;");
+                        });
+                    }
+                })
+                .exceptionally(e -> {
+                    Platform.runLater(() -> {
+                        labelErroLogin.setText("Não foi possível conectar ao servidor.");
+                        labelErroLogin.setStyle("-fx-text-fill: red;");
+                    });
+                    return null;
+                });
+    }
+
+    private String extrairValorJson(String json, String chave) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/MainLayout-view.fxml"));
-            Parent root = loader.load();
-            Stage mainStage = new Stage();
-            mainStage.setTitle("edook - Sistema de Reserva de Equipamentos");
-            Scene scene = new Scene(root, 1440, 1024);
-            scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
-            mainStage.setScene(scene);
-            mainStage.show();
-            Stage loginStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            loginStage.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Erro ao carregar a tela principal: " + e.getMessage());
+            String padrao = "\"" + chave + "\":\"";
+            int inicio = json.indexOf(padrao) + padrao.length();
+            int fim = json.indexOf("\"", inicio);
+            return json.substring(inicio, fim);
+        } catch (Exception e) {
+            return "";
         }
     }
 

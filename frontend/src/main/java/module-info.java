@@ -1,6 +1,7 @@
 module com.edook.frontend {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.net.http;
 
 
     opens com.edook.frontend to javafx.fxml;

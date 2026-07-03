@@ -139,7 +139,7 @@ INSERT INTO FUNCIONARIO (
     '11', 
     '999998888', 
     'Administrativo', 
-    '$2b$12$K196WbXWExKfZU.r10G9v.bNfeH5I/qH3.0e9N5Xw9pBeG7E5Z/Ki', -- Senha original: Admin@2026
+    '$2a$10$x51NJQMK8v/E2u0MFBVuJ.bLquf3kPffyRVuVURsY0SbzNS9jbvYu', -- Senha original: Admin@2026
     NULL,
     TRUE,
     NULL, 
@@ -168,7 +168,7 @@ INSERT INTO FUNCIONARIO (
     '21', 
     '988887777', 
     'Docente', 
-    '$2b$12$R9Z1XmY7VbK1O8gZ3wPqEeL2N4F5J6H7I8K9L0M1N2O3P4Q5R6S7T', -- Senha original: Prof@2026
+    '$2a$10$NGoIN9TjOg6wyTRO.9eYJOzTyjQGOU/fbp9jx7x2yADmdy8LQr9Rq', -- Senha original: Prof@2026
     '12345678901',
     TRUE,
     NULL, 
