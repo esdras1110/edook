@@ -4,6 +4,7 @@ import com.pi1.Edook.model.Funcionario;
 import com.pi1.Edook.repository.FuncionarioRepository;
 import com.pi1.Edook.dto.FuncionarioCreateDto;
 import com.pi1.Edook.dto.FuncionarioResponseDto;
+import com.pi1.Edook.dto.ReenviarConfirmacaoDto;
 import com.pi1.Edook.service.EmailService;
 import com.pi1.Edook.service.FuncionarioService;
 
@@ -16,9 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -38,10 +39,10 @@ public class FuncionarioController {
 
     @PostMapping
     public ResponseEntity<FuncionarioResponseDto> criar(@Valid @RequestBody FuncionarioCreateDto dto) {
-
+        System.out.println("============================================================================");
         // chama a função para salvar no banco
         Funcionario f = serviceFuncionario.criar(dto);
-        serviceEmail.enviarConfirmacaoEmail(f.getEmail(), f.getTokenVerificacao());
+        serviceEmail.enviarConfirmacaoEmail(f.getEmail(), f.getCodigoVerificacao());
 
         FuncionarioResponseDto response = new FuncionarioResponseDto();
 
@@ -56,48 +57,58 @@ public class FuncionarioController {
                 .body(response);
     }
 
-    @GetMapping("/confirmar-email")
-    public ResponseEntity<String> confirmarEmail(@RequestParam String token){
-        Funcionario funcionario = repository.findByTokenVerificacao(token);
+    @PutMapping("/confirmar-email")
+    public ResponseEntity<String> confirmarEmail(@Valid @RequestBody ReenviarConfirmacaoDto dto){
+        Funcionario funcionario = repository.findByEmail(dto.getEmail());
 
         if(funcionario == null){
-            return ResponseEntity.status(400).body("Token inválido");
+            return ResponseEntity.status(400).body("Email não encontrado");
         }
 
-        if(funcionario.getTokenExpiracao().isBefore(LocalDateTime.now())){
+        if (!dto.getCodigo().equals(funcionario.getCodigoVerificacao())) {
             return ResponseEntity.badRequest()
-                    .body("Token expirado");
+                    .body("Código inválido");
+        }
+
+        if(funcionario.getCodigoExpiracao().isBefore(LocalDateTime.now())){
+            return ResponseEntity.badRequest()
+                    .body("Código expirado");
         }
 
         funcionario.setEmailVerificado(true);
-        funcionario.setTokenVerificacao(null);
+        funcionario.setCodigoVerificacao(null);
         repository.save(funcionario);
         return ResponseEntity.ok("Email confirmado com sucesso");
     }
 
     @PostMapping("/reenviar-confirmacao")
-    public ResponseEntity<String> reenviarConfirmacao(@RequestParam String email){
-        Funcionario f = repository.findByEmail(email);
+    public ResponseEntity<String> reenviarConfirmacao(@Valid @RequestBody ReenviarConfirmacaoDto dto) {
 
-        if(f == null){
-            return ResponseEntity.status(400).body("Email não encontrado");
+        Funcionario f = repository.findByEmail(dto.getEmail());
+
+        if (f == null) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Email não encontrado");
         }
 
         if (f.isEmailVerificado()) {
-            return ResponseEntity.badRequest()
+            return ResponseEntity
+                    .badRequest()
                     .body("Email já confirmado");
         }
 
-        String token = UUID.randomUUID().toString();
-        f.setTokenVerificacao(token);
-        f.setTokenExpiracao(LocalDateTime.now().plusHours(24));
+        f.setCodigoVerificacao(dto.getCodigo());
+        f.setCodigoExpiracao(LocalDateTime.now().plusHours(24));
 
         repository.save(f);
 
-        serviceEmail.enviarConfirmacaoEmail(email, token);
+        serviceEmail.enviarConfirmacaoEmail(
+                f.getEmail(),
+                f.getCodigoVerificacao()
+        );
 
-        return ResponseEntity.ok().body("Novo email de confirmação enviado");
-
+        return ResponseEntity.ok("Novo código de confirmação enviado");
     }
 
 }

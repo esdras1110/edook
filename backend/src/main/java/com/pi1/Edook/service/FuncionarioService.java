@@ -1,7 +1,6 @@
 package com.pi1.Edook.service;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -76,10 +75,9 @@ public class FuncionarioService {
         f.setMatricula(dto.getMatricula());
         
         f.setEmailVerificado(false);
-        String token = UUID.randomUUID().toString();
 
-        f.setTokenVerificacao(token);
-        f.setTokenExpiracao(LocalDateTime.now().plusHours(24));
+        f.setCodigoVerificacao(dto.getCodigoVerificacao());
+        f.setCodigoExpiracao(LocalDateTime.now().plusHours(24));
         return repository.save(f);
     }
 }

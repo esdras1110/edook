@@ -35,6 +35,8 @@ public interface UtilizaRepository
             @Param("fim") LocalTime fim
     );
 
+
+    // busca se o equipamento está sendo utilizando naquele intervalo
     @Query("""
         SELECT COUNT(u) > 0
         FROM Utiliza u

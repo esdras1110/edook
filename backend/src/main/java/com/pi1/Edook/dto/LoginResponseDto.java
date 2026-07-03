@@ -10,6 +10,7 @@ import lombok.Setter;
 // utilizado para retornar apenas dados essenciais 
 public class LoginResponseDto {
     private String nome;
+    private String cpf;
     private String cargo;
     private String token;
 }

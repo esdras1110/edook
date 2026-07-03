@@ -50,7 +50,10 @@ public class ReservaService {
         this.utilizaRepository = utilizaRepository;
     }
 
+
+    // Cadastrar reserva
     public Reserva criar(ReservaCreateDto dto) {
+        // valido os dados da reserva
         validarDados(dto);
 
         Funcionario funcionario =
@@ -61,7 +64,7 @@ public class ReservaService {
                                 HttpStatus.NOT_FOUND
                         ));
 
-        
+        // verifica cada equipamento que quero reservar - se existe, se tem algum repetido, se tem choque de horario
         for (EquipamentoReservaDto dtoEquip : dto.getEquipamentos()) {
 
             EquipamentoId id = new EquipamentoId(
@@ -84,8 +87,10 @@ public class ReservaService {
         reserva.setStatus("Pendente");
         reserva.setFuncionario(funcionario);
 
+        // salvo a reserva na tabela
         reserva = reservaRepository.save(reserva);
 
+        // salvo equipamento por equipamento na tabela de utiliza
         for (Equipamento equipamento : equipamentos) {
 
             Utiliza utiliza = new Utiliza();
@@ -108,6 +113,7 @@ public class ReservaService {
     }
 
     private void validarDados(ReservaCreateDto dto){
+        // verifica se o horario faz sentido
         if (!dto.getHorarioFim().isAfter(dto.getHorarioInicio())) {
             throw new BusinessException(
                     "Horário final deve ser maior que o horário inicial",
@@ -115,6 +121,7 @@ public class ReservaService {
             );
         }
 
+        // verifica se a data ja passou
         if (dto.getDia().isBefore(LocalDate.now())) {
             throw new BusinessException(
                     "Não é possível reservar para uma data passada",
@@ -122,6 +129,7 @@ public class ReservaService {
             );
         }
 
+        // verifica se equipamentos é null
         if (dto.getEquipamentos() == null ||
                 dto.getEquipamentos().isEmpty()) {
 
@@ -133,6 +141,7 @@ public class ReservaService {
     }
 
     private Equipamento validarEquipamento(EquipamentoReservaDto dtoEquip, EquipamentoId id, ReservaCreateDto dto){
+        // verifico se o equipamento existe
         Equipamento equipamento = equipamentoRepository.findById(id)
                     .orElseThrow(() -> new BusinessException(
                                     "Equipamento não encontrado: "
@@ -143,33 +152,37 @@ public class ReservaService {
 
         String chave = dtoEquip.getPrefixo() + "-" + dtoEquip.getNumero();
 
+        // verifico se eu não estou salvando nenhum repetido
         if (!equipamentosUnicos.add(chave)) {
         throw new BusinessException(
                 "Equipamento repetido na reserva",
                 HttpStatus.BAD_REQUEST
         );
         }
+
+        // verifico os choques de horarios
         boolean conflito = utilizaRepository.existeConflito(
-                        dtoEquip.getPrefixo(),
-                        dtoEquip.getNumero(),
-                        dto.getDia(),
-                        dto.getHorarioInicio(),
-                        dto.getHorarioFim()
-                );
+            dtoEquip.getPrefixo(),
+            dtoEquip.getNumero(),
+            dto.getDia(),
+            dto.getHorarioInicio(),
+            dto.getHorarioFim()
+        );
 
         if (conflito) {
         throw new BusinessException(
-                "Equipamento "
-                        + dtoEquip.getPrefixo()
-                        + dtoEquip.getNumero()
-                        + " já está reservado nesse horário",
-                HttpStatus.BAD_REQUEST
+            "Equipamento "
+                    + dtoEquip.getPrefixo()
+                    + dtoEquip.getNumero()
+                    + " já está reservado nesse horário",
+            HttpStatus.BAD_REQUEST
         );
         }
 
         return equipamento;
     }
 
+    // atualiza apenas as reservas que são pendentes para concluida caso o horario ja tenha passado
     private void atualizarReservasConcluidas() {
 
         List<Reserva> reservas = reservaRepository.findByStatus("Pendente");
@@ -197,8 +210,7 @@ public class ReservaService {
     	atualizarReservasConcluidas();
 
     	return reservaRepository.buscarProximasReservas(
-            LocalDate.now(),
-            LocalTime.now()
+            LocalDate.now()
     	);
 	}
 

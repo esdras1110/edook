@@ -19,16 +19,11 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
         SELECT r
         FROM Reserva r
         WHERE
-            r.dia > :hoje
-            OR (
-                r.dia = :hoje
-                AND r.horarioFim >= :agora
-            )
+            r.dia >= :hoje
         
         ORDER BY r.dia, r.horarioInicio
     """)
     List<Reserva> buscarProximasReservas(
-        @Param("hoje") LocalDate hoje,
-        @Param("agora") LocalTime agora
+        @Param("hoje") LocalDate hoje
     );
 }

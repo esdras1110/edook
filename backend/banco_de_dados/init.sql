@@ -1,6 +1,6 @@
 
 CREATE TABLE FUNCIONARIO (
-	matricula VARCHAR(20),
+	matricula Integer,
 	cpf VARCHAR(11),
 	nome VARCHAR(100),
 	email VARCHAR(100) NOT NULL,
@@ -10,8 +10,8 @@ CREATE TABLE FUNCIONARIO (
 	senha VARCHAR(100) NOT NULL,
 	cpf_cadastro CHAR(11) DEFAULT NULL,
 	email_verificado BOOLEAN DEFAULT FALSE,
-	token_verificacao VARCHAR(255),
-	token_expiracao TIMESTAMP,
+	codigo_verificacao VARCHAR(255),
+	codigo_expiracao TIMESTAMP,
 
 	CONSTRAINT pk_cpf_funcionario
 		PRIMARY KEY (cpf),
@@ -129,10 +129,10 @@ INSERT INTO FUNCIONARIO (
     senha, 
     cpf_cadastro, 
     email_verificado, 
-    token_verificacao, 
-    token_expiracao
+    codigo_verificacao, 
+    codigo_expiracao
 ) VALUES (
-    'M12345', 
+    '12345', 
     '12345678901', 
     'Carlos Silva', 
     'carlos.silva@escola.com', 
@@ -158,10 +158,10 @@ INSERT INTO FUNCIONARIO (
     senha, 
     cpf_cadastro, 
     email_verificado, 
-    token_verificacao, 
-    token_expiracao
+    codigo_verificacao, 
+    codigo_expiracao
 ) VALUES (
-    'M67890', 
+    '67890', 
     '98765432100', 
     'Ana Souza', 
     'ana.souza@escola.com', 

@@ -32,7 +32,7 @@ public class Funcionario {
 
     // não permite valor nulo e precisa ser unico
     @Column(unique = true, nullable = false)
-    private String matricula;
+    private Integer matricula;
 
     @Column(nullable = false)
     private String nome;
@@ -54,7 +54,7 @@ public class Funcionario {
 
     private boolean emailVerificado;
 
-    private String tokenVerificacao;
+    private String codigoVerificacao;
 
-    private LocalDateTime tokenExpiracao;
+    private LocalDateTime codigoExpiracao;
 }

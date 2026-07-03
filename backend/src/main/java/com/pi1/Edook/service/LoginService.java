@@ -62,6 +62,7 @@ public class LoginService {
         // aqui a senha bateu com a senha do banco de dados e envia um dto de resposta bem sucedida para o controller
         return new LoginResponseDto(
                 funcionario.getNome(),
+                funcionario.getCpf(),
                 funcionario.getCargo(),
                 "LOGIN_EFETUADO_COM_SUCESSO"
         );

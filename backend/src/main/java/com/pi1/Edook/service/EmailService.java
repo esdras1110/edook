@@ -18,43 +18,33 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    public void enviarConfirmacaoEmail(String para, String token) {
-
-        String link = baseUrl + "/funcionarios/confirmar-email?token=" + token;
+    public void enviarConfirmacaoEmail(String para, String codigo) {
 
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
             helper.setTo(para);
-            helper.setSubject("Confirmação de Email");
+            helper.setSubject("Código de Verificação");
 
             String html = """
                 <div style="font-family: Arial; padding: 20px;">
-                    <h2 style="color:#2c3e50;">Confirmação de Conta</h2>
+                    <h2>Código de Verificação</h2>
 
-                    <p>Obrigado por se cadastrar.</p>
+                    <p>Seu código de verificação é:</p>
 
-                    <p>Clique no botão abaixo para confirmar seu email:</p>
+                    <h1 style="
+                        background:#3498db;
+                        color:white;
+                        display:inline-block;
+                        padding:10px 20px;
+                        border-radius:8px;">
+                        %s
+                    </h1>
 
-                    <a href="%s"
-                       style="
-                            display:inline-block;
-                            padding:12px 20px;
-                            background:#3498db;
-                            color:#fff;
-                            text-decoration:none;
-                            border-radius:6px;
-                            margin-top:10px;
-                       ">
-                       Confirmar Email
-                    </a>
-
-                    <p style="margin-top:20px; font-size:12px; color:gray;">
-                        Se você não criou essa conta, ignore este email.
-                    </p>
+                    <p>Digite esse código no aplicativo para concluir o cadastro.</p>
                 </div>
-            """.formatted(link);
+            """.formatted(codigo);
 
             helper.setText(html, true);
 

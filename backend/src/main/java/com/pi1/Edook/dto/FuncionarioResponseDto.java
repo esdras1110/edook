@@ -8,5 +8,5 @@ public class FuncionarioResponseDto {
     private String cpf;
     private String email;
     private String cargo;
-    private String matricula;
+    private Integer matricula;
 }

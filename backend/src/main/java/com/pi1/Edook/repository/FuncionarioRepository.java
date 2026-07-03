@@ -5,10 +5,10 @@ import com.pi1.Edook.model.Funcionario;
 
 public interface FuncionarioRepository extends JpaRepository<Funcionario, String> {
     boolean existsByEmail(String email);   
-    boolean existsByMatricula(String matricula);   
+    boolean existsByMatricula(Integer matricula);   
     boolean existsByCpf(String cpf);
     boolean existsByEmailAndEmailVerificadoTrue(String email);
-    Funcionario findByTokenVerificacao(String token);
+    Funcionario findByCodigoVerificacao(String token);
     Funcionario findByEmail(String email);
     Funcionario findByCpf(String cpf);
 }

@@ -1,5 +1,7 @@
 package com.pi1.Edook.service;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -117,5 +119,9 @@ public class EquipamentoService {
         }
 
         equipamentoRepository.delete(equipamento);
+    }
+
+    public List<Equipamento> listar() {
+        return equipamentoRepository.listarOrdenados();
     }
 }
