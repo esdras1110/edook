@@ -10,6 +10,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -40,19 +41,7 @@ public class InicioController implements Initializable, Filtravel {
     private TableView<ReservaResponseDTO> tabelaInicio;
 
     @FXML
-    private TableColumn<ReservaResponseDTO, String> colData;
-
-    @FXML
-    private TableColumn<ReservaResponseDTO, String> colHorario;
-
-    @FXML
-    private TableColumn<ReservaResponseDTO, String> colEquipamento;
-
-    @FXML
-    private TableColumn<ReservaResponseDTO, String> colLocal;
-
-    @FXML
-    private TableColumn<ReservaResponseDTO, String> colStatus;
+    private TableColumn<ReservaResponseDTO, String> colData, colHorario, colEquipamento, colLocal, colStatus;
 
     @FXML
     private ListView<ReservaResponseDTO> listaLembretes;
@@ -227,6 +216,45 @@ public class InicioController implements Initializable, Filtravel {
 
         } catch (java.io.IOException e) {
             System.err.println("Erro ao abrir o pop-up de filtros.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void onClickAdicionarReserva(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/CadastroReserva-view.fxml"));
+            Parent root = loader.load();
+
+            CadastroReservaController popupController = loader.getController();
+
+            popupController.setOnCadastroSucesso(() -> {
+                buscarReservas();
+            });
+
+            Stage popupStage = new Stage();
+            Stage donoDaJanela = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            Parent rootPrincipal = donoDaJanela.getScene().getRoot();
+
+            javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(15);
+            rootPrincipal.setEffect(blur);
+
+            popupStage.initOwner(donoDaJanela);
+            popupStage.initModality(javafx.stage.Modality.NONE);
+            popupStage.initStyle(javafx.stage.StageStyle.TRANSPARENT);
+
+            Scene scene = new Scene(root);
+            scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
+            scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
+
+            popupStage.setScene(scene);
+            popupStage.centerOnScreen();
+            popupStage.showAndWait();
+
+            rootPrincipal.setEffect(null);
+
+        } catch (java.io.IOException e) {
+            System.err.println("Erro ao abrir o pop-up de Adicionar Reserva.");
             e.printStackTrace();
         }
     }

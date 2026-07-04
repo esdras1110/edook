@@ -14,25 +14,13 @@ import java.util.ResourceBundle;
 
 public class FiltroReservasController implements Initializable {
     @FXML
-    private ComboBox<String> cbEquipamento;
+    private ComboBox<String> cbEquipamento, cbLocal, cbEstado;
 
     @FXML
-    private ComboBox<String> cbLocal;
+    private DatePicker dpDataInicio, dpDataFim;
 
     @FXML
-    private ComboBox<String> cbEstado;
-
-    @FXML
-    private DatePicker dpDataInicio;
-
-    @FXML
-    private DatePicker dpDataFim;
-
-    @FXML
-    private TextField txtHoraInicio;
-
-    @FXML
-    private TextField txtHoraFim;
+    private TextField txtHoraInicio, txtHoraFim;
 
     private Filtravel telaPai;
 
@@ -55,11 +43,16 @@ public class FiltroReservasController implements Initializable {
         ));
 
         cbLocal.setItems(javafx.collections.FXCollections.observableArrayList(
-                "Sala 1 (9°)",
-                "Lab 3",
-                "Sala de Robótica",
-                "Auditório",
-                "Mini Auditório"
+                "Sala 1",
+                "Sala 2",
+                "Sala 3",
+                "Sala 4",
+                "Sala 5",
+                "Sala 6",
+                "Sala 7",
+                "Sala 8",
+                "Sala 9",
+                "Giroteca"
         ));
 
         cbEstado.setItems(javafx.collections.FXCollections.observableArrayList(
