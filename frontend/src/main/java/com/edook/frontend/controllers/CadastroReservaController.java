@@ -210,13 +210,12 @@ public class CadastroReservaController {
 
                                 SucessoCadastroReservaController controller = loader.getController();
 
-                                // Quando ele clicar em finalizar na tela de sucesso, fechamos a tela de cadastro
                                 controller.setOnFinalizar(() -> {
                                     Stage stage = (Stage) mbEquipamentos.getScene().getWindow();
                                     stage.close();
 
                                     if (onCadastroSucesso != null) {
-                                        onCadastroSucesso.run(); // Atualiza a tabela no InicioController
+                                        onCadastroSucesso.run();
                                     }
                                 });
 
@@ -224,12 +223,22 @@ public class CadastroReservaController {
                                 popupStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
                                 popupStage.initStyle(javafx.stage.StageStyle.TRANSPARENT);
 
+                                Stage donoDaJanela = (Stage) mbEquipamentos.getScene().getWindow();
+                                javafx.scene.Parent rootCadastro = donoDaJanela.getScene().getRoot();
+
+                                javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(15);
+                                rootCadastro.setEffect(blur);
+
+                                popupStage.initOwner(donoDaJanela);
+
                                 javafx.scene.Scene scene = new javafx.scene.Scene(root);
                                 scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
                                 popupStage.setScene(scene);
                                 popupStage.centerOnScreen();
+
                                 popupStage.showAndWait();
 
+                                rootCadastro.setEffect(null);
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 lblErro.setText("Reserva criada, mas erro ao abrir pop-up de sucesso.");
