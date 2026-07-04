@@ -83,7 +83,7 @@
             </VBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="24.0">
                <children>
-                  <Button fx:id="btnAdicionarReserva" mnemonicParsing="false" styleClass="botao" text="  Adicionar Reserva" textFill="#f9fafb">
+                  <Button fx:id="btnAdicionarReserva" mnemonicParsing="false" onAction="#onClickAdicionarReserva" styleClass="botao" text="  Adicionar Reserva" textFill="#f9fafb">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>

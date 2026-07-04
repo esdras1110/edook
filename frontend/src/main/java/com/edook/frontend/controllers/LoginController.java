@@ -114,7 +114,6 @@ public class LoginController {
                 .thenAccept(response -> {
                     if (response.statusCode() == 200) {
                         String respostaJson = response.body();
-                        System.out.println("Login bem-sucedido! Dados: " + respostaJson);
 
                         try {
                             ObjectMapper objectMapper = new ObjectMapper();
@@ -129,8 +128,6 @@ public class LoginController {
                             if (emailCPF.contains("@")) {
                                 sessao.setEmail(emailCPF);
                             }
-
-                            System.out.println("Sessão Iniciada: " + sessao.getNome() + " [" + sessao.getCargo() + "]");
 
                             Platform.runLater(() -> {
                                 try {

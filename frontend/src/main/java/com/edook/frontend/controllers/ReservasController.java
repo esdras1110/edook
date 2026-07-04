@@ -44,25 +44,7 @@ public class ReservasController implements Initializable, Filtravel {
     private TableView<ReservaResponseDTO> tabelaReservas;
 
     @FXML
-    private TableColumn<ReservaResponseDTO, String> colFuncionario;
-
-    @FXML
-    private TableColumn<ReservaResponseDTO, String> colTitulo;
-
-    @FXML
-    private TableColumn<ReservaResponseDTO, String> colData;
-
-    @FXML
-    private TableColumn<ReservaResponseDTO, String> colHorario;
-
-    @FXML
-    private TableColumn<ReservaResponseDTO, String> colEquipamento;
-
-    @FXML
-    private TableColumn<ReservaResponseDTO, String> colLocal;
-
-    @FXML
-    private TableColumn<ReservaResponseDTO, String> colStatus;
+    private TableColumn<ReservaResponseDTO, String> colFuncionario, colTitulo, colData, colHorario, colEquipamento, colLocal, colStatus;
 
     private final ObservableList<ReservaResponseDTO> listaReservas = FXCollections.observableArrayList();
     private FilteredList<ReservaResponseDTO> listaFiltrada;
@@ -117,16 +99,6 @@ public class ReservasController implements Initializable, Filtravel {
 
                             Platform.runLater(() -> {
                                 listaReservas.setAll(todasReservas);
-
-                                String cpfUsuarioLogado = UserSession.getInstance().getCpf();
-                                if (filtrarApenasMinhas) {
-                                    List<ReservaResponseDTO> minhasReservas = todasReservas.stream()
-                                            .filter(r -> r.getCpfFuncionario() != null &&
-                                                    r.getCpfFuncionario().equals(cpfUsuarioLogado))
-                                            .toList();
-
-                                    listaReservas.setAll(minhasReservas);
-                                }
                             });
 
                         } catch (Exception e) {
@@ -151,6 +123,7 @@ public class ReservasController implements Initializable, Filtravel {
 
     private void atualizarFiltros() {
         String textoBusca = campoBusca.getText() == null ? "" : campoBusca.getText().toLowerCase();
+        String cpfUsuarioLogado = UserSession.getInstance().getCpf();
 
         listaFiltrada.setPredicate(reserva -> {
             // 1. Regra da Barra de Pesquisa
@@ -164,6 +137,12 @@ public class ReservasController implements Initializable, Filtravel {
 
             // Se já reprovou na busca de texto, não precisa nem checar o avançado
             if (!passaBusca) return false;
+
+            if (filtrarApenasMinhas) {
+                if (reserva.getCpfFuncionario() == null || !reserva.getCpfFuncionario().equals(cpfUsuarioLogado)) {
+                    return false; // Reprova se não for do usuário logado
+                }
+            }
 
             // 2. Regras do Filtro Avançado (Pop-up)
             if (filtrosAvancados != null) {
@@ -254,6 +233,45 @@ public class ReservasController implements Initializable, Filtravel {
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Erro ao carregar o pop-up de filtros: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    void onClickAdicionarReserva(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/CadastroReserva-view.fxml"));
+            Parent root = loader.load();
+
+            CadastroReservaController popupController = loader.getController();
+
+            popupController.setOnCadastroSucesso(() -> {
+                buscarReservas();
+            });
+
+            Stage popupStage = new Stage();
+            Stage donoDaJanela = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            Parent rootPrincipal = donoDaJanela.getScene().getRoot();
+
+            javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(15);
+            rootPrincipal.setEffect(blur);
+
+            popupStage.initOwner(donoDaJanela);
+            popupStage.initModality(javafx.stage.Modality.NONE);
+            popupStage.initStyle(javafx.stage.StageStyle.TRANSPARENT);
+
+            Scene scene = new Scene(root);
+            scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
+            scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
+
+            popupStage.setScene(scene);
+            popupStage.centerOnScreen();
+            popupStage.showAndWait();
+
+            rootPrincipal.setEffect(null);
+
+        } catch (java.io.IOException e) {
+            System.err.println("Erro ao abrir o pop-up de Adicionar Reserva.");
+            e.printStackTrace();
         }
     }
 }
