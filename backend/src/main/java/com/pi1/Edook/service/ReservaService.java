@@ -35,9 +35,6 @@ public class ReservaService {
     private final EquipamentoRepository equipamentoRepository;
     private final UtilizaRepository utilizaRepository;
 
-    private List<Equipamento> equipamentos = new ArrayList<>();
-    private Set<String> equipamentosUnicos = new HashSet<>();
-
     public ReservaService(
             ReservaRepository reservaRepository,
             FuncionarioRepository funcionarioRepository,
@@ -55,6 +52,8 @@ public class ReservaService {
     public Reserva criar(ReservaCreateDto dto) {
         // valido os dados da reserva
         validarDados(dto);
+
+		List<Equipamento> equipamentos = new ArrayList<>();
 
         Funcionario funcionario =
                 funcionarioRepository.findById(dto.getCpfFuncionario())
@@ -141,6 +140,7 @@ public class ReservaService {
     }
 
     private Equipamento validarEquipamento(EquipamentoReservaDto dtoEquip, EquipamentoId id, ReservaCreateDto dto){
+		Set<String> equipamentosUnicos = new HashSet<>();
         // verifico se o equipamento existe
         Equipamento equipamento = equipamentoRepository.findById(id)
                     .orElseThrow(() -> new BusinessException(
@@ -154,10 +154,10 @@ public class ReservaService {
 
         // verifico se eu não estou salvando nenhum repetido
         if (!equipamentosUnicos.add(chave)) {
-        throw new BusinessException(
-                "Equipamento repetido na reserva",
-                HttpStatus.BAD_REQUEST
-        );
+			throw new BusinessException(
+				"Equipamento repetido na reserva",
+				HttpStatus.BAD_REQUEST
+			);
         }
 
         // verifico os choques de horarios
