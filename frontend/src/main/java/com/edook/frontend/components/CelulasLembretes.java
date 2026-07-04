@@ -1,6 +1,6 @@
 package com.edook.frontend.components;
 
-import com.edook.frontend.models.Reserva;
+import com.edook.frontend.models.ReservaResponseDTO;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -8,10 +8,10 @@ import javafx.scene.control.ListCell;
 
 import java.io.IOException;
 
-public class CelulasLembretes extends ListCell<Reserva> {
+public class CelulasLembretes extends ListCell<ReservaResponseDTO>{
 
     @Override
-    protected void updateItem(Reserva reserva, boolean empty) {
+    protected void updateItem(ReservaResponseDTO reserva, boolean empty) {
         super.updateItem(reserva, empty);
 
         if (empty || reserva == null) {
@@ -26,9 +26,9 @@ public class CelulasLembretes extends ListCell<Reserva> {
                 Label lblLocal = (Label) root.lookup("#lblLocal");
                 Label lblTitulo = (Label) root.lookup("#lblTitulo");
 
-                if (lblHorario != null) lblHorario.setText(reserva.getHorario());
-                if (lblLocal != null) lblLocal.setText(reserva.getLocal());
-                if (lblTitulo != null) lblTitulo.setText(reserva.getEquipamento());
+                if (lblHorario != null) lblHorario.setText(reserva.getHorarioFormatado());
+                if (lblLocal != null) lblLocal.setText(reserva.getLocalidade());
+                if (lblTitulo != null) lblTitulo.setText(reserva.getNome());
 
                 setGraphic(root);
             } catch (IOException e) {

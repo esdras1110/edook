@@ -108,7 +108,7 @@
             <Insets bottom="24.0" left="96.0" right="96.0" top="24.0" />
          </padding>
       </VBox>
-      <VBox alignment="TOP_CENTER" spacing="20.0" style="-fx-background-color: #F9FAFB; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #1E1E1E; -fx-border-image-width: 1px;">
+      <VBox alignment="TOP_CENTER" spacing="12.0" style="-fx-background-color: #F9FAFB; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #1E1E1E; -fx-border-image-width: 1px;">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>

@@ -49,8 +49,10 @@ public class UserSession {
     }
 
     public void limparUserSession() {
+        this.nome = null;
         this.email = null;
         this.cpf = null;
         this.cargo = null;
+        this.token = null;
     }
 }

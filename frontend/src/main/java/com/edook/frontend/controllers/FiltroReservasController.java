@@ -75,6 +75,7 @@ public class FiltroReservasController implements Initializable {
     @FXML
     private void onClickAplicar(ActionEvent event) {
         FiltroReservaDTO filtro = new FiltroReservaDTO();
+
         filtro.equipamento = cbEquipamento.getValue();
         filtro.local = cbLocal.getValue();
         filtro.dataInicio = dpDataInicio.getValue();
