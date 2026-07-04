@@ -11,10 +11,11 @@ import com.pi1.Edook.service.FuncionarioService;
 import jakarta.validation.Valid;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -39,7 +40,6 @@ public class FuncionarioController {
 
     @PostMapping
     public ResponseEntity<FuncionarioResponseDto> criar(@Valid @RequestBody FuncionarioCreateDto dto) {
-        System.out.println("============================================================================");
         // chama a função para salvar no banco
         Funcionario f = serviceFuncionario.criar(dto);
         serviceEmail.enviarConfirmacaoEmail(f.getEmail(), f.getCodigoVerificacao());
@@ -55,6 +55,20 @@ public class FuncionarioController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
+    }
+
+    @GetMapping("/busca")
+    public ResponseEntity<FuncionarioResponseDto> buscar(@RequestParam String identificador) {
+        Funcionario f = serviceFuncionario.buscar(identificador);
+
+        FuncionarioResponseDto response = new FuncionarioResponseDto();
+        response.setNome(f.getNome());
+        response.setCpf(f.getCpf());
+        response.setEmail(f.getEmail());
+        response.setCargo(f.getCargo());
+        response.setMatricula(f.getMatricula());
+
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/confirmar-email")
