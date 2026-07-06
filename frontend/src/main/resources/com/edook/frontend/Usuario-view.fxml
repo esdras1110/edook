@@ -101,20 +101,6 @@
                                     </TextField>
                                  </children>
                               </VBox>
-                              <VBox layoutX="10.0" layoutY="10.0" spacing="6.0">
-                                 <children>
-                                    <Label styleClass="h3" text="E-mail" textFill="#111827">
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </Label>
-                                    <TextField id="campoEmailLogin" fx:id="campoEmail" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" promptText="exemplo@dominio.com" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </TextField>
-                                 </children>
-                              </VBox>
                            </children>
                         </HBox>
                         <Label fx:id="lblErro" styleClass="txt" />
@@ -126,8 +112,8 @@
                </children></VBox>
             <HBox alignment="CENTER" spacing="24.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onClickCancelar" style="-fx-background-color: #6B7280;" styleClass="botao-var" text="Cancelar" textFill="#f9fafb" />
-                  <Button mnemonicParsing="false" onAction="#onClickAtualizar" styleClass="botao" text="Atualizar" textFill="#f9fafb" />
+                  <Button mnemonicParsing="false" onAction="#onClickCancelar" styleClass="botao-var" text="Cancelar" textFill="#f9fafb" />
+                  <Button mnemonicParsing="false" onAction="#onClickSalvar" styleClass="botao" text="Salvar" textFill="#f9fafb" />
                </children>
             </HBox>
          </children>
