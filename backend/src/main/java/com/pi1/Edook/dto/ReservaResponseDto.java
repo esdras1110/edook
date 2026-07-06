@@ -23,6 +23,7 @@ public class ReservaResponseDto {
     private LocalTime horarioFim;
     private String status;
     private String cpfFuncionario;
+    private String nomeFuncionario;
 
     private List<EquipamentoResponseDto> equipamentos;
 }

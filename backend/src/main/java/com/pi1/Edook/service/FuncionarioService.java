@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.pi1.Edook.dto.FuncionarioCreateDto;
+import com.pi1.Edook.dto.FuncionarioUpdateDto;
 import com.pi1.Edook.exception.BusinessException;
 import com.pi1.Edook.model.Funcionario;
 import com.pi1.Edook.repository.FuncionarioRepository;
@@ -79,5 +80,54 @@ public class FuncionarioService {
         f.setCodigoVerificacao(dto.getCodigoVerificacao());
         f.setCodigoExpiracao(LocalDateTime.now().plusHours(24));
         return repository.save(f);
+    }
+
+    public Funcionario buscar(String identificador){
+        //buscando o funcionario a partir do cpf e email, primeiro por cpf
+        Funcionario funcionario;
+        if (identificador.matches("\\d{11}")) {
+            funcionario = repository.findByCpf(identificador);
+        } else if (identificador.matches("\\d+")) {
+            Integer matricula = Integer.valueOf(identificador);
+            funcionario = repository.findByMatricula(matricula);
+        } else {
+            throw new BusinessException(
+                "CPF ou matrícula inválidos",
+                HttpStatus.BAD_REQUEST
+            );
+        }
+
+        //se nao existir tal funcionario com tal cpf ou matricula, então da erro
+        if (funcionario == null) {
+            throw new BusinessException(
+                    "Funcionário não encontrado",
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
+        return funcionario;
+    }
+
+    public Funcionario atualizar(String cpf, FuncionarioUpdateDto dto) {
+
+        Funcionario funcionario = repository.findById(cpf)
+                .orElseThrow(() -> new BusinessException(
+                        "Funcionário não encontrado",
+                        HttpStatus.NOT_FOUND
+                ));
+
+        if (dto.getNome() != null) {
+            funcionario.setNome(dto.getNome());
+        }
+
+        if (dto.getDdd() != null) {
+            funcionario.setDdd(dto.getDdd());
+        }
+
+        if (dto.getNumero() != null) {
+            funcionario.setNumero(dto.getNumero());
+        }
+
+        return repository.save(funcionario);
     }
 }

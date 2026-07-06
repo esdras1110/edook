@@ -120,6 +120,9 @@ public class ReservaController {
 					response.setCpfFuncionario(
 							reserva.getFuncionario().getCpf()
 					);
+					response.setNomeFuncionario(
+						reserva.getFuncionario().getNome()
+					);
 					response.setEquipamentos(
 							equipamentos
 					);
