@@ -7,7 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.pi1.Edook.dto.FuncionarioCreateDto;
-import com.pi1.Edook.dto.FuncionarioResponseDto;
+import com.pi1.Edook.dto.FuncionarioUpdateDto;
 import com.pi1.Edook.exception.BusinessException;
 import com.pi1.Edook.model.Funcionario;
 import com.pi1.Edook.repository.FuncionarioRepository;
@@ -106,5 +106,28 @@ public class FuncionarioService {
         }
 
         return funcionario;
+    }
+
+    public Funcionario atualizar(String cpf, FuncionarioUpdateDto dto) {
+
+        Funcionario funcionario = repository.findById(cpf)
+                .orElseThrow(() -> new BusinessException(
+                        "Funcionário não encontrado",
+                        HttpStatus.NOT_FOUND
+                ));
+
+        if (dto.getNome() != null) {
+            funcionario.setNome(dto.getNome());
+        }
+
+        if (dto.getDdd() != null) {
+            funcionario.setDdd(dto.getDdd());
+        }
+
+        if (dto.getNumero() != null) {
+            funcionario.setNumero(dto.getNumero());
+        }
+
+        return repository.save(funcionario);
     }
 }
