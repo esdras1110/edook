@@ -50,6 +50,8 @@ public class FuncionarioController {
         response.setCpf(f.getCpf());
         response.setEmail(f.getEmail());
         response.setCargo(f.getCargo());
+        response.setDdd(f.getDdd());
+        response.setNumero(f.getNumero());
         response.setMatricula(f.getMatricula());
 
         return ResponseEntity
@@ -66,6 +68,8 @@ public class FuncionarioController {
         response.setCpf(f.getCpf());
         response.setEmail(f.getEmail());
         response.setCargo(f.getCargo());
+        response.setDdd(f.getDdd());
+        response.setNumero(f.getNumero());
         response.setMatricula(f.getMatricula());
 
         return ResponseEntity.ok(response);

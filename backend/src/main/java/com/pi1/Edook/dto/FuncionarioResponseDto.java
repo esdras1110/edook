@@ -10,5 +10,7 @@ public class FuncionarioResponseDto {
     private String cpf;
     private String email;
     private String cargo;
+    private String ddd;
+    private String numero;
     private Integer matricula;
 }
