@@ -246,15 +246,94 @@ public class CadastroReservaController {
                         });
                     } else {
                         System.out.println("Erro ao enviar reserva: " + response.statusCode() + " - " + response.body());
-                        lblErro.setText("Erro " + response.statusCode() + "Falha ao cadastrar reserva.\n" + response.body());
-                        lblErro.setStyle("-fx-text-fill: red;");
+
+                        // Captura a mensagem vinda do banco/servidor
+                        String mensagemErro = response.body();
+                        if (mensagemErro == null || mensagemErro.trim().isEmpty()) {
+                            mensagemErro = "O servidor retornou o status " + response.statusCode() + " sem uma descrição.";
+                        }
+
+                        String finalMensagemErro = mensagemErro;
+
+                        Platform.runLater(() -> {
+                            try {
+                                javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/com/edook/frontend/OperacaoInvalida-view.fxml"));
+                                javafx.scene.Parent root = loader.load();
+
+                                OperacaoInvalidaController popupController = loader.getController();
+                                popupController.setMensagem("Cadastro Inválido", finalMensagemErro);
+
+                                Stage popupStage = new Stage();
+                                popupStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+                                popupStage.initStyle(javafx.stage.StageStyle.TRANSPARENT);
+
+                                Stage donoDaJanela = (Stage) mbEquipamentos.getScene().getWindow();
+                                javafx.scene.Parent rootCadastro = donoDaJanela.getScene().getRoot();
+
+                                javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(15);
+                                rootCadastro.setEffect(blur);
+
+                                popupStage.initOwner(donoDaJanela);
+
+                                javafx.scene.Scene scene = new javafx.scene.Scene(root);
+                                scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
+                                // Garante que o arquivo de estilização seja injetado no modal de erro
+                                if (getClass().getResource("/com/edook/frontend/style.css") != null) {
+                                    scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
+                                }
+
+                                popupStage.setScene(scene);
+                                popupStage.centerOnScreen();
+
+                                popupStage.showAndWait();
+
+                                rootCadastro.setEffect(null);
+                            } catch (Exception e) {
+                                System.err.println("Erro crítico ao tentar inflar o pop-up de erro.");
+                                e.printStackTrace();
+                            }
+                        });
                     }
                 });
             } catch (Exception e) {
                 e.printStackTrace();
                 Platform.runLater(() -> {
-                    lblErro.setText("Tente novamente mais tarde.");
-                    lblErro.setStyle("-fx-text-fill: red;");
+                    try {
+                        javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/com/edook/frontend/OperacaoInvalida-view.fxml"));
+                        javafx.scene.Parent root = loader.load();
+
+                        OperacaoInvalidaController popupController = loader.getController();
+                        popupController.setMensagem("Falha de Conexão", "Tente novamente mais tarde.");
+
+                        Stage popupStage = new Stage();
+                        popupStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+                        popupStage.initStyle(javafx.stage.StageStyle.TRANSPARENT);
+
+                        Stage donoDaJanela = (Stage) mbEquipamentos.getScene().getWindow();
+                        javafx.scene.Parent rootCadastro = donoDaJanela.getScene().getRoot();
+
+                        javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(15);
+                        rootCadastro.setEffect(blur);
+
+                        popupStage.initOwner(donoDaJanela);
+
+                        javafx.scene.Scene scene = new javafx.scene.Scene(root);
+                        scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
+                        // Garante que o arquivo de estilização seja injetado no modal de erro
+                        if (getClass().getResource("/com/edook/frontend/style.css") != null) {
+                            scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
+                        }
+
+                        popupStage.setScene(scene);
+                        popupStage.centerOnScreen();
+
+                        popupStage.showAndWait();
+
+                        rootCadastro.setEffect(null);
+                    } catch (Exception ex) {
+                        System.err.println("Erro crítico ao tentar inflar o pop-up de erro.");
+                        e.printStackTrace();
+                    }
                 });
             }
         });

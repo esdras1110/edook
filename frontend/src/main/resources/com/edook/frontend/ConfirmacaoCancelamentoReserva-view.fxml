@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="12.0" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-background-color: white;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.edook.frontend.controllers.ConfirmacaoCancelamentoReservaController">
+    <padding>
+        <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+    </padding>
+    <children>
+        <VBox alignment="CENTER" spacing="12.0">
+            <children>
+                <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@Images/Icone%20de%20Cancelamento%20de%20Reserva.png" />
+                    </image>
+                </ImageView>
+                <Label styleClass="subtitulo" text="Confirmação de Cancelamento de Reservas" textFill="#6b7280" />
+            </children>
+        </VBox>
+        <VBox alignment="CENTER" spacing="6.0">
+            <children>
+                <Label styleClass="txt" text="As seguintes reservas serão canceladas:" />
+            <VBox fx:id="vboxListaReservas" spacing="3.0" VBox.vgrow="ALWAYS" />
+                <Label styleClass="txt" text="Tem certeza que deseja prosseguir?" />
+            </children>
+        </VBox>
+        <HBox alignment="CENTER" spacing="24.0">
+            <children>
+                <Button mnemonicParsing="false" onAction="#onClickVoltar" styleClass="botao-var" text="Voltar" />
+                <Button mnemonicParsing="false" onAction="#onClickConfirmar" styleClass="botao" text="Confirmar" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

@@ -83,7 +83,7 @@
             </VBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="24.0">
                <children>
-                  <Button fx:id="btnAdicionarReserva" mnemonicParsing="false" onAction="#onClickAdicionarReserva" styleClass="botao" text="  Adicionar Reserva" textFill="#f9fafb">
+                  <Button mnemonicParsing="false" onAction="#onClickAdicionarReserva" styleClass="botao" text="  Adicionar Reserva" textFill="#f9fafb">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -92,7 +92,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="btnCancelarReserva" mnemonicParsing="false" styleClass="botao" text="  Cancelar Reserva" textFill="#f9fafb">
+                  <Button mnemonicParsing="false" onAction="#onClickCancelarReservas" styleClass="botao" text="  Cancelar Reserva" textFill="#f9fafb">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -114,7 +114,7 @@
          </opaqueInsets>
          <children>
             <Label styleClass="h2-Inter" text="Lembretes" textAlignment="CENTER" textFill="#1a56db" />
-            <ListView fx:id="listaLembretes" styleClass="lembretes" />
+            <ListView fx:id="listaLembretes" styleClass="lembretes" VBox.vgrow="ALWAYS" />
          </children>
          <padding>
             <Insets bottom="24.0" top="24.0" />

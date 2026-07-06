@@ -17,38 +17,38 @@
                <children>
                   <VBox spacing="6.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label styleClass="h3" text="Nome:" />
-                        <Label fx:id="lblNome" styleClass="txt" />
+                        <Label styleClass="txt" text="Nome:" />
+                        <Label fx:id="lblNome" styleClass="h3" textFill="#1e1e1e" />
                      </children>
                   </VBox>
                   <VBox layoutX="10.0" layoutY="10.0" spacing="6.0">
                      <children>
-                        <Label styleClass="h3" text="CPF:" />
-                        <Label fx:id="lblNome1" styleClass="txt" />
+                        <Label styleClass="txt" text="CPF:" />
+                        <Label fx:id="lblCPF" styleClass="h3" textFill="#1e1e1e" />
                      </children>
                   </VBox>
                   <VBox layoutX="10.0" layoutY="75.0" spacing="6.0">
                      <children>
-                        <Label styleClass="h3" text="Cargo:" />
-                        <Label fx:id="lblNome11" styleClass="txt" />
+                        <Label styleClass="txt" text="Cargo:" />
+                        <Label fx:id="lblCargo" styleClass="h3" textFill="#1e1e1e" />
                      </children>
                   </VBox>
                   <VBox layoutX="10.0" layoutY="140.0" spacing="6.0">
                      <children>
-                        <Label styleClass="h3" text="Matrícula:" />
-                        <Label fx:id="lblNome111" styleClass="txt" />
+                        <Label styleClass="txt" text="Matrícula:" />
+                        <Label fx:id="lblMatricula" styleClass="h3" textFill="#1e1e1e" />
                      </children>
                   </VBox>
                   <VBox layoutX="10.0" layoutY="205.0" spacing="6.0">
                      <children>
-                        <Label styleClass="h3" text="Telefone:" />
-                        <Label fx:id="lblNome1111" styleClass="txt" />
+                        <Label styleClass="txt" text="Telefone:" />
+                        <Label fx:id="lblTelefone" styleClass="h3" textFill="#1e1e1e" />
                      </children>
                   </VBox>
                   <VBox layoutX="10.0" layoutY="270.0" spacing="6.0">
                      <children>
-                        <Label styleClass="h3" text="E-mail:" />
-                        <Label fx:id="lblNome11111" styleClass="txt" />
+                        <Label styleClass="txt" text="E-mail:" />
+                        <Label fx:id="lblEmail" styleClass="h3" textFill="#1e1e1e" />
                      </children>
                   </VBox>
                </children>
@@ -85,38 +85,6 @@
                               </TextField>
                            </children>
                         </VBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="24.0">
-                           <children>
-                              <VBox spacing="6.0">
-                                 <children>
-                                    <Label styleClass="h3" text="CPF" textFill="#111827">
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </Label>
-                                    <TextField id="campoEmailLogin" fx:id="campoCPF" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </TextField>
-                                 </children>
-                              </VBox>
-                              <VBox layoutX="10.0" layoutY="10.0" spacing="6.0">
-                                 <children>
-                                    <Label styleClass="h3" text="Matrícula" textFill="#111827">
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </Label>
-                                    <TextField id="campoEmailLogin" fx:id="campoMatricula" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </TextField>
-                                 </children>
-                              </VBox>
-                           </children>
-                        </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="24.0">
                            <children>
                               <VBox spacing="6.0">

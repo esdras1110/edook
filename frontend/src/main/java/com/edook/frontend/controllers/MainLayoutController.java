@@ -118,7 +118,7 @@ public class MainLayoutController {
     @FXML
     private void onClickSair(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/PopUpSair-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/Sair-view.fxml"));
             Parent root = loader.load();
 
             Stage popupStage = new Stage();

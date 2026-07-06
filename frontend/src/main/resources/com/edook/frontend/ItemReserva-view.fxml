@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+
+
+<HBox spacing="12.0" style="-fx-border-color: red;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.edook.frontend.components.ItemReservaController">
+   <padding>
+      <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+   </padding>
+   <children>
+      <Label fx:id="lblData" styleClass="txt" />
+      <Label fx:id="lblHora" styleClass="txt" />
+      <Label fx:id="lblEquipamentos" styleClass="txt" />
+      <Label fx:id="lblLocal" styleClass="txt" />
+   </children>
+</HBox>

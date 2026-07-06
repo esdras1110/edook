@@ -11,4 +11,5 @@ module com.edook.frontend {
     exports com.edook.frontend.controllers;
     opens com.edook.frontend.controllers to javafx.fxml;
     opens com.edook.frontend.models to javafx.base, javafx.fxml, com.fasterxml.jackson.databind;
+    opens com.edook.frontend.components to javafx.fxml;
 }

@@ -29,6 +29,7 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -66,6 +67,26 @@ public class ReservasController implements Initializable, Filtravel {
         colEquipamento.setCellValueFactory(new PropertyValueFactory<>("equipamentosFormatados"));
         colLocal.setCellValueFactory(new PropertyValueFactory<>("localidade"));
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        colEquipamento.setCellFactory(tc -> {
+            return new TableCell<ReservaResponseDTO, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                        setTooltip(null);
+                    } else {
+                        setText(item);
+                        Tooltip tooltip = new Tooltip(item);
+                        tooltip.setStyle("-fx-font-size: 13px; -fx-background-color: #1E1E1E; -fx-text-fill: #F9FAFB;");
+                        tooltip.setWrapText(true);
+                        tooltip.setPrefWidth(360);
+                        setTooltip(tooltip);
+                    }
+                }
+            };
+        });
 
         listaFiltrada = new FilteredList<>(listaReservas, p -> true);
         tabelaReservas.setItems(listaFiltrada);
@@ -271,6 +292,97 @@ public class ReservasController implements Initializable, Filtravel {
 
         } catch (java.io.IOException e) {
             System.err.println("Erro ao abrir o pop-up de Adicionar Reserva.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void onClickCancelarReservas(ActionEvent event) {
+        ObservableList<ReservaResponseDTO> selecionadas = tabelaReservas.getSelectionModel().getSelectedItems();
+
+        if (selecionadas.isEmpty()) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/OperacaoInvalida-view.fxml"));
+                Parent root = loader.load();
+
+                // Pega o controller do pop-up e define a mensagem de "Nenhuma selecionada"
+                OperacaoInvalidaController popupController = loader.getController();
+                popupController.setMensagem(
+                        "Cancelamento Inválido",
+                        "Você deve selecionar pelo menos uma reserva para efetuar o cancelamento."
+                );
+
+                Stage popupStage = new Stage();
+                Stage donoDaJanela = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+                Parent rootPrincipal = donoDaJanela.getScene().getRoot();
+
+                // Aplica o efeito de desfoque no fundo
+                javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(15);
+                rootPrincipal.setEffect(blur);
+
+                popupStage.initOwner(donoDaJanela);
+                // WINDOW_MODAL impede que o usuário clique na tela de trás enquanto o pop-up estiver aberto
+                popupStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
+                popupStage.initStyle(javafx.stage.StageStyle.TRANSPARENT);
+
+                Scene scene = new Scene(root);
+                scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
+                scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
+
+                popupStage.setScene(scene);
+                popupStage.centerOnScreen();
+
+                // Espera o usuário fechar o pop-up
+                popupStage.showAndWait();
+
+                // Remove o desfoque após o pop-up ser fechado
+                rootPrincipal.setEffect(null);
+
+            } catch (java.io.IOException e) {
+                System.err.println("Erro ao abrir o pop-up de Operação Inválida.");
+                e.printStackTrace();
+            }
+            return;
+        }
+
+        List<ReservaResponseDTO> reservasParaCancelar = new ArrayList<>(selecionadas);
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/ConfirmacaoCancelamentoReserva-view.fxml"));
+            Parent root = loader.load();
+
+            ConfirmacaoCancelamentoReservaController popupController = loader.getController();
+            popupController.setReservas(reservasParaCancelar);
+
+            Stage popupStage = new Stage();
+            Stage donoDaJanela = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            Parent rootPrincipal = donoDaJanela.getScene().getRoot();
+
+            // Aplica o Blur
+            javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(15);
+            rootPrincipal.setEffect(blur);
+
+            popupStage.initOwner(donoDaJanela);
+            popupStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
+            popupStage.initStyle(javafx.stage.StageStyle.TRANSPARENT);
+
+            // Define a cena
+            Scene scene = new Scene(root);
+            scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
+            scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
+
+            popupStage.setScene(scene);
+            popupStage.centerOnScreen();
+            popupStage.showAndWait();
+
+            // Remove o Blur ao fechar
+            rootPrincipal.setEffect(null);
+
+            // Opcional: recarregar a tabela após fechar o pop-up, caso algo tenha sido cancelado
+            buscarReservas();
+
+        } catch (java.io.IOException e) {
+            System.err.println("Erro ao abrir o pop-up de Confirmação.");
             e.printStackTrace();
         }
     }

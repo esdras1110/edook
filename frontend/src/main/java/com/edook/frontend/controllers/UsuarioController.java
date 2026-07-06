@@ -15,58 +15,26 @@ import java.util.function.UnaryOperator;
 public class UsuarioController implements Initializable {
 
     @FXML
-    private VBox vboxDados;
+    private VBox vboxDados, vboxEdicao;
 
     @FXML
-    private VBox vboxEdicao;
+    private Label lblErro, lblNome, lblCPF, lblCargo, lblMatricula, lblEmail, lblTelefone;
 
     @FXML
-    private Label lblErro;
-
-    @FXML
-    private TextField campoNome;
-
-    @FXML
-    private TextField campoCPF;
-
-    @FXML
-    private TextField campoMatricula;
-
-    @FXML
-    private TextField campoTelefone;
-
-    @FXML
-    private TextField campoEmail;
+    private TextField campoNome, campoTelefone, campoEmail;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         aplicarMascaraTelefone(campoTelefone);
-        aplicarMascaraCPF(campoCPF);
-        aplicarMascaraMatricula(campoMatricula);
-
     }
 
     private boolean validarFormulario() {
         String nome = campoNome.getText().trim();
-        String cpf = campoCPF.getText().replaceAll("[^0-9]", "");
         String telefone = campoTelefone.getText().replaceAll("[^0-9]", "");
-        String matricula = campoMatricula.getText().trim();
         String email = campoEmail.getText().trim();
 
-        if (nome.isEmpty() || cpf.isEmpty() || matricula.isEmpty() || telefone.isEmpty() || email.isEmpty()) {
+        if (nome.isEmpty() || telefone.isEmpty() || email.isEmpty()) {
             lblErro.setText("Todos os campos devem ser preenchidos!");
-            lblErro.setStyle("-fx-text-fill: red;");
-            return false;
-        }
-
-        if (cpf.length() != 11) {
-            lblErro.setText("CPF incompleto, deve ter 11 dígitos!");
-            lblErro.setStyle("-fx-text-fill: red;");
-            return false;
-        }
-
-        if (matricula.length() != 7) {
-            lblErro.setText("Matrícula incompleta, deve ter 7 dígitos!");
             lblErro.setStyle("-fx-text-fill: red;");
             return false;
         }
@@ -121,72 +89,6 @@ public class UsuarioController implements Initializable {
             change.setText(sb.toString());
             change.setCaretPosition(sb.length());
             change.setAnchor(sb.length());
-
-            return change;
-        };
-
-        textField.setTextFormatter(new TextFormatter<>(filter));
-    }
-
-    private void aplicarMascaraCPF(TextField textField) {
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            if (change.isDeleted() || change.getText().isEmpty()) {
-                return change;
-            }
-
-            if (!change.getText().matches("[0-9]*")) {
-                return null;
-            }
-
-            String textoLimpo = change.getControlNewText().replaceAll("[^0-9]", "");
-
-            if (textoLimpo.length() > 11) {
-                return null;
-            }
-
-            StringBuilder sb = new StringBuilder();
-            int len = textoLimpo.length();
-
-            if (len > 0) {
-                sb.append(textoLimpo.substring(0, Math.min(len, 3)));
-            }
-            if (len > 3) {
-                sb.append(".");
-                sb.append(textoLimpo.substring(3, Math.min(len, 6)));
-            }
-            if (len > 6) {
-                sb.append(".");
-                sb.append(textoLimpo.substring(6, Math.min(len, 9)));
-            }
-            if (len > 9) {
-                sb.append("-");
-                sb.append(textoLimpo.substring(9, Math.min(len, 11)));
-            }
-
-            change.setRange(0, change.getControlText().length());
-            change.setText(sb.toString());
-            change.setCaretPosition(sb.length());
-            change.setAnchor(sb.length());
-
-            return change;
-        };
-
-        textField.setTextFormatter(new TextFormatter<>(filter));
-    }
-
-    private void aplicarMascaraMatricula(TextField textField) {
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            if (change.isDeleted() || change.getText().isEmpty()) {
-                return change;
-            }
-
-            if (!change.getText().matches("[0-9]*")) {
-                return null;
-            }
-
-            if (change.getControlNewText().length() > 7) {
-                return null;
-            }
 
             return change;
         };

@@ -8,7 +8,7 @@ import javafx.scene.control.ListCell;
 
 import java.io.IOException;
 
-public class CelulasLembretes extends ListCell<ReservaResponseDTO>{
+public class LembreteController extends ListCell<ReservaResponseDTO>{
 
     @Override
     protected void updateItem(ReservaResponseDTO reserva, boolean empty) {
