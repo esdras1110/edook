@@ -1,68 +1,64 @@
 package com.edook.frontend.controllers;
 
-import com.edook.frontend.models.Equipamento;
+import com.edook.frontend.models.EquipamentoResponseDTO;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
 public class CadastroController implements Initializable {
     @FXML
-    private VBox vboxBotoes;
+    private VBox vboxBotoes, vboxCadastro, vboxGerenciarEquipamentos;
 
     @FXML
-    private VBox vboxCadastro;
-
-    @FXML
-    private VBox vboxGerenciarEquipamentos;
-
-    @FXML
-    private TextField campoNome;
-
-    @FXML
-    private TextField campoCPF;
-
-    @FXML
-    private TextField campoMatricula;
+    private TextField campoNome, campoCPF, campoMatricula, campoTelefone, campoEmail, campoBusca;
 
     @FXML
     private ComboBox<String> campoCargo;
 
     @FXML
-    private TextField campoTelefone;
-
-    @FXML
-    private TextField campoEmail;
-
-    @FXML
-    private PasswordField campoSenha;
-
-    @FXML
-    private PasswordField campoConfirmacaoSenha;
+    private PasswordField campoSenha, campoConfirmacaoSenha;
 
     @FXML
     private Label lblErro;
 
     @FXML
-    private TableView<Equipamento> tabelaEquipamentos;
+    private TableView<EquipamentoResponseDTO> tabelaEquipamentos;
 
     @FXML
-    private TableColumn<Equipamento, String> colPrefixo;
+    private TableColumn<EquipamentoResponseDTO, String> colPrefixo, colDescricao, colTipo;
 
     @FXML
-    private TableColumn<Equipamento, String> colID;
+    private TableColumn<EquipamentoResponseDTO, Integer> colNumero;
 
-    @FXML
-    private TableColumn<Equipamento, String> colNome;
-
-    @FXML
-    private TableColumn<Equipamento, String> colTipo;
+    private final ObservableList<EquipamentoResponseDTO> listaEquipamentos = FXCollections.observableArrayList();
+    private FilteredList<EquipamentoResponseDTO> listaFiltrada;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -75,26 +71,89 @@ public class CadastroController implements Initializable {
         );
         campoCargo.getSelectionModel().select("Docente");
 
-        inicializaTabela();
-    }
-
-    private void inicializaTabela(){
-        tabelaEquipamentos.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
         colPrefixo.setCellValueFactory(new PropertyValueFactory<>("prefixo"));
-        colID.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        colNumero.setCellValueFactory(new PropertyValueFactory<>("numero"));
+        colDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
         colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
 
-        Equipamento teste1 = new Equipamento("NT", "002", "Notebook Dell Inspiron", "Informática");
-        Equipamento teste2 = new Equipamento("CX", "003", "Caixa de Som JBL", "Áudio");
-        Equipamento teste3 = new Equipamento("PR", "004", "Projetor BenQ", "Vídeo");
-        Equipamento teste4 = new Equipamento("TL", "005", "Smart TV LG 55'", "Vídeo");
-        Equipamento teste5 = new Equipamento("NT", "006", "MacBook Air M2", "Informática");
+        colDescricao.setCellFactory(tc -> {
+            return new TableCell<EquipamentoResponseDTO, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                        setTooltip(null);
+                    } else {
+                        setText(item);
+                        Tooltip tooltip = new Tooltip(item);
+                        tooltip.setStyle("-fx-font-size: 13px; -fx-background-color: #1E1E1E; -fx-text-fill: #F9FAFB;");
+                        tooltip.setWrapText(true);
+                        tooltip.setPrefWidth(360);
+                        setTooltip(tooltip);
+                    }
+                }
+            };
+        });
 
-        if (tabelaEquipamentos != null) {
-            tabelaEquipamentos.getItems().addAll(teste1, teste2, teste3, teste4, teste5);
-        }
+        listaFiltrada = new FilteredList<>(listaEquipamentos, b -> true);
+        tabelaEquipamentos.setItems(listaFiltrada);
+
+        carregarEquipamentos();
+
+        campoBusca.textProperty().addListener((observable, oldValue, newValue) -> {
+            atualizarBusca();
+        });
+    }
+
+    protected void carregarEquipamentos() {
+        String url = "http://localhost:8080/equipamentos";
+
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Accept", "application/json")
+                .GET()
+                .build();
+
+        // Envia a requisição de forma assíncrona
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(response -> {
+                    try {
+                        ObjectMapper mapper = new ObjectMapper();
+                        List<EquipamentoResponseDTO> dtos = mapper.readValue(
+                                response.body(),
+                                new TypeReference<List<EquipamentoResponseDTO>>(){}
+                        );
+
+                        // 2. Atualiza a ObservableList na Thread do JavaFX
+                        Platform.runLater(() -> {
+                            listaEquipamentos.setAll(dtos);
+                        });
+
+                    } catch (Exception e) {
+                        System.err.println("Erro ao converter os dados: " + e.getMessage());
+                    }
+                })
+                .exceptionally(e -> {
+                    System.err.println("Erro de conexão com a API: " + e.getMessage());
+                    return null;
+                });
+    }
+
+    private void atualizarBusca() {
+        String textoBusca = campoBusca.getText() == null ? "" : campoBusca.getText().toLowerCase();
+
+        listaFiltrada.setPredicate(reserva -> {
+            // 1. Regra da Barra de Pesquisa
+            boolean passaBusca = true;
+            if (!textoBusca.isEmpty()) {
+                passaBusca = (reserva.getDescricao() != null && reserva.getDescricao().toLowerCase().contains(textoBusca)) ||
+                        (reserva.getTipo() != null && reserva.getTipo().toLowerCase().contains(textoBusca));
+            }
+
+            return passaBusca;
+        });
     }
 
     private boolean validarFormulario() {
@@ -150,9 +209,6 @@ public class CadastroController implements Initializable {
             lblErro.setStyle("-fx-text-fill: red;");
             return false;
         }
-
-        lblErro.setText("Tudo certo!");
-        lblErro.setStyle("-fx-text-fill: green;");
 
         return true;
     }
@@ -286,6 +342,157 @@ public class CadastroController implements Initializable {
         vboxGerenciarEquipamentos.setManaged(false);
         vboxBotoes.setVisible(true);
         vboxBotoes.setManaged(true);
+    }
+
+    @FXML
+    private void onClickEditarEquipamento(ActionEvent event) {
+        ObservableList<EquipamentoResponseDTO> selecionados = tabelaEquipamentos.getSelectionModel().getSelectedItems();
+
+        if (selecionados.isEmpty()) {
+            exibirPopupErro("Nenhum equipamento selecionado", "Por favor, selecione um equipamento na tabela para editar.");
+            return;
+        }
+
+        EquipamentoResponseDTO selecionado = selecionados.get(0);
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/EdicaoEquipamento-view.fxml"));
+            Parent root = loader.load();
+
+            EdicaoEquipamentoController controller = loader.getController();
+
+            // Passa os dados e a ação de recarregar a tabela ao finalizar
+            controller.setEquipamento(selecionado);
+            controller.setOnEdicaoSucesso(() -> carregarEquipamentos());
+
+            Stage popupStage = new Stage();
+            Stage donoDaJanela = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Parent rootPrincipal = donoDaJanela.getScene().getRoot();
+
+            // Ativa o Blur na tela principal
+            rootPrincipal.setEffect(new GaussianBlur(15));
+
+            popupStage.initOwner(donoDaJanela);
+            popupStage.initModality(Modality.WINDOW_MODAL);
+            popupStage.initStyle(StageStyle.TRANSPARENT);
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+
+            // Mantém a padronização do CSS se existir
+            if (getClass().getResource("/com/edook/frontend/style.css") != null) {
+                scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
+            }
+
+            popupStage.setScene(scene);
+            popupStage.centerOnScreen();
+
+            // Congela o código aqui até o popup fechar
+            popupStage.showAndWait();
+
+            // Garante que o blur seja removido ao fechar o popup
+            rootPrincipal.setEffect(null);
+
+        } catch (Exception e) {
+            exibirPopupErro("Erro de Carregamento", "Não foi possível abrir a tela de edição.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onClickExcluirEquipamento(ActionEvent event) {
+        ObservableList<EquipamentoResponseDTO> selecionados = tabelaEquipamentos.getSelectionModel().getSelectedItems();
+
+        if (selecionados.isEmpty()) {
+            exibirPopupErro("Nenhum equipamento selecionado", "Por favor, selecione um equipamento na tabela para excluir.");
+            return;
+        }
+
+        EquipamentoResponseDTO selecionado = selecionados.get(0);
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/ConfirmacaoExclusaoEquipamento-view.fxml"));
+            Parent root = loader.load();
+
+            ConfirmacaoExclusaoEquipamentoController controller = loader.getController();
+
+            // Passa o equipamento selecionado para a tela de confirmação
+            controller.setEquipamento(selecionado);
+
+            // Passa a função para recarregar a tabela se a exclusão for bem-sucedida
+            controller.setOnAtualizarTabela(() -> carregarEquipamentos());
+
+            Stage popupStage = new Stage();
+            Stage donoDaJanela = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Parent rootPrincipal = donoDaJanela.getScene().getRoot();
+
+            // Ativa o blur
+            rootPrincipal.setEffect(new GaussianBlur(15));
+
+            popupStage.initOwner(donoDaJanela);
+            popupStage.initModality(Modality.WINDOW_MODAL);
+            popupStage.initStyle(StageStyle.TRANSPARENT);
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+
+            if (getClass().getResource("/com/edook/frontend/style.css") != null) {
+                scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
+            }
+
+            popupStage.setScene(scene);
+            popupStage.centerOnScreen();
+
+            // Aguarda a interação do usuário no pop-up de confirmação
+            popupStage.showAndWait();
+
+            // Remove o blur quando finalizar
+            rootPrincipal.setEffect(null);
+
+        } catch (Exception e) {
+            exibirPopupErro("Erro de Carregamento", "Não foi possível abrir a tela de confirmação de exclusão.");
+            e.printStackTrace();
+        }
+    }
+
+    public void exibirPopupErro(String titulo, String descricao) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/OperacaoInvalida-view.fxml"));
+            Parent root = loader.load();
+
+            OperacaoInvalidaController controller = loader.getController();
+            controller.setMensagem(titulo, descricao);
+
+            Stage popupStage = new Stage();
+            popupStage.initModality(Modality.WINDOW_MODAL);
+            popupStage.initStyle(StageStyle.TRANSPARENT);
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            popupStage.setScene(scene);
+
+            if (vboxGerenciarEquipamentos != null && vboxGerenciarEquipamentos.getScene() != null) {
+                Stage donoDaJanela = (Stage) vboxGerenciarEquipamentos.getScene().getWindow();
+                Parent rootPrincipal = donoDaJanela.getScene().getRoot();
+
+                // Ativa o blur
+                rootPrincipal.setEffect(new GaussianBlur(15));
+
+                popupStage.initOwner(donoDaJanela);
+                popupStage.centerOnScreen();
+
+                // Espera o popup fechar
+                popupStage.showAndWait();
+
+                // Remove o blur
+                rootPrincipal.setEffect(null);
+            } else {
+                popupStage.showAndWait();
+            }
+
+        } catch (Exception e) {
+            System.err.println("Erro crítico ao abrir popup de erro: " + e.getMessage());
+        }
     }
 
     @FXML
