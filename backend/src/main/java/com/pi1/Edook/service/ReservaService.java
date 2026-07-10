@@ -208,11 +208,18 @@ public class ReservaService {
 
 	public List<Reserva> listarProximasReservas() {
     	atualizarReservasConcluidas();
+        excluirReservasAntigas();
 
     	return reservaRepository.buscarProximasReservas(
             LocalDate.now()
     	);
 	}
+
+    public void excluirReservasAntigas() {
+        LocalDate limite = LocalDate.now().minusWeeks(1);
+
+        reservaRepository.excluirReservasAntigas(limite);
+    }
 
 	public void cancelar(Integer idReserva, String cpfFuncionario) {
 		Reserva reserva = reservaRepository.findById(idReserva)
