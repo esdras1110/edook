@@ -11,15 +11,18 @@ import com.pi1.Edook.dto.FuncionarioUpdateDto;
 import com.pi1.Edook.exception.BusinessException;
 import com.pi1.Edook.model.Funcionario;
 import com.pi1.Edook.repository.FuncionarioRepository;
+import com.pi1.Edook.repository.ReservaRepository;
 
 
 @Service
 public class FuncionarioService {
-    private final FuncionarioRepository repository;
+    private final FuncionarioRepository funcionarioRepository;
+    private final ReservaRepository reservaRepository;
     private final BCryptPasswordEncoder encoder;
 
-    public FuncionarioService(FuncionarioRepository repository, BCryptPasswordEncoder encoder) {
-        this.repository = repository;
+    public FuncionarioService(FuncionarioRepository repository, ReservaRepository reservaRepository, BCryptPasswordEncoder encoder) {
+        this.funcionarioRepository = repository;
+        this.reservaRepository = reservaRepository;
         this.encoder = encoder;
     }
 
@@ -35,7 +38,7 @@ public class FuncionarioService {
         }
 
         // checo se esse email ja foi cadastrado
-        if (repository.existsByEmail(dto.getEmail())) {
+        if (funcionarioRepository.existsByEmail(dto.getEmail())) {
             throw new BusinessException(
                     "Email já cadastrado",
                     HttpStatus.BAD_REQUEST
@@ -43,7 +46,7 @@ public class FuncionarioService {
         }
 
         // checo se a matricula ja foi cadastrada
-        if (repository.existsByMatricula(dto.getMatricula())) {
+        if (funcionarioRepository.existsByMatricula(dto.getMatricula())) {
             throw new BusinessException(
                     "Matrícula já cadastrada",
                     HttpStatus.BAD_REQUEST
@@ -51,7 +54,7 @@ public class FuncionarioService {
         }
 
         // checo se o cpf ja foi cadastrado
-        if (repository.existsByCpf(dto.getCpf())) {
+        if (funcionarioRepository.existsByCpf(dto.getCpf())) {
             throw new BusinessException(
                     "CPF já cadastrado",
                     HttpStatus.BAD_REQUEST
@@ -79,17 +82,17 @@ public class FuncionarioService {
 
         f.setCodigoVerificacao(dto.getCodigoVerificacao());
         f.setCodigoExpiracao(LocalDateTime.now().plusHours(24));
-        return repository.save(f);
+        return funcionarioRepository.save(f);
     }
 
     public Funcionario buscar(String identificador){
         //buscando o funcionario a partir do cpf e email, primeiro por cpf
         Funcionario funcionario;
         if (identificador.matches("\\d{11}")) {
-            funcionario = repository.findByCpf(identificador);
+            funcionario = funcionarioRepository.findByCpf(identificador);
         } else if (identificador.matches("\\d+")) {
             Integer matricula = Integer.valueOf(identificador);
-            funcionario = repository.findByMatricula(matricula);
+            funcionario = funcionarioRepository.findByMatricula(matricula);
         } else {
             throw new BusinessException(
                 "CPF ou matrícula inválidos",
@@ -110,7 +113,7 @@ public class FuncionarioService {
 
     public Funcionario atualizar(String cpf, FuncionarioUpdateDto dto) {
 
-        Funcionario funcionario = repository.findById(cpf)
+        Funcionario funcionario = funcionarioRepository.findById(cpf)
                 .orElseThrow(() -> new BusinessException(
                         "Funcionário não encontrado",
                         HttpStatus.NOT_FOUND
@@ -128,6 +131,24 @@ public class FuncionarioService {
             funcionario.setNumero(dto.getNumero());
         }
 
-        return repository.save(funcionario);
+        return funcionarioRepository.save(funcionario);
+    }
+
+    public void excluir(String cpf) {
+
+        Funcionario funcionario = funcionarioRepository.findById(cpf)
+            .orElseThrow(() -> new BusinessException(
+                "Funcionário não encontrado",
+                HttpStatus.NOT_FOUND
+            ));
+
+        if (reservaRepository.existsByFuncionarioCpfAndStatus(cpf, "Pendente")) {
+            throw new BusinessException(
+                "Não é possível excluir um funcionário com reservas pendentes",
+                HttpStatus.BAD_REQUEST
+            );
+        }
+
+        funcionarioRepository.delete(funcionario);
     }
 }

@@ -26,4 +26,6 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
     List<Reserva> buscarProximasReservas(
         @Param("hoje") LocalDate hoje
     );
+
+    boolean existsByFuncionarioCpfAndStatus(String cpf, String status);
 }

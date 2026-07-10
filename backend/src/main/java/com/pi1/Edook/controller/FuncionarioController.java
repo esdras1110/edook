@@ -91,6 +91,13 @@ public class FuncionarioController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/{cpf}")
+    public ResponseEntity<Void> excluir(@PathVariable String cpf) {
+        serviceFuncionario.excluir(cpf);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @PutMapping("/confirmar-email")
     public ResponseEntity<String> confirmarEmail(@Valid @RequestBody ReenviarConfirmacaoDto dto){
         Funcionario funcionario = repository.findByEmail(dto.getEmail());
