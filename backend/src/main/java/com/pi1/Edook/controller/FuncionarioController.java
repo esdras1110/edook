@@ -5,7 +5,8 @@ import com.pi1.Edook.repository.FuncionarioRepository;
 import com.pi1.Edook.dto.FuncionarioCreateDto;
 import com.pi1.Edook.dto.FuncionarioResponseDto;
 import com.pi1.Edook.dto.FuncionarioUpdateDto;
-import com.pi1.Edook.dto.ReenviarConfirmacaoDto;
+import com.pi1.Edook.dto.RedefinirSenhaDto;
+import com.pi1.Edook.dto.CodigoVerificacaoDto;
 import com.pi1.Edook.service.EmailService;
 import com.pi1.Edook.service.FuncionarioService;
 
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -98,8 +100,29 @@ public class FuncionarioController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/enviar-codigo")
+    public ResponseEntity<String> enviarCodigo(@Valid @RequestBody CodigoVerificacaoDto dto) {
+        serviceFuncionario.enviarCodigo(dto);
+
+        return ResponseEntity.ok("Código enviado com sucesso");
+    }
+
+    @PostMapping("/verificar-codigo")
+    public ResponseEntity<String> verificarCodigo(@Valid @RequestBody CodigoVerificacaoDto dto) {
+        serviceFuncionario.verificarCodigo(dto);
+
+        return ResponseEntity.ok("Código verificado com sucesso");
+    }
+
+    @PatchMapping("/redefinir-senha")
+    public ResponseEntity<String> redefinirSenha(@Valid @RequestBody RedefinirSenhaDto dto) {
+        serviceFuncionario.redefinirSenha(dto);
+
+        return ResponseEntity.ok("Senha redefinida com sucesso");
+    }
+
     @PutMapping("/confirmar-email")
-    public ResponseEntity<String> confirmarEmail(@Valid @RequestBody ReenviarConfirmacaoDto dto){
+    public ResponseEntity<String> confirmarEmail(@Valid @RequestBody CodigoVerificacaoDto dto){
         Funcionario funcionario = repository.findByEmail(dto.getEmail());
 
         if(funcionario == null){
@@ -123,7 +146,7 @@ public class FuncionarioController {
     }
 
     @PostMapping("/reenviar-confirmacao")
-    public ResponseEntity<String> reenviarConfirmacao(@Valid @RequestBody ReenviarConfirmacaoDto dto) {
+    public ResponseEntity<String> reenviarConfirmacao(@Valid @RequestBody CodigoVerificacaoDto dto) {
 
         Funcionario f = repository.findByEmail(dto.getEmail());
 

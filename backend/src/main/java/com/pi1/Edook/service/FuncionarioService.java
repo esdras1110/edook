@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.pi1.Edook.dto.FuncionarioCreateDto;
 import com.pi1.Edook.dto.FuncionarioUpdateDto;
+import com.pi1.Edook.dto.RedefinirSenhaDto;
+import com.pi1.Edook.dto.CodigoVerificacaoDto;
 import com.pi1.Edook.exception.BusinessException;
 import com.pi1.Edook.model.Funcionario;
 import com.pi1.Edook.repository.FuncionarioRepository;
@@ -16,12 +18,15 @@ import com.pi1.Edook.repository.ReservaRepository;
 
 @Service
 public class FuncionarioService {
+    private final EmailService emailService;
     private final FuncionarioRepository funcionarioRepository;
     private final ReservaRepository reservaRepository;
     private final BCryptPasswordEncoder encoder;
 
-    public FuncionarioService(FuncionarioRepository repository, ReservaRepository reservaRepository, BCryptPasswordEncoder encoder) {
+    public FuncionarioService(FuncionarioRepository repository, ReservaRepository reservaRepository,
+        EmailService emailService, BCryptPasswordEncoder encoder) {
         this.funcionarioRepository = repository;
+        this.emailService = emailService;
         this.reservaRepository = reservaRepository;
         this.encoder = encoder;
     }
@@ -150,5 +155,74 @@ public class FuncionarioService {
         }
 
         funcionarioRepository.delete(funcionario);
+    }
+
+    public void enviarCodigo(CodigoVerificacaoDto dto) {
+
+        Funcionario funcionario = funcionarioRepository.findByEmail(dto.getEmail());
+
+        if (funcionario == null) {
+            throw new BusinessException(
+                "Email não encontrado",
+                HttpStatus.NOT_FOUND
+            );
+        }
+
+        funcionario.setCodigoVerificacao(dto.getCodigo());
+        funcionario.setCodigoExpiracao(LocalDateTime.now().plusMinutes(10));
+
+        funcionarioRepository.save(funcionario);
+
+        emailService.enviarConfirmacaoEmail(
+            funcionario.getEmail(),
+            dto.getCodigo()
+        );
+    }
+
+    public void verificarCodigo(CodigoVerificacaoDto dto) {
+
+        Funcionario funcionario = funcionarioRepository.findByEmail(dto.getEmail());
+
+        if (funcionario == null) {
+            throw new BusinessException(
+                    "Email não encontrado",
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
+        if (funcionario.getCodigoExpiracao().isBefore(LocalDateTime.now())) {
+            throw new BusinessException(
+                    "Código expirado",
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        if (!funcionario.getCodigoVerificacao().equals(dto.getCodigo())) {
+            throw new BusinessException(
+                    "Código inválido",
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        funcionario.setCodigoVerificacao(null);
+        funcionario.setCodigoExpiracao(null);
+
+        funcionarioRepository.save(funcionario);
+    }
+
+    public void redefinirSenha(RedefinirSenhaDto dto) {
+
+        Funcionario funcionario = funcionarioRepository.findByCpf(dto.getCpf());
+
+        if (funcionario == null) {
+            throw new BusinessException(
+                "Funcionário não encontrado",
+                HttpStatus.NOT_FOUND
+            );
+        }
+
+        funcionario.setSenha(encoder.encode(dto.getNovaSenha()));
+
+        funcionarioRepository.save(funcionario);
     }
 }

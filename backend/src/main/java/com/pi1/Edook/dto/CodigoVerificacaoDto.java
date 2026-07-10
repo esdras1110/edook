@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ReenviarConfirmacaoDto {
+public class CodigoVerificacaoDto {
 
     @NotBlank
     @Email
