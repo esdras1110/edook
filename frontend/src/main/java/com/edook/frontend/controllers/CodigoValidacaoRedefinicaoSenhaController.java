@@ -99,42 +99,30 @@ public class CodigoValidacaoRedefinicaoSenhaController implements Initializable 
                 .thenAccept(response -> {
                     Platform.runLater(() -> {
                         if (response.statusCode() == 200) {
-                            // Captura o Stage atual e fecha
-                            Stage stageAtual = (Stage) campoCodigo.getScene().getWindow();
-                            stageAtual.close();
-
-                            // Abre o próximo pop-up: RedefinicaoSenha-view.fxml
                             try {
+                                // 1. Pega a janela (Stage) que JÁ ESTÁ aberta
+                                Stage stageAtual = (Stage) campoCodigo.getScene().getWindow();
+
+                                // 2. Carrega a próxima tela (Redefinição de Senha)
                                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/RedefinicaoSenha-view.fxml"));
                                 Parent root = loader.load();
 
-                                Stage popupStage = new Stage();
-                                popupStage.initModality(Modality.APPLICATION_MODAL);
-                                popupStage.initStyle(StageStyle.TRANSPARENT);
-
-                                // Recupera o dono da janela anterior para aplicar o efeito Blur novamente
-                                Stage donoDaJanela = (Stage) stageAtual.getOwner();
-                                Parent rootPrincipal = donoDaJanela.getScene().getRoot();
-
-                                GaussianBlur blur = new GaussianBlur(15);
-                                rootPrincipal.setEffect(blur);
-
-                                popupStage.initOwner(donoDaJanela);
-
-                                Scene scene = new Scene(root);
-                                scene.setFill(Color.TRANSPARENT);
+                                // 3. Cria a nova cena
+                                Scene novaScene = new Scene(root);
+                                novaScene.setFill(javafx.scene.paint.Color.TRANSPARENT);
 
                                 if (getClass().getResource("/com/edook/frontend/style.css") != null) {
-                                    scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
+                                    novaScene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
                                 }
 
-                                popupStage.setScene(scene);
-                                popupStage.centerOnScreen();
-                                popupStage.showAndWait();
+                                // 4. A mágica: Apenas substitui a cena na janela atual!
+                                stageAtual.setScene(novaScene);
 
-                                rootPrincipal.setEffect(null);
+                                // NÃO chame stageAtual.close() nem showAndWait() aqui!
+                                // A janela já está sendo exibida.
+
                             } catch (IOException e) {
-                                System.err.println("Erro ao abrir pop-up de redefinição de senha.");
+                                System.err.println("Erro ao trocar cena para redefinição de senha.");
                                 e.printStackTrace();
                             }
                         } else {
