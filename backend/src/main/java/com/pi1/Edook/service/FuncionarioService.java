@@ -212,7 +212,7 @@ public class FuncionarioService {
 
     public void redefinirSenha(RedefinirSenhaDto dto) {
 
-        Funcionario funcionario = funcionarioRepository.findByCpf(dto.getCpf());
+        Funcionario funcionario = funcionarioRepository.findByEmail(dto.getEmail());
 
         if (funcionario == null) {
             throw new BusinessException(
