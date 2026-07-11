@@ -31,6 +31,12 @@ public class ConfirmacaoCancelamentoReservaController {
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
+    private Runnable onAtualizarTabela;
+
+    public void setOnAtualizarTabela(Runnable onAtualizarTabela) {
+        this.onAtualizarTabela = onAtualizarTabela;
+    }
+
     public void setReservas(List<ReservaResponseDTO> reservas) {
         this.reservasParaCancelar = reservas;
         vboxListaReservas.getChildren().clear();
@@ -142,6 +148,10 @@ public class ConfirmacaoCancelamentoReservaController {
                                 popupStage.showAndWait();
                                 rootPrincipal.setEffect(null);
 
+                                if (onAtualizarTabela != null) {
+                                    onAtualizarTabela.run();
+                                }
+
                             } catch (IOException e) {
                                 System.err.println("Erro ao abrir o pop-up de erro de permissão.");
                                 e.printStackTrace();
@@ -172,6 +182,10 @@ public class ConfirmacaoCancelamentoReservaController {
 
                                 popupStage.showAndWait();
                                 rootPrincipal.setEffect(null);
+
+                                if (onAtualizarTabela != null) {
+                                    onAtualizarTabela.run();
+                                }
 
                             } catch (IOException e) {
                                 System.err.println("Erro ao abrir o pop-up de sucesso do cancelamento.");

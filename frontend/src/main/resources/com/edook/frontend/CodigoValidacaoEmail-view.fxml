@@ -44,7 +44,7 @@
             <Insets />
          </VBox.margin>
       </VBox>
-      <Label id="labelErro" fx:id="labelErroCodigo" styleClass="txt" textAlignment="CENTER" textFill="#111827">
+      <Label id="labelErro" fx:id="lblErro" styleClass="txt" textAlignment="CENTER" textFill="#111827">
          <VBox.margin>
             <Insets />
          </VBox.margin>
@@ -56,7 +56,6 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Hyperlink onAction="#onClickVoltar" styleClass="h3" text="Voltar" textFill="#1a56db" />
          </children>
          <VBox.margin>
             <Insets />
@@ -69,7 +68,7 @@
                   <Insets />
                </VBox.margin>
             </Label>
-            <Hyperlink styleClass="h3" text="Reenvie o código de redefinição." textAlignment="CENTER" textFill="#1a56db">
+            <Hyperlink onAction="#onClickReenviarCodigo" styleClass="h3" text="Reenvie o código de redefinição." textAlignment="CENTER" textFill="#1a56db">
                <VBox.margin>
                   <Insets />
                </VBox.margin>

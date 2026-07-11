@@ -339,6 +339,7 @@ public class InicioController implements Initializable, Filtravel {
 
             ConfirmacaoCancelamentoReservaController popupController = loader.getController();
             popupController.setReservas(reservasParaCancelar);
+            popupController.setOnAtualizarTabela(() -> buscarReservas());
 
             Stage popupStage = new Stage();
             Stage donoDaJanela = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
@@ -363,9 +364,6 @@ public class InicioController implements Initializable, Filtravel {
 
             // Remove o Blur ao fechar
             rootPrincipal.setEffect(null);
-
-            // Opcional: recarregar a tabela após fechar o pop-up, caso algo tenha sido cancelado
-            buscarReservas();
 
         } catch (java.io.IOException e) {
             System.err.println("Erro ao abrir o pop-up de Confirmação.");

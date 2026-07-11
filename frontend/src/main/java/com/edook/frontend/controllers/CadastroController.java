@@ -354,6 +354,7 @@ public class CadastroController implements Initializable {
 
             ConfirmacaoCadastroUsuarioController controller = loader.getController();
             controller.setDados(novoFuncionario);
+            controller.setOnSucesso(() -> limparCampos());
 
             Node sourceNode = (Node) event.getSource();
             Stage popupStage = new Stage();
@@ -387,6 +388,18 @@ public class CadastroController implements Initializable {
             exibirPopupErro("Erro de Tela", "Não foi possível abrir a tela de confirmação.");
         }
     }
+
+    private void limparCampos() {
+        campoNome.clear();
+        campoCPF.clear();
+        campoMatricula.clear();
+        campoTelefone.clear();
+        campoEmail.clear();
+        campoCargo.getSelectionModel().clearSelection();
+        campoSenha.clear();
+        campoConfirmacaoSenha.clear();
+    }
+
 
     @FXML
     private void onClickExcluirUsuario(ActionEvent event) {

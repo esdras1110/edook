@@ -30,12 +30,18 @@ public class ConfirmacaoCadastroUsuarioController {
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
 
+    private Runnable onSucesso;
+
+    public void setOnSucesso(Runnable onSucesso) {
+        this.onSucesso = onSucesso;
+    }
+
     public void setDados(FuncionarioResponseDTO f) {
         this.funcionario = f;
         lblNome.setText(f.getNome());
         lblCPF.setText(f.getCpf());
         lblCargo.setText(f.getCargo());
-        lblMatricula.setText(f.getMatricula() != null ? f.getMatricula().toString() : "Gerada automaticamente");
+        lblMatricula.setText(String.valueOf(f.getMatricula()));
     }
 
     @FXML
@@ -51,8 +57,7 @@ public class ConfirmacaoCadastroUsuarioController {
         Stage stageConfirmacao = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Stage telaPrincipal = (Stage) stageConfirmacao.getOwner();
 
-        // Fecha a tela de confirmação imediatamente
-        stageConfirmacao.close();
+        stageConfirmacao.setOpacity(0);
 
         try {
             String jsonBody = mapper.writeValueAsString(funcionario);
@@ -68,15 +73,18 @@ public class ConfirmacaoCadastroUsuarioController {
                     .thenAccept(response -> {
                         Platform.runLater(() -> {
                             if (response.statusCode() == 201 || response.statusCode() == 200) {
-                                // Se gravou provisoriamente e enviou o e-mail, chama a tela do código
                                 abrirPopupValidacaoEmail(telaPrincipal, funcionario.getEmail());
+
+                                stageConfirmacao.close();
                             } else {
+                                stageConfirmacao.setOpacity(1);
                                 abrirPopupErro(telaPrincipal, "Erro no Cadastro",
                                         "Não foi possível salvar o registro. Código: " + response.statusCode());
                             }
                         });
                     })
                     .exceptionally(e -> {
+                        stageConfirmacao.setOpacity(1);
                         Platform.runLater(() -> abrirPopupErro(telaPrincipal, "Falha de Conexão", "Não foi possível conectar ao servidor."));
                         return null;
                     });
@@ -93,6 +101,7 @@ public class ConfirmacaoCadastroUsuarioController {
 
             CodigoValidacaoEmailController controller = loader.getController();
             controller.setEmailValidacao(email);
+            controller.setOnSucesso(this.onSucesso);
 
             Stage popupStage = new Stage();
             popupStage.initOwner(telaPrincipal);
@@ -107,7 +116,8 @@ public class ConfirmacaoCadastroUsuarioController {
 
             popupStage.setScene(scene);
             popupStage.centerOnScreen();
-            popupStage.show();
+
+            popupStage.showAndWait();
 
         } catch (IOException e) {
             e.printStackTrace();

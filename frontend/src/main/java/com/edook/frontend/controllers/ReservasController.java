@@ -353,6 +353,7 @@ public class ReservasController implements Initializable, Filtravel {
 
             ConfirmacaoCancelamentoReservaController popupController = loader.getController();
             popupController.setReservas(reservasParaCancelar);
+            popupController.setOnAtualizarTabela(() -> buscarReservas());
 
             Stage popupStage = new Stage();
             Stage donoDaJanela = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
