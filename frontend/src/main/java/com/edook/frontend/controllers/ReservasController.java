@@ -60,7 +60,7 @@ public class ReservasController implements Initializable, Filtravel {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         tabelaReservas.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        colFuncionario.setCellValueFactory(new PropertyValueFactory<>("cpfFuncionario"));
+        colFuncionario.setCellValueFactory(new PropertyValueFactory<>("nomeFuncionario"));
         colTitulo.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colData.setCellValueFactory(new PropertyValueFactory<>("dataFormatada"));
         colHorario.setCellValueFactory(new PropertyValueFactory<>("horarioFormatado"));
@@ -160,7 +160,7 @@ public class ReservasController implements Initializable, Filtravel {
             if (!passaBusca) return false;
 
             if (filtrarApenasMinhas) {
-                if (reserva.getCpfFuncionario() == null || !reserva.getCpfFuncionario().equals(cpfUsuarioLogado)) {
+                if (reserva.getNomeFuncionario() == null || !reserva.getNomeFuncionario().equals(cpfUsuarioLogado)) {
                     return false; // Reprova se não for do usuário logado
                 }
             }

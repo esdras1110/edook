@@ -23,7 +23,7 @@ public class ReservaResponseDTO {
     private LocalTime horarioFim;
 
     private String status;
-    private String cpfFuncionario;
+    private String nomeFuncionario;
     private List<EquipamentoResponseDTO> equipamentos;
 
     public ReservaResponseDTO() {}
@@ -49,8 +49,8 @@ public class ReservaResponseDTO {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
-    public String getCpfFuncionario() { return cpfFuncionario; }
-    public void setCpfFuncionario(String cpfFuncionario) { this.cpfFuncionario = cpfFuncionario; }
+    public String getNomeFuncionario() { return nomeFuncionario; }
+    public void setNomeFuncionario(String nomeFuncionario) { this.nomeFuncionario = nomeFuncionario; }
 
     public List<EquipamentoResponseDTO> getEquipamentos() { return equipamentos; }
     public void setEquipamentos(List<EquipamentoResponseDTO> equipamentos) { this.equipamentos = equipamentos; }
