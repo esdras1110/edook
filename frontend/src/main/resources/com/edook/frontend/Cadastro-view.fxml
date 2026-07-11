@@ -38,7 +38,7 @@
                         <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
                      </padding>
                   </Button>
-                  <Button alignment="CENTER" contentDisplay="TOP" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="360.0" prefWidth="360.0" styleClass="botao" text="Cadastrar Equipamento" textFill="#f9fafb">
+                  <Button alignment="CENTER" contentDisplay="TOP" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickCadastrarEquipamento" prefHeight="360.0" prefWidth="360.0" styleClass="botao" text="Cadastrar Equipamento" textFill="#f9fafb">
                      <graphic>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -54,7 +54,7 @@
             </HBox>
             <HBox alignment="CENTER" spacing="216.0" VBox.vgrow="ALWAYS">
                <children>
-                  <Button alignment="CENTER" contentDisplay="TOP" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="360.0" prefWidth="360.0" styleClass="botao" text="Excluir Usuário" textFill="#f9fafb">
+                  <Button alignment="CENTER" contentDisplay="TOP" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickExcluirUsuario" prefHeight="360.0" prefWidth="360.0" styleClass="botao" text="Excluir Usuário" textFill="#f9fafb">
                      <graphic>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>

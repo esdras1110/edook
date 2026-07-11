@@ -23,7 +23,7 @@ public class CadastroReservaController {
     private TextField txtTitulo, txtHoraInicio, txtHoraFim;
 
     @FXML
-    private ComboBox<String> cbLocal, cbEstado;
+    private ComboBox<String> cbLocal;
 
     @FXML
     private DatePicker dpData;

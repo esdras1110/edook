@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="12.0" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-background-color: white;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.edook.frontend.controllers.CadastroEquipamentoController">
+    <children>
+        <Label styleClass="h2-Inter" text="Cadastro de Equipamento" textFill="#1a56db" />
+        <VBox spacing="6.0">
+            <children>
+                <Label styleClass="h3" text="Descrição" />
+                <TextField fx:id="txtDescricao" prefHeight="56.0" prefWidth="360.0" promptText="Projetor Dell 4k" style="-fx-border-color: #6B7280; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-width: 1px;" styleClass="subtitulo" />
+            </children>
+        </VBox>
+        <VBox spacing="6.0">
+            <children>
+                <Label styleClass="h3" text="Tipo" />
+                <ComboBox fx:id="cbTipo" prefHeight="56.0" prefWidth="360.0" styleClass="combo-box-editavel" />
+            </children>
+        </VBox>
+        <Label fx:id="lblErro" />
+        <HBox alignment="CENTER" spacing="24.0">
+            <children>
+                <Button mnemonicParsing="false" onAction="#onClickCancelar" styleClass="botao-var" text="Cancelar" />
+                <Button mnemonicParsing="false" onAction="#onClickEnviar" styleClass="botao" text="Enviar" />
+            </children>
+        </HBox>
+    </children>
+    <padding>
+        <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+    </padding>
+</VBox>

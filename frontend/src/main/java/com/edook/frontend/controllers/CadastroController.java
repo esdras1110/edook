@@ -1,6 +1,7 @@
 package com.edook.frontend.controllers;
 
 import com.edook.frontend.models.EquipamentoResponseDTO;
+import com.edook.frontend.models.FuncionarioResponseDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
@@ -29,6 +30,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
@@ -329,6 +331,144 @@ public class CadastroController implements Initializable {
     }
 
     @FXML
+    private void onClickCadastrar(ActionEvent event) {
+        if(!validarFormulario()){
+            return;
+        }
+
+        FuncionarioResponseDTO novoFuncionario = new FuncionarioResponseDTO();
+        novoFuncionario.setNome(campoNome.getText());
+        novoFuncionario.setCpf(campoCPF.getText().replaceAll("[^0-9]", ""));
+        novoFuncionario.setMatricula(Integer.valueOf(campoMatricula.getText()));
+        novoFuncionario.setDdd(campoTelefone.getText().replaceAll("[^0-9]", "").substring(0,2));
+        novoFuncionario.setNumero(campoTelefone.getText().replaceAll("[^0-9]", "").substring(2));
+        novoFuncionario.setEmail(campoEmail.getText());
+        novoFuncionario.setCargo(campoCargo.getValue());
+        novoFuncionario.setSenha(campoSenha.getText());
+        String codigoGerado = String.format("%04d", new Random().nextInt(10000));
+        novoFuncionario.setCodigoVerificacao(codigoGerado);
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/ConfirmacaoCadastroUsuario-view.fxml"));
+            Parent root = loader.load();
+
+            ConfirmacaoCadastroUsuarioController controller = loader.getController();
+            controller.setDados(novoFuncionario);
+
+            Node sourceNode = (Node) event.getSource();
+            Stage popupStage = new Stage();
+            Stage telaPrincipal = (Stage) sourceNode.getScene().getWindow();
+            Parent rootPrincipal = telaPrincipal.getScene().getRoot();
+
+            // Aplica o Blur na tela principal
+            rootPrincipal.setEffect(new GaussianBlur(15));
+
+            popupStage.initOwner(telaPrincipal);
+            popupStage.initModality(Modality.WINDOW_MODAL);
+            popupStage.initStyle(StageStyle.TRANSPARENT);
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            if (getClass().getResource("/com/edook/frontend/style.css") != null) {
+                scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
+            }
+
+            popupStage.setScene(scene);
+            popupStage.centerOnScreen();
+
+            // Espera todo o fluxo terminar
+            popupStage.showAndWait();
+
+            // Remove o Blur quando o fluxo inteiro (ou cancelamento) finalizar
+            rootPrincipal.setEffect(null);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            exibirPopupErro("Erro de Tela", "Não foi possível abrir a tela de confirmação.");
+        }
+    }
+
+    @FXML
+    private void onClickExcluirUsuario(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/ExclusaoUsuario-view.fxml"));
+            Parent root = loader.load();
+
+            ExclusaoUsuarioController controller = loader.getController();
+
+            // Define o comportamento ao finalizar com sucesso
+            controller.setOnExclusaoSucesso(() -> {
+                System.out.println("Fluxo de exclusão de usuário concluído com sucesso!");
+            });
+
+            Stage popupStage = new Stage();
+            Stage donoDaJanela = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Parent rootPrincipal = donoDaJanela.getScene().getRoot();
+
+            // Ativa o Blur na tela principal
+            rootPrincipal.setEffect(new GaussianBlur(15));
+
+            popupStage.initOwner(donoDaJanela);
+            popupStage.initModality(Modality.WINDOW_MODAL);
+            popupStage.initStyle(StageStyle.TRANSPARENT);
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+
+            if (getClass().getResource("/com/edook/frontend/style.css") != null) {
+                scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
+            }
+
+            popupStage.setScene(scene);
+            popupStage.centerOnScreen();
+
+            // Aguarda a finalização do fluxo
+            popupStage.showAndWait();
+
+            // Remove o efeito de desfoque ao retornar
+            rootPrincipal.setEffect(null);
+
+        } catch (Exception e) {
+            exibirPopupErro("Erro de Carregamento", "Não foi possível abrir a tela de exclusão de usuários.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void onClickCadastrarEquipamento(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/CadastroEquipamento-view.fxml"));
+            Parent root = loader.load();
+
+            CadastroEquipamentoController controller = loader.getController();
+
+            // Passa o método da listagem como Runnable! Ao clicar em finalizar, a lista se auto-atualiza.
+            controller.setOnCadastroSucesso(() -> carregarEquipamentos());
+
+            Stage popupStage = new Stage();
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.initStyle(StageStyle.TRANSPARENT);
+
+            // Adiciona o efeito de Blur na tela de fundo principal
+            Stage donoDaJanela = (Stage) tabelaEquipamentos.getScene().getWindow();
+            Parent rootPrincipal = donoDaJanela.getScene().getRoot();
+            rootPrincipal.setEffect(new GaussianBlur(15));
+
+            popupStage.initOwner(donoDaJanela);
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            popupStage.setScene(scene);
+            popupStage.centerOnScreen();
+
+            popupStage.showAndWait();
+            rootPrincipal.setEffect(null); // Desativa o Blur ao voltar
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private void onClickGerenciarEquipamento(ActionEvent event) {
         vboxBotoes.setVisible(false);
         vboxBotoes.setManaged(false);
@@ -502,7 +642,4 @@ public class CadastroController implements Initializable {
         vboxBotoes.setVisible(true);
         vboxBotoes.setManaged(true);
     }
-
-    @FXML
-    private void onClickCadastrar(ActionEvent event) { validarFormulario(); }
 }
