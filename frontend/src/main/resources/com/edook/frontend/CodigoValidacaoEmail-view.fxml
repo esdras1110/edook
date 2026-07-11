@@ -20,7 +20,7 @@
                </image>
             </ImageView>
             <Label styleClass="subtitulo" text="Validação de E-mail" textFill="#6b7280" />
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="360.0" styleClass="txt" text="Um código de redefinição de senha foi enviado para o seu e-mail cadastrado, verifique sua caixa de entrada." textAlignment="CENTER" wrapText="true">
+            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="360.0" styleClass="txt" text="Um código de validação de e-mail foi enviado para o seu e-mail cadastrado, verifique sua caixa de entrada." textAlignment="CENTER" wrapText="true">
                <VBox.margin>
                   <Insets />
                </VBox.margin>

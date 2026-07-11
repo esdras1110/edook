@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="vboxNovaSenha" alignment="CENTER" spacing="12.0" style="-fx-background-radius: 20; -fx-border-radius: 20;" stylesheets="@style.css" visible="true" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.edook.frontend.controllers.RedefinicaoSenhaController">
+   <children>
+      <Label styleClass="h2-Inter" text="Redefinição de Senha" textFill="#1a56db" />
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="6.0">
+         <children>
+            <Label styleClass="h3" text="Nova Senha" textFill="#111827">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Label>
+            <PasswordField fx:id="campoSenhaRedefinicao" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-radius: 20; -fx-border-width: 1px;" styleClass="subtitulo">
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding>
+            </PasswordField>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </VBox>
+      <VBox fx:id="vBoxNovaSenha" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="6.0">
+         <children>
+            <Label styleClass="h3" text="Confirmar Nova Senha" textFill="#111827">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Label>
+            <PasswordField fx:id="campoConfirmacaoSenhaRedefinicao" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-radius: 20; -fx-border-width: 1px;" styleClass="subtitulo">
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding>
+            </PasswordField>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </VBox>
+      <Label id="labelErro" fx:id="labelErroSenha" styleClass="txt" textFill="#111827" />
+      <VBox alignment="CENTER" spacing="12.0">
+         <children>
+            <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickRedefinirSenha" prefHeight="56.0" prefWidth="168.0" styleClass="botao" text="Redefinir" textAlignment="CENTER" textFill="#f9fafb">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+   </padding>
+</VBox>

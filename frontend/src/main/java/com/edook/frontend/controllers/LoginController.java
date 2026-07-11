@@ -23,6 +23,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.edook.frontend.models.LoginResponseDTO;
+import javafx.stage.StageStyle;
+
 import java.util.Random;
 
 public class LoginController {
@@ -43,7 +45,7 @@ public class LoginController {
     private String emailTemporario;
 
     @FXML
-    void onClickEntrar(ActionEvent event) {
+    private void onClickEntrar(ActionEvent event) {
         String emailCPF = campoTextLogin.getText().trim();
         String senha = campoSenhaLogin.getText().trim();
 
@@ -90,15 +92,12 @@ public class LoginController {
                             ObjectMapper objectMapper = new ObjectMapper();
                             LoginResponseDTO dados = objectMapper.readValue(respostaJson, LoginResponseDTO.class);
 
-                            UserSession sessao = UserSession.getInstance();
-                            sessao.setNome(dados.getNome());
-                            sessao.setCargo(dados.getCargo());
-                            sessao.setToken(dados.getToken());
-                            sessao.setCpf(dados.getCpf());
-
-                            if (emailCPF.contains("@")) {
-                                sessao.setEmail(emailCPF);
-                            }
+                            UserSession session = UserSession.getInstance();
+                            session.setNome(dados.getNome());
+                            session.setEmail(dados.getEmail());
+                            session.setCpf(dados.getCpf());
+                            session.setCargo(dados.getCargo());
+                            session.setToken(dados.getToken());
 
                             Platform.runLater(() -> {
                                 try {
@@ -155,7 +154,7 @@ public class LoginController {
     }
 
     @FXML
-    void onClickEsqueceuSenha(ActionEvent event) {
+    private void onClickEsqueceuSenha(ActionEvent event) {
         vboxLogin.setVisible(false);
         vboxLogin.setManaged(false);
         vboxEsqueceuSenha.setVisible(true);
@@ -163,7 +162,7 @@ public class LoginController {
     }
 
     @FXML
-    void onClickEnviar(ActionEvent event) {
+    private void onClickEnviar(ActionEvent event) {
         String email = campoEmail.getText().trim();
         labelErroEmail.setText("");
 
@@ -214,7 +213,7 @@ public class LoginController {
     }
 
     @FXML
-    void onClickVoltarLogin(ActionEvent event) {
+    private void onClickVoltarLogin(ActionEvent event) {
         vboxEsqueceuSenha.setVisible(false);
         vboxEsqueceuSenha.setManaged(false);
         vboxLogin.setVisible(true);
@@ -222,7 +221,7 @@ public class LoginController {
     }
 
     @FXML
-    void onClickVerificar(ActionEvent event) {
+    private void onClickVerificar(ActionEvent event) {
         String codigoUsuario = campoTextCodigo.getText().trim();
         labelErroCodigo.setText("");
 
@@ -251,7 +250,7 @@ public class LoginController {
     }
 
     @FXML
-    void onClickRedefinirSenha(ActionEvent event) {
+    private void onClickRedefinirSenha(ActionEvent event) {
         String novaSenha = campoSenhaRedefinicao.getText();
         String confirmacao = campoConfirmacaoSenhaRedefinicao.getText();
 
@@ -287,6 +286,7 @@ public class LoginController {
                                 Stage popupStage = new Stage();
                                 popupStage.initModality(Modality.APPLICATION_MODAL);
                                 popupStage.initOwner(loginStage);
+                                popupStage.initStyle(StageStyle.UNDECORATED);
                                 popupStage.setScene(new Scene(root));
 
                                 // Remove o efeito de Blur e redireciona para a tela de login quando o popup for fechado
@@ -317,7 +317,7 @@ public class LoginController {
     }
 
     @FXML
-    void onClickReenviarCodigo(ActionEvent event) {
+    private void onClickReenviarCodigo(ActionEvent event) {
         String novoCodigo = String.format("%04d", new Random().nextInt(10000));
 
         // 3. Monta o JSON esperado pelo CodigoVerificacaoDto no Backend
@@ -354,7 +354,7 @@ public class LoginController {
     }
 
     @FXML
-    void onClickVoltarEsqueceuSenha(ActionEvent event) {
+    private void onClickVoltarEsqueceuSenha(ActionEvent event) {
         vboxCodigo.setVisible(false);
         vboxCodigo.setManaged(false);
         vboxEsqueceuSenha.setVisible(true);

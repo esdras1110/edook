@@ -56,7 +56,7 @@
             <HBox spacing="24.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#onClickEditar" styleClass="botao" text="Editar" textFill="#f9fafb" />
-                  <Button mnemonicParsing="false" styleClass="botao" text="Redefinir Senha" textFill="#f9fafb" />
+                  <Button mnemonicParsing="false" onAction="#onClickRedefinirSenha" styleClass="botao" text="Redefinir Senha" textFill="#f9fafb" />
                </children>
             </HBox>
          </children>

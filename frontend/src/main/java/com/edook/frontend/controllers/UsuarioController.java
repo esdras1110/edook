@@ -193,6 +193,47 @@ public class UsuarioController implements Initializable {
     }
 
     @FXML
+    private void onClickRedefinirSenha(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/CodigoValidacaoRedefinicaoSenha-view.fxml"));
+            Parent root = loader.load();
+
+            Stage popupStage = new Stage();
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.initStyle(StageStyle.TRANSPARENT);
+
+            Stage donoDaJanela = (Stage) vboxDados.getScene().getWindow();
+            Parent rootPrincipal = donoDaJanela.getScene().getRoot();
+
+            // Aplica o efeito de desfoque na tela de fundo
+            GaussianBlur blur = new GaussianBlur(15);
+            rootPrincipal.setEffect(blur);
+
+            popupStage.initOwner(donoDaJanela);
+
+            Scene scene = new Scene(root);
+            scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
+
+            if (getClass().getResource("/com/edook/frontend/style.css") != null) {
+                scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
+            }
+
+            popupStage.setScene(scene);
+            popupStage.centerOnScreen();
+
+            // Aguarda a finalização do fluxo do código de validação
+            popupStage.showAndWait();
+
+            // Remove o efeito após o fechamento do pop-up
+            rootPrincipal.setEffect(null);
+
+        } catch (IOException e) {
+            System.err.println("Erro ao abrir o pop-up de código de validação.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private void onClickCancelar(ActionEvent event) {
         vboxEdicao.setVisible(false);
         vboxEdicao.setManaged(false);

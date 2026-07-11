@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="vboxCodigo" alignment="TOP_CENTER" spacing="12.0" style="-fx-background-radius: 20; -fx-border-radius: 20;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.edook.frontend.controllers.CodigoValidacaoRedefinicaoSenhaController">
+    <children>
+        <VBox alignment="CENTER" spacing="6.0">
+            <children>
+                <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@Images/Icone%20Envio.png" />
+                    </image>
+                </ImageView>
+                <Label styleClass="subtitulo" text="Validação de E-mail" textFill="#6b7280" />
+                <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="360.0" styleClass="txt" text="Um código de redefinição de senha foi enviado para o seu e-mail cadastrado, verifique sua caixa de entrada." textAlignment="CENTER" wrapText="true">
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                </Label>
+            </children>
+        </VBox>
+        <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="6.0">
+            <children>
+                <Label styleClass="h3" text="Código" textFill="#111827">
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                </Label>
+                <TextField id="campoEmailLogin" fx:id="campoCodigo" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="168.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                </TextField>
+            </children>
+            <VBox.margin>
+                <Insets />
+            </VBox.margin>
+        </VBox>
+        <Label id="labelErro" fx:id="lblErro" styleClass="txt" textAlignment="CENTER" textFill="#111827">
+            <VBox.margin>
+                <Insets />
+            </VBox.margin>
+        </Label>
+        <VBox alignment="CENTER" spacing="6.0">
+            <children>
+                <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickVerificar" prefHeight="56.0" prefWidth="168.0" styleClass="botao" text="Verificar" textAlignment="CENTER" textFill="#f9fafb">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+            <Hyperlink onAction="#onClickVoltar" styleClass="h3" text="Voltar" textAlignment="CENTER" textFill="#1a56db" />
+            </children>
+            <VBox.margin>
+                <Insets />
+            </VBox.margin>
+        </VBox>
+        <VBox alignment="CENTER" spacing="6.0">
+            <children>
+                <Label styleClass="txt" text="Se não recebeu o código em 5 minutos,">
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                </Label>
+                <Hyperlink onAction="#onClickReenviarCodigo" styleClass="h3" text="Reenvie o código de redefinição." textAlignment="CENTER" textFill="#1a56db">
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                </Hyperlink>
+            </children>
+        </VBox>
+    </children>
+    <padding>
+        <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+    </padding>
+</VBox>
