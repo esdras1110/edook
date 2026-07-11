@@ -93,7 +93,7 @@ CREATE TABLE RESERVA (
 
 	CONSTRAINT fk_reserva_funcionario
 		FOREIGN KEY (cpf_funcionario) REFERENCES FUNCIONARIO(cpf)
-			ON DELETE SET NULL ON UPDATE CASCADE,
+			ON DELETE CASCADE ON UPDATE CASCADE,
 
 	CONSTRAINT chk_reserva_status 
 		CHECK (status IN ('Concluída', 'Pendente', 'Cancelada'))
