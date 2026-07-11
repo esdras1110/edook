@@ -1,5 +1,6 @@
 package com.pi1.Edook.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -13,9 +14,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RedefinirSenhaDto {
 
-    @NotBlank
-    @NotBlank(message = "CPF é obrigatório")
-    private String cpf;
+    @NotBlank(message = "Email é obrigatório")
+    @Email(message = "Email inválido")
+    private String email;
 
     @NotBlank
     @Pattern(
