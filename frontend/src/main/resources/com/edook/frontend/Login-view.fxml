@@ -120,7 +120,7 @@
                                     <Insets />
                                  </VBox.margin>
                               </Label>
-                              <TextField id="campoEmailLogin" fx:id="campoTextRecuperacaoSenha" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" promptText="exemplo@dominio.com" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
+                              <TextField id="campoEmailLogin" fx:id="campoEmail" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" promptText="exemplo@dominio.com" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
@@ -190,7 +190,7 @@
                         </Label>
                         <VBox alignment="CENTER" spacing="12.0">
                            <children>
-                              <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickEnviar" prefHeight="56.0" prefWidth="168.0" styleClass="botao" text="Verificar" textAlignment="CENTER" textFill="#f9fafb">
+                              <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickVerificar" prefHeight="56.0" prefWidth="168.0" styleClass="botao" text="Verificar" textAlignment="CENTER" textFill="#f9fafb">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
@@ -210,7 +210,7 @@
                               <Insets />
                            </VBox.margin>
                         </Label>
-                        <Hyperlink styleClass="h3" text="Reenvie o código de redefinição." textAlignment="CENTER" textFill="#1a56db">
+                        <Hyperlink onAction="#onClickReenviarCodigo" styleClass="h3" text="Reenvie o código de redefinição." textAlignment="CENTER" textFill="#1a56db">
                            <VBox.margin>
                               <Insets />
                            </VBox.margin></Hyperlink>
@@ -228,11 +228,11 @@
                                     <Insets />
                                  </VBox.margin>
                               </Label>
-                              <TextField id="campoEmailLogin" fx:id="campoTextRecuperacaoSenha2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </TextField>
+                              <PasswordField fx:id="campoSenhaRedefinicao" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-radius: 20; -fx-border-width: 1px;" styleClass="subtitulo">
+                                 <padding>
+                                    <Insets left="20.0" right="20.0" />
+                                 </padding>
+                              </PasswordField>
                            </children>
                            <VBox.margin>
                               <Insets />
@@ -245,11 +245,11 @@
                                     <Insets />
                                  </VBox.margin>
                               </Label>
-                              <TextField id="campoEmailLogin" fx:id="campoTextRecuperacaoSenha21" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-width: 1px; -fx-border-radius: 20;" styleClass="subtitulo">
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </TextField>
+                              <PasswordField fx:id="campoConfirmacaoSenhaRedefinicao" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="56.0" prefWidth="360.0" style="-fx-background-radius: 20; -fx-border-color: #6B7280; -fx-border-radius: 20; -fx-border-width: 1px;" styleClass="subtitulo">
+                                 <padding>
+                                    <Insets left="20.0" right="20.0" />
+                                 </padding>
+                              </PasswordField>
                            </children>
                            <VBox.margin>
                               <Insets />
@@ -258,7 +258,7 @@
                         <Label id="labelErro" fx:id="labelErroSenha" styleClass="txt" textFill="#111827" />
                         <VBox alignment="CENTER" spacing="12.0">
                            <children>
-                              <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickEnviar" prefHeight="56.0" prefWidth="168.0" styleClass="botao" text="Redefinir" textAlignment="CENTER" textFill="#f9fafb">
+                              <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClickRedefinirSenha" prefHeight="56.0" prefWidth="168.0" styleClass="botao" text="Redefinir" textAlignment="CENTER" textFill="#f9fafb">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>

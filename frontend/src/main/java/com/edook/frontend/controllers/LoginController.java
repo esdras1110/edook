@@ -11,7 +11,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URI;
@@ -26,50 +29,18 @@ public class LoginController {
     private static final HttpClient httpClient = HttpClient.newHttpClient();
 
     @FXML
-    private TextField campoTextLogin;
+    private TextField campoTextLogin, campoEmail, campoTextCodigo;
 
     @FXML
-    private PasswordField campoSenhaLogin;
+    private PasswordField campoSenhaLogin, campoSenhaRedefinicao, campoConfirmacaoSenhaRedefinicao;
 
     @FXML
-    private TextField campoTextRecuperacaoSenha;
+    private Label labelErroLogin, labelErroEmail, labelErroCodigo, labelErroSenha;
 
     @FXML
-    private TextField campoTextCodigo;
-
-    @FXML
-    private TextField campoTextNovaSenha;
-
-    @FXML
-    private TextField campoTextConfirmarNovaSenha;
-
-    @FXML
-    private Label labelErroLogin;
-
-    @FXML
-    private Label labelErroEmail;
-
-    @FXML
-    private Label labelErroCodigo;
-
-    @FXML
-    private Label labelErroSenha;
-
-    @FXML
-    private VBox vboxLogin;
-
-    @FXML
-    private VBox vboxEsqueceuSenha;
-
-    @FXML
-    private VBox vboxCodigo;
-
-    @FXML
-    private VBox vboxNovaSenha;
+    private VBox vboxLogin, vboxEsqueceuSenha, vboxCodigo, vboxNovaSenha;
 
     private String emailTemporario;
-
-    private String codigo;
 
     @FXML
     void onClickEntrar(ActionEvent event) {
@@ -183,17 +154,6 @@ public class LoginController {
                 });
     }
 
-    private String extrairValorJson(String json, String chave) {
-        try {
-            String padrao = "\"" + chave + "\":\"";
-            int inicio = json.indexOf(padrao) + padrao.length();
-            int fim = json.indexOf("\"", inicio);
-            return json.substring(inicio, fim);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
     @FXML
     void onClickEsqueceuSenha(ActionEvent event) {
         vboxLogin.setVisible(false);
@@ -204,8 +164,7 @@ public class LoginController {
 
     @FXML
     void onClickEnviar(ActionEvent event) {
-        String email = campoTextRecuperacaoSenha.getText().trim();
-
+        String email = campoEmail.getText().trim();
         labelErroEmail.setText("");
 
         if (email.isEmpty()) {
@@ -222,15 +181,36 @@ public class LoginController {
 
         this.emailTemporario = email;
 
-        Random gerador = new Random();
-        this.codigo = String.valueOf(gerador.nextInt(900000) + 100000);
+        String codigo = String.format("%04d", new Random().nextInt(10000));
+        String jsonBody = String.format("{\"email\": \"%s\", \"codigo\": \"%s\"}", email, codigo);
 
-        //chamar função de enviar email
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/funcionarios/enviar-codigo"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
 
-        vboxEsqueceuSenha.setVisible(false);
-        vboxEsqueceuSenha.setManaged(false);
-        vboxCodigo.setVisible(true);
-        vboxCodigo.setManaged(true);
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(response -> {
+                    Platform.runLater(() -> {
+                        if (response.statusCode() == 200) {
+                            vboxEsqueceuSenha.setVisible(false);
+                            vboxEsqueceuSenha.setManaged(false);
+                            vboxCodigo.setVisible(true);
+                            vboxCodigo.setManaged(true);
+                        } else {
+                            labelErroEmail.setText("Erro ao enviar e-mail. Verifique os dados.");
+                            labelErroEmail.setStyle("-fx-text-fill: red;");
+                        }
+                    });
+                })
+                .exceptionally(e -> {
+                    Platform.runLater(() -> {
+                        labelErroEmail.setText("Erro de conexão com o servidor.");
+                        labelErroEmail.setStyle("-fx-text-fill: red;");
+                    });
+                    return null;
+                });
     }
 
     @FXML
@@ -244,17 +224,133 @@ public class LoginController {
     @FXML
     void onClickVerificar(ActionEvent event) {
         String codigoUsuario = campoTextCodigo.getText().trim();
+        labelErroCodigo.setText("");
 
-        if(!codigo.equals(codigoUsuario)){
-            labelErroCodigo.setText("Código Inválido.");
-            labelErroCodigo.setStyle("-fx-text-fill: red;");
+        String jsonBody = String.format("{\"email\": \"%s\", \"codigo\": \"%s\"}", emailTemporario, codigoUsuario);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/funcionarios/verificar-codigo"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
+
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(response -> {
+                    Platform.runLater(() -> {
+                        if (response.statusCode() == 200) {
+                            vboxCodigo.setVisible(false);
+                            vboxCodigo.setManaged(false);
+                            vboxNovaSenha.setVisible(true);
+                            vboxNovaSenha.setManaged(true);
+                        } else {
+                            labelErroCodigo.setText("Código Inválido.");
+                            labelErroCodigo.setStyle("-fx-text-fill: red;");
+                        }
+                    });
+                });
+    }
+
+    @FXML
+    void onClickRedefinirSenha(ActionEvent event) {
+        String novaSenha = campoSenhaRedefinicao.getText();
+        String confirmacao = campoConfirmacaoSenhaRedefinicao.getText();
+
+        if (novaSenha.isEmpty() || !novaSenha.equals(confirmacao)) {
+            labelErroSenha.setText("As senhas não coincidem ou estão vazias.");
+            labelErroSenha.setStyle("-fx-text-fill: red;");
             return;
         }
 
-        vboxCodigo.setVisible(false);
-        vboxCodigo.setManaged(false);
-        vboxNovaSenha.setVisible(true);
-        vboxNovaSenha.setManaged(true);
+        // Assumindo que o DTO no backend espera 'email' e 'novaSenha'
+        String jsonBody = String.format("{\"email\": \"%s\", \"novaSenha\": \"%s\"}", emailTemporario, novaSenha);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/funcionarios/redefinir-senha"))
+                .header("Content-Type", "application/json")
+                .method("PATCH", HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
+
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(response -> {
+                    Platform.runLater(() -> {
+                        if (response.statusCode() == 200) {
+                            try {
+                                Stage loginStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+                                // Aplica o GaussianBlur de 15 na tela atual
+                                GaussianBlur blur = new GaussianBlur(15);
+                                loginStage.getScene().getRoot().setEffect(blur);
+
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/SucessoEsqueceuSenha-view.fxml"));
+                                Parent root = loader.load();
+
+                                Stage popupStage = new Stage();
+                                popupStage.initModality(Modality.APPLICATION_MODAL);
+                                popupStage.initOwner(loginStage);
+                                popupStage.setScene(new Scene(root));
+
+                                // Remove o efeito de Blur e redireciona para a tela de login quando o popup for fechado
+                                popupStage.setOnHidden(e -> {
+                                    loginStage.getScene().getRoot().setEffect(null);
+                                    vboxNovaSenha.setVisible(false);
+                                    vboxNovaSenha.setManaged(false);
+                                    vboxLogin.setVisible(true);
+                                    vboxLogin.setManaged(true);
+
+                                    // Limpar campos
+                                    campoSenhaRedefinicao.clear();
+                                    campoConfirmacaoSenhaRedefinicao.clear();
+                                    campoTextCodigo.clear();
+                                    campoEmail.clear();
+                                });
+
+                                popupStage.show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            labelErroSenha.setText("Erro ao redefinir a senha.");
+                            labelErroSenha.setStyle("-fx-text-fill: red;");
+                        }
+                    });
+                });
+    }
+
+    @FXML
+    void onClickReenviarCodigo(ActionEvent event) {
+        String novoCodigo = String.format("%04d", new Random().nextInt(10000));
+
+        // 3. Monta o JSON esperado pelo CodigoVerificacaoDto no Backend
+        String jsonBody = String.format("{\"email\": \"%s\", \"codigo\": \"%s\"}", emailTemporario, novoCodigo);
+
+        // 4. Monta a requisição POST apontando para a rota correta do seu Controller
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/funcionarios/enviar-codigo"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
+
+        // 5. Dispara a requisição assíncrona para não travar a interface
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(response -> {
+                    Platform.runLater(() -> {
+                        if (response.statusCode() == 200) {
+                            labelErroCodigo.setText("Um novo código foi enviado para o seu e-mail.");
+                            labelErroCodigo.setTextFill(Color.GREEN);
+                        } else {
+                            System.err.println("Erro ao reenviar. Status: " + response.statusCode() + " | Body: " + response.body());
+
+                            labelErroCodigo.setText("Erro ao reenviar o código.");
+                            labelErroCodigo.setTextFill(Color.RED);
+                        }
+                    });
+                })
+                .exceptionally(e -> {
+                    Platform.runLater(() -> {
+                        System.err.println("Falha de conexão ao reenviar código: " + e.getMessage());
+                    });
+                    return null;
+                });
     }
 
     @FXML
