@@ -11,6 +11,7 @@ import lombok.Setter;
 public class LoginResponseDto {
     private String nome;
     private String cpf;
+    private String email;
     private String cargo;
     private String token;
 }
