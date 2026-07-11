@@ -54,26 +54,14 @@ public class RedefinicaoSenhaController {
                     Platform.runLater(() -> {
                         if (response.statusCode() == 200) {
                             try {
-                                // Fecha o pop-up atual de inserção da nova senha
+                                // 1. Obtém a janela (Stage) que já está aberta na tela
                                 Stage stageAtual = (Stage) campoSenhaRedefinicao.getScene().getWindow();
-                                stageAtual.close();
 
-                                // Abre o pop-up final: SucessoRedefinicaoSenha-view.fxml
+                                // 2. Carrega o layout de sucesso (SucessoRedefinicaoSenha-view.fxml)
                                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/SucessoRedefinicaoSenha-view.fxml"));
                                 Parent root = loader.load();
 
-                                Stage popupStage = new Stage();
-                                popupStage.initModality(Modality.APPLICATION_MODAL);
-                                popupStage.initStyle(StageStyle.TRANSPARENT);
-
-                                Stage donoDaJanela = (Stage) stageAtual.getOwner();
-                                Parent rootPrincipal = donoDaJanela.getScene().getRoot();
-
-                                GaussianBlur blur = new GaussianBlur(15);
-                                rootPrincipal.setEffect(blur);
-
-                                popupStage.initOwner(donoDaJanela);
-
+                                // 3. Monta a nova cena
                                 Scene scene = new Scene(root);
                                 scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
 
@@ -81,14 +69,15 @@ public class RedefinicaoSenhaController {
                                     scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
                                 }
 
-                                popupStage.setScene(scene);
-                                popupStage.centerOnScreen();
-                                popupStage.showAndWait();
+                                // 4. Substitui o conteúdo da janela de forma segura, sem abrir outra por cima
+                                stageAtual.setScene(scene);
+                                stageAtual.centerOnScreen();
 
-                                rootPrincipal.setEffect(null);
+                                // Nota: O efeito de Blur (Desfocado) na tela principal por trás continuará ativo
+                                // porque não fechamos a janela dona do efeito ainda!
 
                             } catch (IOException e) {
-                                System.err.println("Erro ao abrir pop-up de sucesso da redefinição.");
+                                System.err.println("Erro ao transicionar para a tela de sucesso da redefinição.");
                                 e.printStackTrace();
                             }
                         } else {

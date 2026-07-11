@@ -11,7 +11,7 @@
     </padding>
     <children>
       <Label styleClass="h2-Inter" text="Redefinição de Senha" textFill="#1a56db" />
-          <Label prefWidth="360.0" styleClass="txt" text="Senha redefinida com sucesso, clique em finalizar para ser direcionado a tela de login." textAlignment="CENTER" wrapText="true" />
+          <Label alignment="CENTER" prefWidth="360.0" styleClass="txt" text="Senha redefinida com sucesso." textAlignment="CENTER" wrapText="true" />
         <Button mnemonicParsing="false" onAction="#onClickFinalizar" styleClass="botao" text="Finalizar" />
     </children>
 </VBox>

@@ -314,6 +314,7 @@ public class UsuarioController implements Initializable {
             httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenAccept(response -> {
                         if (response.statusCode() == 200) {
+                            UserSession.getInstance().setNome(campoNome.getText().trim());
                             Platform.runLater(() -> {
                                 try {
                                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/SucessoEdicaoUsuario-view.fxml"));

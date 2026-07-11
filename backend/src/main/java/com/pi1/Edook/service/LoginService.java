@@ -63,6 +63,7 @@ public class LoginService {
         return new LoginResponseDto(
                 funcionario.getNome(),
                 funcionario.getCpf(),
+                funcionario.getEmail(),
                 funcionario.getCargo(),
                 "LOGIN_EFETUADO_COM_SUCESSO"
         );
