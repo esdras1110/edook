@@ -6,94 +6,19 @@ O Edook é um sistema para gerenciamento de reservas de equipamentos escolares. 
 
 ---
 
-# Pré-requisitos
+## Arquitetura do Projeto
 
-Antes de executar o projeto é necessário possuir:
+O ecossistema é dividido em duas partes independentes e complementares:
 
-* Docker Desktop instalado;
-* Docker Desktop em execução.
+*  **Backend (API REST):** Desenvolvido em **Java 21** com **Spring Boot**, utilizando **PostgreSQL** como banco de dados e empacotado via **Docker**.
+*  **Frontend (Cliente Desktop):** Desenvolvido em **Java 25** utilizando o framework gráfico **JavaFX 21.0.6** para uma experiência nativa de desktop.
+*  Para demais integrações especificas, basta acessar o README de cada parte especificamente, como demonstra o diretório abaixo.
 
----
-
-# Configuração do envio de e-mails
-
-O sistema utiliza uma conta Gmail para enviar:
-
-* Código de confirmação de e-mail;
-* Código para redefinição de senha.
-
-O sistema já vem com uma conta genérica para realizar essa função que pode ser alterada em:
 
 ```text
-backend/src/main/resources/application.properties
-```
-Campos a serem alterados:
-```properties
-spring.mail.username=SEU_EMAIL@gmail.com
-spring.mail.password=SUA_SENHA_DE_APLICATIVO
-```
-
-**Importante:** a senha utilizada deve ser uma **Senha de Aplicativo** gerada pela conta Google.
-
----
-
-# Executando o projeto
-
-Na pasta `backend`, execute:
-
-```bash
-docker compose up --build
-```
-
-Na primeira execução o Docker irá:
-
-* baixar as imagens necessárias;
-* criar o banco de dados PostgreSQL;
-* compilar o projeto Spring Boot;
-* iniciar a API.
-
-Esse processo pode levar alguns minutos.
-
----
-
-# Acessando a documentação da API
-
-Após iniciar a aplicação, a documentação Swagger estará disponível em:
-
-```text
-http://localhost:8080/swagger-ui/index.html
-```
-
----
-
-# Acessando o banco de dados
-
-Caso seja necessário executar comandos SQL diretamente no PostgreSQL:
-
-```bash
-docker exec -it postgres_sistema psql -U admin_sistema -d Edook
-```
-
-Para sair do terminal do PostgreSQL:
-
-```bash
-\q
-```
-
----
-
-# Encerrando a aplicação
-
-Parar os containers mantendo os dados do banco:
-
-```bash
-docker compose down
-```
-
-Parar os containers e remover os dados do banco:
-
-```bash
-docker compose down -v
+edook/
+├──  backend       --> API REST, Banco de Dados e Documentação Swagger
+└──  frontend      --> Interface gráfica Desktop (JavaFX) e Telas FXML
 ```
 
 ---
