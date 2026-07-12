@@ -1,59 +1,115 @@
 # Edook
 
 ## Sobre o Projeto
-Sistema automatizado onde todos os professores podem registrar previamente os instrumentos que utilizarão, contando depois com recursos de fácil acesso ao campo de reservas para saber quais e quantos itens estão disponíveis e controle para impedirem reservas simultâneas ao mesmo item no mesmo horário.
+
+O Edook é um sistema para gerenciamento de reservas de equipamentos escolares. Ele permite que professores realizem reservas antecipadas de equipamentos, evitando conflitos de horário e facilitando o controle dos recursos disponíveis.
 
 ---
 
-## Como rodar o Docker e testar pelo Swagger
+# Pré-requisitos
 
-### Compilar a API
-Para que o Docker consiga executar, ele precisa acessar o JAR contendo todas as informações que ele precisa para rodar.
+Antes de executar o projeto é necessário possuir:
 
-1. Para gerar esse JAR abra o terminal na pasta do backend e execute:
-   ```bash
-   mvnw.cmd clean package -DskipTests
-   ```
-### Executar o Docker
-Com o JAR da API gerado é possivel executar o docker
-1. Na pasta do backend, execute:
-   ```bash
-   docker compose up -d --build
-   ```
-2. É possivel executar comandos SQL pelo proprio terminal. Para isso, execute esse comando na mesma pasta:
-   ```bash
-   docker exec -it postgres_sistema psql -U admin_sistema -d Edook
-   ```
-
-### Como acessar o Swagger
-Com o docker rodando, acesse pelo seu navegador: http://localhost:8080/swagger-ui/index.html#.
-
-
-### Finalizar Docker
-1. Para sair do terminal do PostgreSQL execute:
-   ```bash
-   \q
-   ```
-2. Para apenas parar o docker e manter os dados do banco execute:
-   ```bash
-   docker compose down
-   ```
-3. Para parar e remover os dados execute:
-   ```bash
-   docker compose down -v
-   ```
-### Pré-requisitos
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado e aberto durante o processo.
+* Docker Desktop instalado;
+* Docker Desktop em execução.
 
 ---
 
-## Tecnologias Utilizadas
+# Configuração do envio de e-mails
 
-O projeto utiliza a linguagem **Java** como base principal para todo o ecossistema, dividindo-se em:
+O sistema utiliza uma conta Gmail para enviar:
 
-### Backend
-* **Spring Boot**: Framework para criação da API REST e gerenciamento do sistema.
-* **PostgreSQL**: Banco de dados relacional para armazenamento das informações.
+* Código de confirmação de e-mail;
+* Código para redefinição de senha.
 
-### Frontend
-* **JavaFX**: Framework para construção da interface gráfica para desktop.
+O sistema já vem com uma conta genérica para realizar essa função que pode ser alterada em:
+
+```text
+backend/src/main/resources/application.properties
+```
+Campos a serem alterados:
+```properties
+spring.mail.username=SEU_EMAIL@gmail.com
+spring.mail.password=SUA_SENHA_DE_APLICATIVO
+```
+
+**Importante:** a senha utilizada deve ser uma **Senha de Aplicativo** gerada pela conta Google.
+
+---
+
+# Executando o projeto
+
+Na pasta `backend`, execute:
+
+```bash
+docker compose up --build
+```
+
+Na primeira execução o Docker irá:
+
+* baixar as imagens necessárias;
+* criar o banco de dados PostgreSQL;
+* compilar o projeto Spring Boot;
+* iniciar a API.
+
+Esse processo pode levar alguns minutos.
+
+---
+
+# Acessando a documentação da API
+
+Após iniciar a aplicação, a documentação Swagger estará disponível em:
+
+```text
+http://localhost:8080/swagger-ui/index.html
+```
+
+---
+
+# Acessando o banco de dados
+
+Caso seja necessário executar comandos SQL diretamente no PostgreSQL:
+
+```bash
+docker exec -it postgres_sistema psql -U admin_sistema -d Edook
+```
+
+Para sair do terminal do PostgreSQL:
+
+```bash
+\q
+```
+
+---
+
+# Encerrando a aplicação
+
+Parar os containers mantendo os dados do banco:
+
+```bash
+docker compose down
+```
+
+Parar os containers e remover os dados do banco:
+
+```bash
+docker compose down -v
+```
+
+---
+
+# Tecnologias utilizadas
+
+## Backend
+
+* Java 21
+* Spring Boot
+* Spring Data JPA
+* PostgreSQL
+* Docker
+* Swagger (Springdoc OpenAPI)
+
+## Frontend
+
+* Java 25
+* JavaFX
