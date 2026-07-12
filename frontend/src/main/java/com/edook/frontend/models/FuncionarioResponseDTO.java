@@ -1,5 +1,7 @@
 package com.edook.frontend.models;
 
+// DTO (Data Transfer Object) para os dados de Funcionario
+// EquipamentoResponseDTO detalhado
 public class FuncionarioResponseDTO {
     private String nome;
     private String cpf;
@@ -11,7 +13,6 @@ public class FuncionarioResponseDTO {
     private String senha;
     private String codigoVerificacao;
 
-    // Getters e Setters
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
 

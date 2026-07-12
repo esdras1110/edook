@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+// Controlador do modal de Filtros Avançados de Reservas.
 public class FiltroReservasController implements Initializable {
     @FXML
     private ComboBox<String> cbEquipamento, cbLocal, cbEstado;
@@ -22,19 +23,24 @@ public class FiltroReservasController implements Initializable {
     @FXML
     private TextField txtHoraInicio, txtHoraFim;
 
+    // Referência a tela principal que implementa a interface Filtravel.
     private Filtravel telaPai;
 
+    // Função executado ao abrir a janela.
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarComponentes();
     }
 
+    // Preenche as listas suspensas e aplica máscaras e comportamentos aos campos de data e hora para evitar dados inválidos.
     private void configurarComponentes() {
         configurarComportamentoDatePicker(dpDataInicio);
         configurarComportamentoDatePicker(dpDataFim);
+        // Aplica o filtro de formatação HH:mm nos campos de texto
         aplicarMascaraHorario(txtHoraInicio);
         aplicarMascaraHorario(txtHoraFim);
 
+        // Preenchimento estático das opções de filtro
         cbEquipamento.setItems(javafx.collections.FXCollections.observableArrayList(
                 "Projetor",
                 "Notebook",
@@ -61,10 +67,12 @@ public class FiltroReservasController implements Initializable {
         ));
     }
 
+    // Define quem é o ecrã pai que vai receber os filtros no final.
     public void setTelaPai(Filtravel telaPai) {
         this.telaPai = telaPai;
     }
 
+    // Recolhe todos os valores preenchidos, agrupa-os num objeto DTO e devolve-os a tela pai antes de fechar a janela.
     @FXML
     private void onClickAplicar(ActionEvent event) {
         FiltroReservaDTO filtro = new FiltroReservaDTO();
@@ -82,12 +90,14 @@ public class FiltroReservasController implements Initializable {
         ((Stage) cbEquipamento.getScene().getWindow()).close();
     }
 
+    // Limpa todos os filtros.
     @FXML
     private void onClickLimpar(ActionEvent event) {
         telaPai.setFiltrosAvancados(null);
         ((Stage) cbEquipamento.getScene().getWindow()).close();
     }
 
+    // Impede que o utilizador escreva datas manualmente e força a abertura do calendário ao clicar no campo de texto.
     private void configurarComportamentoDatePicker(DatePicker datePicker) {
         if (datePicker != null) {
             datePicker.setEditable(false);
@@ -100,6 +110,7 @@ public class FiltroReservasController implements Initializable {
         }
     }
 
+    // Aplica uma máscara que formata a hora automaticamente e valida os caracteres introduzidos através de Regex
     private void aplicarMascaraHorario(TextField textField) {
         if (textField == null) {
             return;
@@ -132,6 +143,7 @@ public class FiltroReservasController implements Initializable {
         }));
     }
 
+    // Se o usuário já tiver filtrado algo antes, este Função preenche os campos com as escolhas antigas
     public void carregarFiltrosSalvos(FiltroReservaDTO filtro) {
         if (filtro == null) return;
 

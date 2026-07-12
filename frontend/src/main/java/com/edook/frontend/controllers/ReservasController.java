@@ -33,6 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+// Controlador da tela de Reservas, muito semelhante a tela de Inicio, difere pois não tem lembretes e possui filtro de
+// minhas reservas
+// Mais descrições em CadastroController ou InicioController
 public class ReservasController implements Initializable, Filtravel {
     private static final HttpClient httpClient = HttpClient.newHttpClient();
     private static final ObjectMapper objectMapper = new ObjectMapper()
@@ -53,6 +56,7 @@ public class ReservasController implements Initializable, Filtravel {
     @FXML
     private Button btnMinhasReservas;
 
+    // Variável de Controle de Estado. Dita se a tabela deve mostrar tudo (false) ou apenas as reservas do usuário (true)
     private boolean filtrarApenasMinhas = false;
     private FiltroReservaDTO filtrosAvancados = null;
 
@@ -99,7 +103,7 @@ public class ReservasController implements Initializable, Filtravel {
     }
 
     private void buscarReservas() {
-        String url = "http://localhost:8080/reservas"; // URL do seu ReservaController no Back-end
+        String url = "http://localhost:8080/reservas";
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -112,7 +116,6 @@ public class ReservasController implements Initializable, Filtravel {
                         try {
                             String json = response.body();
 
-                            // O Jackson converte o JSON do Back para uma lista de ReservaResponseDto
                             List<ReservaResponseDTO> todasReservas = objectMapper.readValue(
                                     json,
                                     new TypeReference<List<ReservaResponseDTO>>() {}
@@ -147,7 +150,6 @@ public class ReservasController implements Initializable, Filtravel {
         String cpfUsuarioLogado = UserSession.getInstance().getCpf();
 
         listaFiltrada.setPredicate(reserva -> {
-            // 1. Regra da Barra de Pesquisa
             boolean passaBusca = true;
             if (!textoBusca.isEmpty()) {
                 passaBusca = (reserva.getNome() != null && reserva.getNome().toLowerCase().contains(textoBusca)) ||
@@ -156,16 +158,16 @@ public class ReservasController implements Initializable, Filtravel {
                         (reserva.getStatus() != null && reserva.getStatus().toLowerCase().contains(textoBusca));
             }
 
-            // Se já reprovou na busca de texto, não precisa nem checar o avançado
             if (!passaBusca) return false;
 
+            // Filtro de Estado ("Minhas Reservas")
+            // Se o botão estiver ativado, descarta qualquer reserva que não pertença ao usuário logado.
             if (filtrarApenasMinhas) {
                 if (reserva.getNomeFuncionario() == null || !reserva.getNomeFuncionario().equals(cpfUsuarioLogado)) {
-                    return false; // Reprova se não for do usuário logado
+                    return false;
                 }
             }
 
-            // 2. Regras do Filtro Avançado (Pop-up)
             if (filtrosAvancados != null) {
                 if (filtrosAvancados.local != null && !filtrosAvancados.local.isEmpty()) {
                     if (reserva.getLocalidade() == null || !reserva.getLocalidade().equalsIgnoreCase(filtrosAvancados.local)) return false;
@@ -189,13 +191,14 @@ public class ReservasController implements Initializable, Filtravel {
                 }
             }
 
-            // Se passou pelos dois testes, a reserva aparece na tabela!
             return true;
         });
     }
 
+    // Ação do botão "Minhas Reservas". Alterna o estado da variável e altera dinamicamente a aparência do botão
     @FXML
     private void onClickMinhasReservas(ActionEvent event) {
+        // Inverte o estado atual (se era false, vira true, e vice-versa)
         filtrarApenasMinhas = !filtrarApenasMinhas;
 
         if (filtrarApenasMinhas) {
@@ -305,7 +308,6 @@ public class ReservasController implements Initializable, Filtravel {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/OperacaoInvalida-view.fxml"));
                 Parent root = loader.load();
 
-                // Pega o controller do pop-up e define a mensagem de "Nenhuma selecionada"
                 OperacaoInvalidaController popupController = loader.getController();
                 popupController.setMensagem(
                         "Cancelamento Inválido",
@@ -316,12 +318,10 @@ public class ReservasController implements Initializable, Filtravel {
                 Stage donoDaJanela = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
                 Parent rootPrincipal = donoDaJanela.getScene().getRoot();
 
-                // Aplica o efeito de desfoque no fundo
                 javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(15);
                 rootPrincipal.setEffect(blur);
 
                 popupStage.initOwner(donoDaJanela);
-                // WINDOW_MODAL impede que o usuário clique na tela de trás enquanto o pop-up estiver aberto
                 popupStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
                 popupStage.initStyle(javafx.stage.StageStyle.TRANSPARENT);
 
@@ -332,10 +332,8 @@ public class ReservasController implements Initializable, Filtravel {
                 popupStage.setScene(scene);
                 popupStage.centerOnScreen();
 
-                // Espera o usuário fechar o pop-up
                 popupStage.showAndWait();
 
-                // Remove o desfoque após o pop-up ser fechado
                 rootPrincipal.setEffect(null);
 
             } catch (java.io.IOException e) {
@@ -359,7 +357,6 @@ public class ReservasController implements Initializable, Filtravel {
             Stage donoDaJanela = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             Parent rootPrincipal = donoDaJanela.getScene().getRoot();
 
-            // Aplica o Blur
             javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(15);
             rootPrincipal.setEffect(blur);
 
@@ -367,7 +364,6 @@ public class ReservasController implements Initializable, Filtravel {
             popupStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
             popupStage.initStyle(javafx.stage.StageStyle.TRANSPARENT);
 
-            // Define a cena
             Scene scene = new Scene(root);
             scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
             scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
@@ -376,12 +372,9 @@ public class ReservasController implements Initializable, Filtravel {
             popupStage.centerOnScreen();
             popupStage.showAndWait();
 
-            // Remove o Blur ao fechar
             rootPrincipal.setEffect(null);
 
-            // Opcional: recarregar a tabela após fechar o pop-up, caso algo tenha sido cancelado
             buscarReservas();
-
         } catch (java.io.IOException e) {
             System.err.println("Erro ao abrir o pop-up de Confirmação.");
             e.printStackTrace();

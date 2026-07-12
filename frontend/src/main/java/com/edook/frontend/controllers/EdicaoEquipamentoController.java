@@ -21,14 +21,20 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
 
+// Controlador do modal de Edição de Equipamentos. Semelhante aos modais de cadastro, mas esse inicializa com os dados antigos
+// e permite o usuário modificá-los.
 public class EdicaoEquipamentoController {
 
     @FXML private TextField txtDesc;
     @FXML private Label lblErro;
 
+    // Guarda os dados originais do equipamento que está sendo editado
     private EquipamentoResponseDTO equipamento;
-    private Runnable onEdicaoSucesso; // Para atualizar a tabela no CadastroController
 
+    // Variável de ação que será executada quando a edição der certo, recarregar tabela.
+    private Runnable onEdicaoSucesso;
+
+    // Recebe o equipamento selecionado na tabela da tela anterior e preenche o campo de texto com a descrição atual dele
     public void setEquipamento(EquipamentoResponseDTO equipamento) {
         this.equipamento = equipamento;
         if (equipamento != null) {
@@ -40,6 +46,7 @@ public class EdicaoEquipamentoController {
         this.onEdicaoSucesso = onEdicaoSucesso;
     }
 
+    // Valida se a nova descrição não está vazia e abre a tela de confirmação.
     @FXML
     private void onClickAtualizar(ActionEvent event) {
         String novaDesc = txtDesc.getText().trim();
@@ -50,6 +57,7 @@ public class EdicaoEquipamentoController {
             return;
         }
 
+        // Carrega o PopUp de forma padrão como visto no CadastroController
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/ConfirmacaoEdicaoEquipamento-view.fxml"));
             Parent root = loader.load();
@@ -62,7 +70,6 @@ public class EdicaoEquipamentoController {
             popupStage.initModality(Modality.APPLICATION_MODAL);
             popupStage.initStyle(StageStyle.TRANSPARENT);
 
-            // Aplica Blur nesta janela antes de abrir a Confirmação
             Stage donoDaJanela = (Stage) txtDesc.getScene().getWindow();
             Parent rootPrincipal = donoDaJanela.getScene().getRoot();
             rootPrincipal.setEffect(new GaussianBlur(15));
@@ -73,10 +80,8 @@ public class EdicaoEquipamentoController {
             popupStage.setScene(scene);
             popupStage.centerOnScreen();
 
-            // Pausa a execução aqui até a pessoa confirmar ou cancelar
             popupStage.showAndWait();
 
-            // Remove o Blur garantido!
             rootPrincipal.setEffect(null);
 
         } catch (Exception e) {
@@ -85,6 +90,7 @@ public class EdicaoEquipamentoController {
         }
     }
 
+    // Faz a comunicação com a API para salvar as alterações.
     private void enviarEdicao(String novaDescricao, ActionEvent originalEvent) {
         CompletableFuture.runAsync(() -> {
             try {
@@ -117,6 +123,7 @@ public class EdicaoEquipamentoController {
         });
     }
 
+    // Exibe um modal de sucesso e fecha a janela de edição atual, acionando a atualização da tabela na tela anterior.
     private void abrirTelaSucesso() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/SucessoEdicaoEquipamento-view.fxml"));
@@ -124,9 +131,9 @@ public class EdicaoEquipamentoController {
 
             SucessoEdicaoEquipamentoController controller = loader.getController();
             controller.setOnFinalizar(() -> {
-                if (onEdicaoSucesso != null) onEdicaoSucesso.run(); // Atualiza a tabela na tela de trás
+                if (onEdicaoSucesso != null) onEdicaoSucesso.run();
                 Stage stage = (Stage) txtDesc.getScene().getWindow();
-                stage.close(); // Fecha a tela de edição
+                stage.close();
             });
 
             Stage popupStage = new Stage();
@@ -152,6 +159,7 @@ public class EdicaoEquipamentoController {
         }
     }
 
+    // Fecha a janela se a ação for cancelada
     @FXML
     private void onClickCancelar(ActionEvent event) {
         Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();

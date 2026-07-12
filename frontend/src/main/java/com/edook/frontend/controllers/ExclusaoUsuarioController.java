@@ -29,9 +29,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.UnaryOperator;
 
+// Controlador do modal de Exclusão de Usuário. Semelhante aos modais de cadastro, diferindo apenas que nesse caso o usuário
+// entra com o cpf do funcionário a ser excluído.
 public class ExclusaoUsuarioController implements Initializable {
     @FXML
     private Label lblErro;

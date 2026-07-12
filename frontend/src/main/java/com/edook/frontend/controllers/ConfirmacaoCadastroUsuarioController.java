@@ -22,6 +22,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+// Controlador do modal Confirmar Cadastro de Usuário. Semelhante aos outros controladores de confirmação.
+// ConfirmacaoCadastroEquipamentoControlle comentado detalhadamente.
 public class ConfirmacaoCadastroUsuarioController {
     @FXML
     private Label lblCPF, lblNome, lblMatricula, lblCargo;
@@ -62,7 +64,6 @@ public class ConfirmacaoCadastroUsuarioController {
         try {
             String jsonBody = mapper.writeValueAsString(funcionario);
 
-            // Ajuste o endpoint conforme a rota real do seu backend
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("http://localhost:8080/funcionarios"))
                     .header("Content-Type", "application/json")

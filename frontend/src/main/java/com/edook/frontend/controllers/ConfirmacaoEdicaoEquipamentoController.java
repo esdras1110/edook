@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+// Controlador do modal Confirmar Ediçao de Equipamento. Semelhante aos outros controladores de confirmação.
+// ConfirmacaoCadastroEquipamentoControlle comentado detalhadamente.
 public class ConfirmacaoEdicaoEquipamentoController {
 
     @FXML private Label lblDescricaoAntiga;
@@ -22,14 +24,9 @@ public class ConfirmacaoEdicaoEquipamentoController {
     }
 
     @FXML
-    private void onClickCancelar(ActionEvent event) {
-        onClickVoltar(event);
-    }
-
-    @FXML
     private void onClickConfirmar(ActionEvent event) {
         if (onConfirmar != null) {
-            onConfirmar.run(); // Avisa a tela anterior que pode enviar para API
+            onConfirmar.run();
         }
         onClickVoltar(event);
     }

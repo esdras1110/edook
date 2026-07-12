@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 
+// Controlador da tela de Confirmação de Sucesso Cadastro de Usuário, modal genérico de sucesso.
+// Mais detalhado em SucessoCadastroEquipamentoController
 public class SucessoCadastroUsuarioController {
 
     @FXML

@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 
+// Controlador da tela de Confirmação de Sucesso Exclusão de Usuário, modal genérico de sucesso.
+// Mais detalhado em SucessoCadastroEquipamentoController
 public class SucessoExclusaoUsuarioController {
 
     private Runnable onFinalizar;

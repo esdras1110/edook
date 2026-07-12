@@ -4,6 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 
+// Controlador da tela de Confirmação de Sucesso Edição de Equipamento, modal genérico de sucesso.
+// Mais detalhado em SucessoCadastroEquipamentoController
 public class SucessoEdicaoEquipamentoController {
 
     private Runnable onFinalizar;

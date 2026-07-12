@@ -21,6 +21,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+// Controlador do modal Confirmar Exclusão de Equipamento. Semelhante aos outros controladores de confirmação.
+// ConfirmacaoCadastroEquipamentoControlle comentado detalhadamente.
 public class ConfirmacaoExclusaoEquipamentoController {
 
     @FXML
@@ -48,11 +50,9 @@ public class ConfirmacaoExclusaoEquipamentoController {
     void onClickConfirmar(ActionEvent event) {
         if (equipamento == null) return;
 
-        // Pega a referência da tela principal antes de fechar este pop-up atual
         Stage stageAtual = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Stage telaPrincipal = (Stage) stageAtual.getOwner();
 
-        // Fecha o pop-up de confirmação imediatamente
         stageAtual.close();
 
         String url = "http://localhost:8080/equipamentos/" + equipamento.getPrefixo() + "/" + equipamento.getNumero();
@@ -66,9 +66,8 @@ public class ConfirmacaoExclusaoEquipamentoController {
                 .thenAccept(response -> {
                     Platform.runLater(() -> {
                         if (response.statusCode() == 204) {
-                            // Sucesso na Exclusão
                             if (onAtualizarTabela != null) {
-                                onAtualizarTabela.run(); // Recarrega a tabela no background
+                                onAtualizarTabela.run();
                             }
 
                             try {
@@ -77,7 +76,7 @@ public class ConfirmacaoExclusaoEquipamentoController {
 
                                 Stage popupStage = new Stage();
                                 Parent rootPrincipal = telaPrincipal.getScene().getRoot();
-                                rootPrincipal.setEffect(new GaussianBlur(15)); // Aplica blur novamente na main window
+                                rootPrincipal.setEffect(new GaussianBlur(15));
 
                                 popupStage.initOwner(telaPrincipal);
                                 popupStage.initModality(Modality.WINDOW_MODAL);
@@ -93,17 +92,15 @@ public class ConfirmacaoExclusaoEquipamentoController {
                                 popupStage.centerOnScreen();
 
                                 popupStage.showAndWait();
-                                rootPrincipal.setEffect(null); // Remove o blur ao finalizar
+                                rootPrincipal.setEffect(null);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
 
                         } else if (response.statusCode() == 400) {
-                            // Erro de Regra de Negócio (Equipamento em uso)
                             abrirPopupErro(telaPrincipal, "Exclusão Inválida", "Não é possível excluir um equipamento com reservas pendentes.");
 
                         } else {
-                            // Outros Erros (500, 404, etc)
                             abrirPopupErro(telaPrincipal, "Erro na Exclusão", "Ocorreu um erro inesperado ao tentar excluir o equipamento.");
                         }
                     });

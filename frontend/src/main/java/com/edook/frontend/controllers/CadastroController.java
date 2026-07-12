@@ -34,7 +34,9 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
+// Controlador da tela de cadastro e gerenciamentos gerais.
 public class CadastroController implements Initializable {
+    // Injeção dos elementos visuais mapeados no arquivo FXML
     @FXML
     private VBox vboxBotoes, vboxCadastro, vboxGerenciarEquipamentos;
 
@@ -59,25 +61,27 @@ public class CadastroController implements Initializable {
     @FXML
     private TableColumn<EquipamentoResponseDTO, Integer> colNumero;
 
+    // Listas para gerenciar os dados da tabela de equipamentos e o filtro de pesquisa
     private final ObservableList<EquipamentoResponseDTO> listaEquipamentos = FXCollections.observableArrayList();
     private FilteredList<EquipamentoResponseDTO> listaFiltrada;
 
+    // Função inicial, prepara as configurações iniciais, como máscaras, colunas da tabela e a busca.
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Aplica as restrições de digitação aos campos de cadastro de usuário
         aplicarMascaraTelefone(campoTelefone);
         aplicarMascaraCPF(campoCPF);
         aplicarMascaraMatricula(campoMatricula);
-        campoCargo.getItems().addAll(
-                "Docente",
-                "Administrativo"
-        );
+        campoCargo.getItems().addAll("Docente", "Administrativo");
         campoCargo.getSelectionModel().select("Docente");
 
+        // Vincula as colunas da tabela aos atributos do DTO de Equipamento
         colPrefixo.setCellValueFactory(new PropertyValueFactory<>("prefixo"));
         colNumero.setCellValueFactory(new PropertyValueFactory<>("numero"));
         colDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
         colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
 
+        // Customiza a coluna "Descrição" para exibir um balãozinho caso o texto seja muito grande e acabe cortado na tabela.
         colDescricao.setCellFactory(tc -> {
             return new TableCell<EquipamentoResponseDTO, String>() {
                 @Override
@@ -98,19 +102,24 @@ public class CadastroController implements Initializable {
             };
         });
 
+        // Configura a lista filtrada conectada à lista original e a insere na tabela
         listaFiltrada = new FilteredList<>(listaEquipamentos, b -> true);
         tabelaEquipamentos.setItems(listaFiltrada);
 
+        // Popula a tabela
         carregarEquipamentos();
 
+        // Adiciona um "ouvinte" no campo de busca para filtrar a tabela a cada letra digitada
         campoBusca.textProperty().addListener((observable, oldValue, newValue) -> {
             atualizarBusca();
         });
     }
 
+    // Busca os equipamentos do banco de dados chamando a API do backend.
     protected void carregarEquipamentos() {
         String url = "http://localhost:8080/equipamentos";
 
+        // Cria o cliente e a requisição HTTP GET
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -118,17 +127,18 @@ public class CadastroController implements Initializable {
                 .GET()
                 .build();
 
-        // Envia a requisição de forma assíncrona
+        // Envia a requisição de forma assíncrona para não travar a tela
         client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenAccept(response -> {
                     try {
+                        // Converte a resposta JSON em uma lista de objetos Java
                         ObjectMapper mapper = new ObjectMapper();
                         List<EquipamentoResponseDTO> dtos = mapper.readValue(
                                 response.body(),
                                 new TypeReference<List<EquipamentoResponseDTO>>(){}
                         );
 
-                        // 2. Atualiza a ObservableList na Thread do JavaFX
+                        // Atualiza a interface gráfica
                         Platform.runLater(() -> {
                             listaEquipamentos.setAll(dtos);
                         });
@@ -143,11 +153,11 @@ public class CadastroController implements Initializable {
                 });
     }
 
+    // Filtra a tabela verificando se o texto digitado bate com a descrição ou tipo do equipamento.
     private void atualizarBusca() {
         String textoBusca = campoBusca.getText() == null ? "" : campoBusca.getText().toLowerCase();
 
         listaFiltrada.setPredicate(reserva -> {
-            // 1. Regra da Barra de Pesquisa
             boolean passaBusca = true;
             if (!textoBusca.isEmpty()) {
                 passaBusca = (reserva.getDescricao() != null && reserva.getDescricao().toLowerCase().contains(textoBusca)) ||
@@ -158,7 +168,9 @@ public class CadastroController implements Initializable {
         });
     }
 
+    // Verifica se os dados inseridos pelo usuário estão corretos antes de salvar.
     private boolean validarFormulario() {
+        // Recebe todos os campos limpando as máscaras
         String nome = campoNome.getText().trim();
         String cpf = campoCPF.getText().replaceAll("[^0-9]", "");
         String telefone = campoTelefone.getText().replaceAll("[^0-9]", "");
@@ -168,12 +180,14 @@ public class CadastroController implements Initializable {
         String senha = campoSenha.getText().trim();
         String confirmacaoSenha = campoConfirmacaoSenha.getText().trim();
 
+        // Checa campos vazios
         if (nome.isEmpty() || cpf.isEmpty() || matricula.isEmpty() || cargo.isEmpty() || telefone.isEmpty() || email.isEmpty() || senha.isEmpty() || confirmacaoSenha.isEmpty()) {
             lblErro.setText("Todos os campos devem ser preenchidos!");
             lblErro.setStyle("-fx-text-fill: red;");
             return false;
         }
 
+        // Validações de tamanho específico
         if (cpf.length() != 11) {
             lblErro.setText("CPF incompleto, deve ter 11 dígitos!");
             lblErro.setStyle("-fx-text-fill: red;");
@@ -192,6 +206,7 @@ public class CadastroController implements Initializable {
             return false;
         }
 
+        // Validações com Regex para formato de email e senha
         String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
         if (!email.matches(emailRegex)) {
             lblErro.setText("E-mail inválido!");
@@ -215,22 +230,27 @@ public class CadastroController implements Initializable {
         return true;
     }
 
+    // Impede digitação de letras e formata o telefone dinamicamente para o padrão (XX) XXXXX-XXXX
     private void aplicarMascaraTelefone(TextField textField) {
+        // O TextFormatter analisa cada tecla pressionada e formata o texto em tempo real
         UnaryOperator<TextFormatter.Change> filter = change -> {
+            // Permite apagar texto normalmente
             if (change.isDeleted() || change.getText().isEmpty()) {
                 return change;
             }
 
+            // Bloqueia qualquer caractere que não seja número
             if (!change.getText().matches("[0-9]*")) {
                 return null;
             }
-
             String novoTexto = change.getControlNewText().replaceAll("[^0-9]", "");
 
+            // Limite máximo de números
             if (novoTexto.length() > 11) {
                 return null;
             }
 
+            // Constrói a máscara gradualmente
             StringBuilder sb = new StringBuilder();
             if (novoTexto.length() > 0) {
                 sb.append("(");
@@ -245,6 +265,7 @@ public class CadastroController implements Initializable {
                 sb.append(novoTexto.substring(7, Math.min(novoTexto.length(), 11)));
             }
 
+            // Atualiza o texto final e reposiciona o cursor
             change.setRange(0, change.getControlText().length());
             change.setText(sb.toString());
             change.setCaretPosition(sb.length());
@@ -256,6 +277,7 @@ public class CadastroController implements Initializable {
         textField.setTextFormatter(new TextFormatter<>(filter));
     }
 
+    // A máscara de CPF segue exatamente a mesma lógica de formatação de string do telefone
     private void aplicarMascaraCPF(TextField textField) {
         UnaryOperator<TextFormatter.Change> filter = change -> {
             if (change.isDeleted() || change.getText().isEmpty()) {
@@ -302,6 +324,7 @@ public class CadastroController implements Initializable {
         textField.setTextFormatter(new TextFormatter<>(filter));
     }
 
+    // A máscara de matrícula apenas bloqueia letras e limita o tamanho para 7 dígitos
     private void aplicarMascaraMatricula(TextField textField) {
         UnaryOperator<TextFormatter.Change> filter = change -> {
             if (change.isDeleted() || change.getText().isEmpty()) {
@@ -322,6 +345,7 @@ public class CadastroController implements Initializable {
         textField.setTextFormatter(new TextFormatter<>(filter));
     }
 
+    // Controla a troca de abas escondendo/mostrando as VBox
     @FXML
     private void onClickCadastrarUsuario(ActionEvent event) {
         vboxBotoes.setVisible(false);
@@ -333,9 +357,10 @@ public class CadastroController implements Initializable {
     @FXML
     private void onClickCadastrar(ActionEvent event) {
         if(!validarFormulario()){
-            return;
+            return; // Interrompe o fluxo se houver erro na validação de cadastro de usuário
         }
 
+        // Monta o objeto que será enviado
         FuncionarioResponseDTO novoFuncionario = new FuncionarioResponseDTO();
         novoFuncionario.setNome(campoNome.getText());
         novoFuncionario.setCpf(campoCPF.getText().replaceAll("[^0-9]", ""));
@@ -349,11 +374,13 @@ public class CadastroController implements Initializable {
         novoFuncionario.setCodigoVerificacao(codigoGerado);
 
         try {
+            // Abre o popup de confirmação de cadastro
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/ConfirmacaoCadastroUsuario-view.fxml"));
             Parent root = loader.load();
 
             ConfirmacaoCadastroUsuarioController controller = loader.getController();
             controller.setDados(novoFuncionario);
+            // Passa uma função para limpar os campos caso a confirmação dê certo
             controller.setOnSucesso(() -> limparCampos());
 
             Node sourceNode = (Node) event.getSource();
@@ -361,11 +388,11 @@ public class CadastroController implements Initializable {
             Stage telaPrincipal = (Stage) sourceNode.getScene().getWindow();
             Parent rootPrincipal = telaPrincipal.getScene().getRoot();
 
-            // Aplica o Blur na tela principal
+            // Aplica efeito de desfoque (Blur) no fundo
             rootPrincipal.setEffect(new GaussianBlur(15));
 
             popupStage.initOwner(telaPrincipal);
-            popupStage.initModality(Modality.WINDOW_MODAL);
+            popupStage.initModality(Modality.WINDOW_MODAL); // Impede o clique fora do popup
             popupStage.initStyle(StageStyle.TRANSPARENT);
 
             Scene scene = new Scene(root);
@@ -377,18 +404,20 @@ public class CadastroController implements Initializable {
             popupStage.setScene(scene);
             popupStage.centerOnScreen();
 
-            // Espera todo o fluxo terminar
+            // showAndWait pausa o código aqui até que a janela do popup seja fechada
             popupStage.showAndWait();
 
-            // Remove o Blur quando o fluxo inteiro (ou cancelamento) finalizar
+            // Remove o desfoque ao fechar o popup
             rootPrincipal.setEffect(null);
-
         } catch (Exception e) {
             e.printStackTrace();
             exibirPopupErro("Erro de Tela", "Não foi possível abrir a tela de confirmação.");
         }
     }
+    // Os métodos de onClickExcluirUsuario, onClickCadastrarEquipamento onClickEditarEquipamento seguem exatamente
+    // a mesma lógica de desfoque e popup descrita acima
 
+    // Limpa os campos após cadastro de usuário
     private void limparCampos() {
         campoNome.clear();
         campoCPF.clear();
@@ -409,7 +438,6 @@ public class CadastroController implements Initializable {
 
             ExclusaoUsuarioController controller = loader.getController();
 
-            // Define o comportamento ao finalizar com sucesso
             controller.setOnExclusaoSucesso(() -> {
                 System.out.println("Fluxo de exclusão de usuário concluído com sucesso!");
             });
@@ -418,7 +446,6 @@ public class CadastroController implements Initializable {
             Stage donoDaJanela = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent rootPrincipal = donoDaJanela.getScene().getRoot();
 
-            // Ativa o Blur na tela principal
             rootPrincipal.setEffect(new GaussianBlur(15));
 
             popupStage.initOwner(donoDaJanela);
@@ -435,10 +462,8 @@ public class CadastroController implements Initializable {
             popupStage.setScene(scene);
             popupStage.centerOnScreen();
 
-            // Aguarda a finalização do fluxo
             popupStage.showAndWait();
 
-            // Remove o efeito de desfoque ao retornar
             rootPrincipal.setEffect(null);
 
         } catch (Exception e) {
@@ -455,14 +480,12 @@ public class CadastroController implements Initializable {
 
             CadastroEquipamentoController controller = loader.getController();
 
-            // Passa o método da listagem como Runnable! Ao clicar em finalizar, a lista se auto-atualiza.
             controller.setOnCadastroSucesso(() -> carregarEquipamentos());
 
             Stage popupStage = new Stage();
             popupStage.initModality(Modality.APPLICATION_MODAL);
             popupStage.initStyle(StageStyle.TRANSPARENT);
 
-            // Adiciona o efeito de Blur na tela de fundo principal
             Stage donoDaJanela = (Stage) tabelaEquipamentos.getScene().getWindow();
             Parent rootPrincipal = donoDaJanela.getScene().getRoot();
             rootPrincipal.setEffect(new GaussianBlur(15));
@@ -474,13 +497,14 @@ public class CadastroController implements Initializable {
             popupStage.centerOnScreen();
 
             popupStage.showAndWait();
-            rootPrincipal.setEffect(null); // Desativa o Blur ao voltar
+            rootPrincipal.setEffect(null);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    // Controla a troca de abas escondendo/mostrando as VBox
     @FXML
     private void onClickGerenciarEquipamento(ActionEvent event) {
         vboxBotoes.setVisible(false);
@@ -489,6 +513,7 @@ public class CadastroController implements Initializable {
         vboxGerenciarEquipamentos.setManaged(true);
     }
 
+    // Controla a troca de abas escondendo/mostrando as VBox
     @FXML
     private void onClickVoltar(ActionEvent event) {
         vboxGerenciarEquipamentos.setVisible(false);
@@ -499,6 +524,7 @@ public class CadastroController implements Initializable {
 
     @FXML
     private void onClickEditarEquipamento(ActionEvent event) {
+        // Cria uma lista observável contendo os itens que o usuário selecionou
         ObservableList<EquipamentoResponseDTO> selecionados = tabelaEquipamentos.getSelectionModel().getSelectedItems();
 
         if (selecionados.isEmpty()) {
@@ -514,7 +540,6 @@ public class CadastroController implements Initializable {
 
             EdicaoEquipamentoController controller = loader.getController();
 
-            // Passa os dados e a ação de recarregar a tabela ao finalizar
             controller.setEquipamento(selecionado);
             controller.setOnEdicaoSucesso(() -> carregarEquipamentos());
 
@@ -522,7 +547,6 @@ public class CadastroController implements Initializable {
             Stage donoDaJanela = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent rootPrincipal = donoDaJanela.getScene().getRoot();
 
-            // Ativa o Blur na tela principal
             rootPrincipal.setEffect(new GaussianBlur(15));
 
             popupStage.initOwner(donoDaJanela);
@@ -532,7 +556,6 @@ public class CadastroController implements Initializable {
             Scene scene = new Scene(root);
             scene.setFill(Color.TRANSPARENT);
 
-            // Mantém a padronização do CSS se existir
             if (getClass().getResource("/com/edook/frontend/style.css") != null) {
                 scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
             }
@@ -540,10 +563,8 @@ public class CadastroController implements Initializable {
             popupStage.setScene(scene);
             popupStage.centerOnScreen();
 
-            // Congela o código aqui até o popup fechar
             popupStage.showAndWait();
 
-            // Garante que o blur seja removido ao fechar o popup
             rootPrincipal.setEffect(null);
 
         } catch (Exception e) {
@@ -554,6 +575,7 @@ public class CadastroController implements Initializable {
 
     @FXML
     public void onClickExcluirEquipamento(ActionEvent event) {
+        // Cria uma lista observável contendo os itens que o usuário selecionou
         ObservableList<EquipamentoResponseDTO> selecionados = tabelaEquipamentos.getSelectionModel().getSelectedItems();
 
         if (selecionados.isEmpty()) {
@@ -569,17 +591,14 @@ public class CadastroController implements Initializable {
 
             ConfirmacaoExclusaoEquipamentoController controller = loader.getController();
 
-            // Passa o equipamento selecionado para a tela de confirmação
             controller.setEquipamento(selecionado);
 
-            // Passa a função para recarregar a tabela se a exclusão for bem-sucedida
             controller.setOnAtualizarTabela(() -> carregarEquipamentos());
 
             Stage popupStage = new Stage();
             Stage donoDaJanela = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent rootPrincipal = donoDaJanela.getScene().getRoot();
 
-            // Ativa o blur
             rootPrincipal.setEffect(new GaussianBlur(15));
 
             popupStage.initOwner(donoDaJanela);
@@ -596,10 +615,8 @@ public class CadastroController implements Initializable {
             popupStage.setScene(scene);
             popupStage.centerOnScreen();
 
-            // Aguarda a interação do usuário no pop-up de confirmação
             popupStage.showAndWait();
 
-            // Remove o blur quando finalizar
             rootPrincipal.setEffect(null);
 
         } catch (Exception e) {
@@ -608,6 +625,7 @@ public class CadastroController implements Initializable {
         }
     }
 
+    // Função genérico para exibir mensagens de erro
     public void exibirPopupErro(String titulo, String descricao) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/OperacaoInvalida-view.fxml"));
@@ -628,16 +646,13 @@ public class CadastroController implements Initializable {
                 Stage donoDaJanela = (Stage) vboxGerenciarEquipamentos.getScene().getWindow();
                 Parent rootPrincipal = donoDaJanela.getScene().getRoot();
 
-                // Ativa o blur
                 rootPrincipal.setEffect(new GaussianBlur(15));
 
                 popupStage.initOwner(donoDaJanela);
                 popupStage.centerOnScreen();
 
-                // Espera o popup fechar
                 popupStage.showAndWait();
 
-                // Remove o blur
                 rootPrincipal.setEffect(null);
             } else {
                 popupStage.showAndWait();

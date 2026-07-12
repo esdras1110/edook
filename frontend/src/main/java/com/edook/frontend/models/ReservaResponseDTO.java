@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+// DTO (Data Transfer Object) para os dados de Reserva
+// EquipamentoResponseDTO detalhado
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReservaResponseDTO {
 
@@ -24,6 +26,8 @@ public class ReservaResponseDTO {
 
     private String status;
     private String nomeFuncionario;
+
+    // Uma reserva pode ter vários equipamentos
     private List<EquipamentoResponseDTO> equipamentos;
 
     public ReservaResponseDTO() {}
@@ -55,11 +59,12 @@ public class ReservaResponseDTO {
     public List<EquipamentoResponseDTO> getEquipamentos() { return equipamentos; }
     public void setEquipamentos(List<EquipamentoResponseDTO> equipamentos) { this.equipamentos = equipamentos; }
 
-
+    // Retorna a data formatada para impressão
     public String getDataFormatada() {
         return dia != null ? dia.toString() : "";
     }
 
+    // Retorna o horário formatado para impressão juntando horário de início e fim
     public String getHorarioFormatado() {
         if (horarioInicio != null && horarioFim != null) {
             String inicio = horarioInicio.toString().substring(0, 5);
@@ -69,6 +74,7 @@ public class ReservaResponseDTO {
         return "";
     }
 
+    // // Retorna os equipamentos formatados para impressão separados por vírgula
     public String getEquipamentosFormatados() {
         if (equipamentos == null || equipamentos.isEmpty()) return "Nenhum";
         return equipamentos.stream()

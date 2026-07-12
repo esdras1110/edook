@@ -21,6 +21,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+// Controlador do modal Confirmar Exclusão de Usuário. Semelhante aos outros controladores de confirmação.
+// ConfirmacaoCadastroEquipamentoControlle comentado detalhadamente.
 public class ConfirmacaoExclusaoUsuarioController {
     @FXML
     private Label lblCPF, lblMatricula, lblNome, lblCargo;
@@ -51,12 +53,10 @@ public class ConfirmacaoExclusaoUsuarioController {
     void onClickConfirmar(ActionEvent event) {
         if (funcionarioSelecionado == null) return;
 
-        // Pega a referência da tela de Busca e da Janela Principal (CadastroController)
         Stage stageConfirmacao = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Stage stageBusca = (Stage) stageConfirmacao.getOwner();
         Stage telaPrincipal = (Stage) stageBusca.getOwner();
 
-        // Fecha as janelas do fluxo de exclusão imediatamente
         stageConfirmacao.close();
         stageBusca.close();
 

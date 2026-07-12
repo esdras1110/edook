@@ -22,6 +22,8 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+// Controlador do modal Confirmar Cancelamento de Reserva. Semelhante aos outros controladores de confirmação.
+// ConfirmacaoCadastroEquipamentoControlle comentado detalhadamente.
 public class ConfirmacaoCancelamentoReservaController {
 
     @FXML
@@ -43,17 +45,13 @@ public class ConfirmacaoCancelamentoReservaController {
 
         for (ReservaResponseDTO reserva : reservas) {
             try {
-                // Carrega o FXML do componente que acabamos de criar
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/ItemReserva-view.fxml"));
                 HBox itemReserva = loader.load();
 
-                // Pega o controller do componente e passa os dados
                 ItemReservaController controller = loader.getController();
                 controller.setDadosReserva(reserva);
 
-                // Adiciona o componente visualizado na lista do Pop-up
                 vboxListaReservas.getChildren().add(itemReserva);
-
             } catch (IOException e) {
                 System.err.println("Erro ao carregar o item da reserva: " + reserva.getId());
                 e.printStackTrace();
@@ -158,7 +156,6 @@ public class ConfirmacaoCancelamentoReservaController {
                             }
 
                         } else {
-                            // BLOCO DE SUCESSO TOTAL
                             try {
                                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/SucessoCancelamentoReserva-view.fxml"));
                                 Parent root = loader.load();

@@ -6,6 +6,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+// Controlador do modal Confirmar Ediçao de Usuário. Semelhante aos outros controladores de confirmação.
+// ConfirmacaoCadastroEquipamentoControlle comentado detalhadamente.
 public class ConfirmacaoEdicaoUsuarioController {
 
     @FXML
@@ -30,7 +32,7 @@ public class ConfirmacaoEdicaoUsuarioController {
     @FXML
     void onClickConfirmar(ActionEvent event) {
         if (onConfirmarAction != null) {
-            onConfirmarAction.run(); // Executa a requisição HTTP PUT
+            onConfirmarAction.run();
         }
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();

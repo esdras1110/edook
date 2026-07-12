@@ -10,11 +10,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URI;
@@ -25,6 +22,8 @@ import java.net.http.HttpResponse;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+// Controlador do modal de Validação de código para redefinição de senha. Semelhante ao controlador de validação de Email
+// CodigoValidacaoEmailController comentado detalhadamente
 public class CodigoValidacaoRedefinicaoSenhaController implements Initializable {
     private static final HttpClient httpClient = HttpClient.newHttpClient();
 
@@ -43,17 +42,14 @@ public class CodigoValidacaoRedefinicaoSenhaController implements Initializable 
         String novoCodigo = String.format("%04d", new Random().nextInt(10000));
         String emailLogado = UserSession.getInstance().getEmail();
 
-        // 3. Monta o JSON esperado pelo CodigoVerificacaoDto no Backend
         String jsonBody = String.format("{\"email\": \"%s\", \"codigo\": \"%s\"}", emailLogado, novoCodigo);
 
-        // 4. Monta a requisição POST apontando para a rota correta do seu Controller
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/funcionarios/enviar-codigo"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                 .build();
 
-        // 5. Dispara a requisição assíncrona para não travar a interface
         httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenAccept(response -> {
                     Platform.runLater(() -> {
@@ -100,14 +96,11 @@ public class CodigoValidacaoRedefinicaoSenhaController implements Initializable 
                     Platform.runLater(() -> {
                         if (response.statusCode() == 200) {
                             try {
-                                // 1. Pega a janela (Stage) que JÁ ESTÁ aberta
                                 Stage stageAtual = (Stage) campoCodigo.getScene().getWindow();
 
-                                // 2. Carrega a próxima tela (Redefinição de Senha)
                                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/RedefinicaoSenha-view.fxml"));
                                 Parent root = loader.load();
 
-                                // 3. Cria a nova cena
                                 Scene novaScene = new Scene(root);
                                 novaScene.setFill(javafx.scene.paint.Color.TRANSPARENT);
 
@@ -115,12 +108,7 @@ public class CodigoValidacaoRedefinicaoSenhaController implements Initializable 
                                     novaScene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
                                 }
 
-                                // 4. A mágica: Apenas substitui a cena na janela atual!
                                 stageAtual.setScene(novaScene);
-
-                                // NÃO chame stageAtual.close() nem showAndWait() aqui!
-                                // A janela já está sendo exibida.
-
                             } catch (IOException e) {
                                 System.err.println("Erro ao trocar cena para redefinição de senha.");
                                 e.printStackTrace();
@@ -143,7 +131,7 @@ public class CodigoValidacaoRedefinicaoSenhaController implements Initializable 
     @FXML
     private void onClickVoltar(ActionEvent event) {
         Stage stage = (Stage) campoCodigo.getScene().getWindow();
-        stage.close(); // Ao fechar, o showAndWait do pai encerra e limpa o Blur automaticamente
+        stage.close();
     }
 
     @FXML

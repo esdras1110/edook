@@ -1,5 +1,7 @@
 package com.edook.frontend.models;
 
+// DTO (Data Transfer Object) para os dados de Login
+// EquipamentoResponseDTO detalhado
 public class LoginResponseDTO {
     private String nome;
     private String cpf;

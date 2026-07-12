@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+// Controlador do modal de cadastro de equipamentos
 public class CadastroEquipamentoController {
     @FXML
     private TextField txtDescricao;
@@ -33,12 +34,14 @@ public class CadastroEquipamentoController {
     private ComboBox<String> cbTipo;
 
     @FXML
-    private Label lblErro; // Adicionado para dar feedback visual de erros
+    private Label lblErro;
 
+    // Variável para armazenar uma ação que será executada quando o cadastro der certo
     private Runnable onCadastroSucesso;
 
     @FXML
     public void initialize() {
+        // Configuração das opções disponíveis no menu suspenso de tipos de equipamento.
         cbTipo.setItems(javafx.collections.FXCollections.observableArrayList(
                 "Projetor",
                 "Notebook",
@@ -51,12 +54,12 @@ public class CadastroEquipamentoController {
         this.onCadastroSucesso = onCadastroSucesso;
     }
 
+    // Valida os campos, monta os dados e chama a tela de confirmação antes de salvar
     @FXML
     public void onClickEnviar(ActionEvent event) {
         String descricao = txtDescricao.getText();
         String tipo = cbTipo.getValue();
 
-        // 1. Validação simples de campos vazios
         if (descricao == null || descricao.trim().isEmpty() || tipo == null) {
             if (lblErro != null) {
                 lblErro.setText("Todos os campos devem ser preenchidos.");
@@ -65,7 +68,7 @@ public class CadastroEquipamentoController {
             return;
         }
 
-        // 2. Derivação do prefixo conforme solicitado
+        // Regra de negócio: Define um prefixo automático baseado no tipo do equipamento
         String prefixo;
         switch (tipo) {
             case "Projetor":
@@ -81,18 +84,18 @@ public class CadastroEquipamentoController {
                 prefixo = "TV";
                 break;
             default:
-                prefixo = "EQ"; // Fallback genérico de segurança
+                prefixo = "EQ";
                 break;
         }
 
-        // 3. Montagem do payload esperado pelo EquipamentoCreateDto do Spring Boot
+        // Monta um "pacote" com os dados que serão convertidos para JSON depois
         Map<String, Object> payload = new HashMap<>();
-        payload.put("cpfCadastro", UserSession.getInstance().getCpf()); // Puxa da sessão logada
+        payload.put("cpfCadastro", UserSession.getInstance().getCpf()); // Pega o usuário logado na sessão
         payload.put("prefixo", prefixo);
         payload.put("descricao", descricao.trim());
         payload.put("tipo", tipo);
 
-        // 4. Abertura do Popup de Confirmação com efeito de Blur no fundo
+        // Antes de salvar de vez, abre um popup para o usuário confirmar os dados
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/ConfirmacaoCadastroEquipamento-view.fxml"));
             Parent root = loader.load();
@@ -100,9 +103,10 @@ public class CadastroEquipamentoController {
             ConfirmacaoCadastroEquipamentoController controller = loader.getController();
             controller.setDados(descricao.trim(), tipo);
 
-            // Passa a ação de envio como Runnable para disparar após o usuário clicar em Confirmar
+            // Passa a função de enviar para a API apenas se o usuário confirmar no popup
             controller.setOnConfirmar(() -> enviarEquipamento(payload));
 
+            // Configuração visual do popup e aplicação de efeito de desfoque (Blur) no fundo
             Stage popupStage = new Stage();
             popupStage.initModality(Modality.APPLICATION_MODAL);
             popupStage.initStyle(StageStyle.TRANSPARENT);
@@ -110,7 +114,6 @@ public class CadastroEquipamentoController {
             Stage donoDaJanela = (Stage) txtDescricao.getScene().getWindow();
             Parent rootCadastro = donoDaJanela.getScene().getRoot();
 
-            // Ativa o Blur
             GaussianBlur blur = new GaussianBlur(15);
             rootCadastro.setEffect(blur);
 
@@ -121,10 +124,8 @@ public class CadastroEquipamentoController {
             popupStage.setScene(scene);
             popupStage.centerOnScreen();
 
-            // Aguarda o fechamento do popup de confirmação
             popupStage.showAndWait();
 
-            // Desativa o Blur
             rootCadastro.setEffect(null);
 
         } catch (Exception e) {
@@ -135,8 +136,8 @@ public class CadastroEquipamentoController {
         }
     }
 
+    // Realiza a requisição HTTP POST para salvar o equipamento no banco de dados.
     private void enviarEquipamento(Map<String, Object> payload) {
-        // Envio assíncrono para não travar a interface JavaFX
         CompletableFuture.runAsync(() -> {
             try {
                 ObjectMapper mapper = new ObjectMapper();
@@ -153,7 +154,6 @@ public class CadastroEquipamentoController {
 
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-                // Retorna para a Thread principal da UI para manipular as telas
                 Platform.runLater(() -> {
                     if (response.statusCode() == 201 || response.statusCode() == 200) {
                         abrirPopupSucesso();
@@ -176,6 +176,7 @@ public class CadastroEquipamentoController {
         });
     }
 
+    // Abre um aviso visual de sucesso e, ao fechar, encerra a tela de cadastro atual.
     private void abrirPopupSucesso() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/SucessoCadastroEquipamento-view.fxml"));
@@ -183,11 +184,10 @@ public class CadastroEquipamentoController {
 
             SucessoCadastroEquipamentoController controller = loader.getController();
             controller.setOnFinalizar(() -> {
-                // Fecha a janela atual de formulário de cadastro
                 Stage stage = (Stage) txtDescricao.getScene().getWindow();
-                stage.close();
+                stage.close(); // Fecha a tela de cadastro principal
 
-                // Dispara o callback para atualizar a tabela na tela de listagem principal
+                // Recarrega a tabela
                 if (onCadastroSucesso != null) {
                     onCadastroSucesso.run();
                 }
@@ -222,6 +222,7 @@ public class CadastroEquipamentoController {
         }
     }
 
+    // Fecha a janela de cadastro caso o usuário desista da ação
     @FXML
     private void onClickCancelar(ActionEvent event) {
         Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();

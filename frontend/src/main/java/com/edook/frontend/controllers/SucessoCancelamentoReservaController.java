@@ -4,6 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 
+// Controlador da tela de Confirmação de Sucesso Cancelamento de Reserva, modal genérico de sucesso.
+// Mais detalhado em SucessoCadastroEquipamentoController
 public class SucessoCancelamentoReservaController {
 
     private Runnable onFinalizar;

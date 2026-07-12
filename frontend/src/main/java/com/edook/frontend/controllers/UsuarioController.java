@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
+// Controlador da tela de Perfil do Usuário, semelhante a outras telas.
+// CadastroController ou InicioController com mais descrições.
 public class UsuarioController implements Initializable {
 
     @FXML
@@ -48,9 +50,11 @@ public class UsuarioController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         aplicarMascaraTelefone(campoTelefone);
 
+        // Assim que a tela abre, busca no backend os dados atualizados de quem está logado
         carregarDadosUsuario();
     }
 
+    // Busca as informações completas do usuário no banco de dados
     private void carregarDadosUsuario() {
         String cpfUsuario = UserSession.getInstance().getCpf();
 
@@ -66,6 +70,7 @@ public class UsuarioController implements Initializable {
                 .thenAccept(response -> {
                     if (response.statusCode() == 200 && response.body().trim().startsWith("{")) {
                         try {
+                            // Em vez de converter para uma classe DTO inteira, usamos o JsonNode para extrair os campos que precisamos de forma dinâmica.
                             JsonNode json = objectMapper.readTree(response.body());
 
                             Platform.runLater(() -> {
@@ -79,6 +84,7 @@ public class UsuarioController implements Initializable {
                                 String numero = json.has("numero") && !json.get("numero").isNull() ? json.get("numero").asText() : "";
                                 String telefoneCompleto = ddd + numero;
 
+                                // Preenche o painel de Visualização (Labels)
                                 lblNome.setText(nome);
                                 lblEmail.setText(email);
                                 lblCPF.setText(formatarCpfExibicao(cpf));
@@ -86,6 +92,7 @@ public class UsuarioController implements Initializable {
                                 lblMatricula.setText(matricula);
                                 lblTelefone.setText(telefoneCompleto.isEmpty() ? "Não informado" : formatarTelefoneExibicao(telefoneCompleto));
 
+                                // Preenche previamente os campos do painel de Edição
                                 campoNome.setText(nome);
                                 campoTelefone.setText(telefoneCompleto);
                             });
@@ -205,7 +212,6 @@ public class UsuarioController implements Initializable {
             Stage donoDaJanela = (Stage) vboxDados.getScene().getWindow();
             Parent rootPrincipal = donoDaJanela.getScene().getRoot();
 
-            // Aplica o efeito de desfoque na tela de fundo
             GaussianBlur blur = new GaussianBlur(15);
             rootPrincipal.setEffect(blur);
 
@@ -221,10 +227,8 @@ public class UsuarioController implements Initializable {
             popupStage.setScene(scene);
             popupStage.centerOnScreen();
 
-            // Aguarda a finalização do fluxo do código de validação
             popupStage.showAndWait();
 
-            // Remove o efeito após o fechamento do pop-up
             rootPrincipal.setEffect(null);
 
         } catch (IOException e) {
@@ -258,14 +262,12 @@ public class UsuarioController implements Initializable {
 
             ConfirmacaoEdicaoUsuarioController popupController = loader.getController();
 
-            // Configura o pop-up passando os dados e a ação que será disparada ao confirmar
             popupController.setDados(nomeAntigo, telefoneAntigo, nomeNovo, telefoneNovo, () -> carregarEdicao());
 
             Stage popupStage = new Stage();
             Stage donoJanela = (Stage) vboxEdicao.getScene().getWindow();
             Parent rootPrincipal = donoJanela.getScene().getRoot();
 
-            // Aplica efeito de desfoque (Blur) na tela de fundo
             rootPrincipal.setEffect(new GaussianBlur(15));
 
             popupStage.initOwner(donoJanela);
@@ -279,7 +281,6 @@ public class UsuarioController implements Initializable {
 
             popupStage.showAndWait();
 
-            // Remove o efeito quando fechar
             rootPrincipal.setEffect(null);
 
         } catch (IOException e) {
@@ -296,7 +297,6 @@ public class UsuarioController implements Initializable {
         String ddd = apenasNumeros.substring(0, 2);
         String numero = apenasNumeros.substring(2);
 
-        // Monta o corpo DTO compatível com o FuncionarioUpdateDto do Backend
         Map<String, String> dadosAtualizados = new HashMap<>();
         dadosAtualizados.put("nome", campoNome.getText().trim());
         dadosAtualizados.put("ddd", ddd);

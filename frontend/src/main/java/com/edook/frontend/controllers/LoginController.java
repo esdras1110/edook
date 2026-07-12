@@ -27,7 +27,10 @@ import javafx.stage.StageStyle;
 
 import java.util.Random;
 
+// Controlador principal da tela de Login
+// Em vez de abrir várias janelas, alterna a visibilidade de painéis, como na tela de Cadastro
 public class LoginController {
+    // Cliente HTTP reutilizável
     private static final HttpClient httpClient = HttpClient.newHttpClient();
 
     @FXML
@@ -39,11 +42,14 @@ public class LoginController {
     @FXML
     private Label labelErroLogin, labelErroEmail, labelErroCodigo, labelErroSenha;
 
+    // Múltiplos painéis (VBox) sobrepostos na mesma interface.
     @FXML
     private VBox vboxLogin, vboxEsqueceuSenha, vboxCodigo, vboxNovaSenha;
 
+    // Guarda o e-mail durante as várias etapas de redefinição da senha
     private String emailTemporario;
 
+    // Função de autenticação e login
     @FXML
     private void onClickEntrar(ActionEvent event) {
         String emailCPF = campoTextLogin.getText().trim();
@@ -51,6 +57,7 @@ public class LoginController {
 
         labelErroLogin.setText("");
 
+        // Validações básicas de campos
         if (emailCPF.isEmpty() || senha.isEmpty()) {
             labelErroLogin.setText("Por favor, preencha todos os campos obrigatórios.");
             labelErroLogin.setStyle("-fx-text-fill: red;");
@@ -82,7 +89,7 @@ public class LoginController {
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                 .build();
-
+        // Requisição assíncrona padrão
         httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenAccept(response -> {
                     if (response.statusCode() == 200) {
@@ -92,6 +99,7 @@ public class LoginController {
                             ObjectMapper objectMapper = new ObjectMapper();
                             LoginResponseDTO dados = objectMapper.readValue(respostaJson, LoginResponseDTO.class);
 
+                            // Guarda os dados do utilizador numa instância única global
                             UserSession session = UserSession.getInstance();
                             session.setNome(dados.getNome());
                             session.setEmail(dados.getEmail());
@@ -99,6 +107,7 @@ public class LoginController {
                             session.setCargo(dados.getCargo());
                             session.setToken(dados.getToken());
 
+                            // Avança para a tela inicial do sistema, abrindo uma nova Scene
                             Platform.runLater(() -> {
                                 try {
                                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/edook/frontend/MainLayout-view.fxml"));
@@ -153,6 +162,7 @@ public class LoginController {
                 });
     }
 
+    // Mudança de painel visível
     @FXML
     private void onClickEsqueceuSenha(ActionEvent event) {
         vboxLogin.setVisible(false);
@@ -161,6 +171,7 @@ public class LoginController {
         vboxEsqueceuSenha.setManaged(true);
     }
 
+    // Solicita o envio do código para o e-mail fornecido
     @FXML
     private void onClickEnviar(ActionEvent event) {
         String email = campoEmail.getText().trim();
@@ -178,7 +189,7 @@ public class LoginController {
             return;
         }
 
-        this.emailTemporario = email;
+        this.emailTemporario = email; // Guarda o e-mail na memória para a próxima etapa
 
         String codigo = String.format("%04d", new Random().nextInt(10000));
         String jsonBody = String.format("{\"email\": \"%s\", \"codigo\": \"%s\"}", email, codigo);
@@ -193,6 +204,7 @@ public class LoginController {
                 .thenAccept(response -> {
                     Platform.runLater(() -> {
                         if (response.statusCode() == 200) {
+                            // Avança para o painel do código
                             vboxEsqueceuSenha.setVisible(false);
                             vboxEsqueceuSenha.setManaged(false);
                             vboxCodigo.setVisible(true);
@@ -212,6 +224,7 @@ public class LoginController {
                 });
     }
 
+    // Mudança de painel visível
     @FXML
     private void onClickVoltarLogin(ActionEvent event) {
         vboxEsqueceuSenha.setVisible(false);
@@ -220,11 +233,13 @@ public class LoginController {
         vboxLogin.setManaged(true);
     }
 
+    // Valida se o código introduzido corresponde ao que foi enviado para o e-mail
     @FXML
     private void onClickVerificar(ActionEvent event) {
         String codigoUsuario = campoTextCodigo.getText().trim();
         labelErroCodigo.setText("");
 
+        // Junta o código introduzido com o email guardado
         String jsonBody = String.format("{\"email\": \"%s\", \"codigo\": \"%s\"}", emailTemporario, codigoUsuario);
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -237,6 +252,7 @@ public class LoginController {
                 .thenAccept(response -> {
                     Platform.runLater(() -> {
                         if (response.statusCode() == 200) {
+                            // Avança para a Redefinição de Senha
                             vboxCodigo.setVisible(false);
                             vboxCodigo.setManaged(false);
                             vboxNovaSenha.setVisible(true);
@@ -249,18 +265,19 @@ public class LoginController {
                 });
     }
 
+    // Submete a nova palavra-passe
     @FXML
     private void onClickRedefinirSenha(ActionEvent event) {
         String novaSenha = campoSenhaRedefinicao.getText();
         String confirmacao = campoConfirmacaoSenhaRedefinicao.getText();
 
+        // Validações para campos vazios e senhas iguais
         if (novaSenha.isEmpty() || !novaSenha.equals(confirmacao)) {
             labelErroSenha.setText("As senhas não coincidem ou estão vazias.");
             labelErroSenha.setStyle("-fx-text-fill: red;");
             return;
         }
 
-        // Assumindo que o DTO no backend espera 'email' e 'novaSenha'
         String jsonBody = String.format("{\"email\": \"%s\", \"novaSenha\": \"%s\"}", emailTemporario, novaSenha);
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -274,9 +291,9 @@ public class LoginController {
                     Platform.runLater(() -> {
                         if (response.statusCode() == 200) {
                             try {
+                                // Carrega modal de sucesso
                                 Stage loginStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-                                // Aplica o GaussianBlur de 15 na tela atual
                                 GaussianBlur blur = new GaussianBlur(15);
                                 loginStage.getScene().getRoot().setEffect(blur);
 
@@ -289,15 +306,15 @@ public class LoginController {
                                 popupStage.initStyle(StageStyle.UNDECORATED);
                                 popupStage.setScene(new Scene(root));
 
-                                // Remove o efeito de Blur e redireciona para a tela de login quando o popup for fechado
                                 popupStage.setOnHidden(e -> {
+                                    // Retorna ao login após sucesso
                                     loginStage.getScene().getRoot().setEffect(null);
                                     vboxNovaSenha.setVisible(false);
                                     vboxNovaSenha.setManaged(false);
                                     vboxLogin.setVisible(true);
                                     vboxLogin.setManaged(true);
 
-                                    // Limpar campos
+                                    // Limpa os campos
                                     campoSenhaRedefinicao.clear();
                                     campoConfirmacaoSenhaRedefinicao.clear();
                                     campoTextCodigo.clear();
@@ -316,21 +333,20 @@ public class LoginController {
                 });
     }
 
+    // Reenvia um novo código para o backend, mas não valida o email, endpoint apenas para reenvio do código
     @FXML
     private void onClickReenviarCodigo(ActionEvent event) {
         String novoCodigo = String.format("%04d", new Random().nextInt(10000));
 
-        // 3. Monta o JSON esperado pelo CodigoVerificacaoDto no Backend
         String jsonBody = String.format("{\"email\": \"%s\", \"codigo\": \"%s\"}", emailTemporario, novoCodigo);
 
-        // 4. Monta a requisição POST apontando para a rota correta do seu Controller
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/funcionarios/enviar-codigo"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                 .build();
 
-        // 5. Dispara a requisição assíncrona para não travar a interface
+        // Requisição assíncrona padrão
         httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenAccept(response -> {
                     Platform.runLater(() -> {
@@ -353,6 +369,7 @@ public class LoginController {
                 });
     }
 
+    // Mudança de painel visível
     @FXML
     private void onClickVoltarEsqueceuSenha(ActionEvent event) {
         vboxCodigo.setVisible(false);

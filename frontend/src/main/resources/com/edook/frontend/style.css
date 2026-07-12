@@ -1,3 +1,4 @@
+/* Estilos de Tipos de Texto */
 .txt {
     -fx-font-family: 'Inter 28pt Regular';
     -fx-font-weight: normal;
@@ -29,6 +30,7 @@
     -fx-font-size: 18px;
 }
 
+/* Estilo de Botão Azul */
 .botao {
     -fx-background-color: #1A56DB;
     -fx-background-radius: 20;
@@ -43,6 +45,7 @@
     -fx-background-color: #1546b8;
 }
 
+/* Estilos de Botão Cinza */
 .botao-var {
     -fx-background-color: #6B7280;
     -fx-background-radius: 20;
@@ -57,6 +60,7 @@
     -fx-background-color: #4B5563;
 }
 
+/* Estilos de Botão da SideBar */
 .botao-navbar {
     -fx-background-color: #1A56DB;
     -fx-font-family: 'Inter 28pt Bold';
@@ -76,6 +80,7 @@
     -fx-border-width: 0 0 0 4px;
 }
 
+/* Estilos de Campo de Busca */
 .campo-busca {
     -fx-background-color: #f4f4f4;
     -fx-background-radius: 20;
@@ -88,6 +93,7 @@
     -fx-border-color: #b8b8b8;
 }
 
+/* Estilos de Caixa de Seleção Prédefinida */
 .combo-box-editavel {
     -fx-background-color: transparent;
     -fx-background-radius: 20;
@@ -113,6 +119,7 @@
     -fx-text-fill: #f9fafb;
 }
 
+/* Estilos de Caixa de Seleção Prédefinida Múltipla */
 .menu-button-editavel {
     -fx-background-color: transparent;
     -fx-background-radius: 20;
@@ -132,7 +139,7 @@
     -fx-background-color: white;
     -fx-border-color: #6B7280;
     -fx-border-width: 1px;
-    -fx-background-radius: 8px; /* Fica melhor um pouco menos arredondado na lista */
+    -fx-background-radius: 8px;
     -fx-border-radius: 8px;
     -fx-padding: 0;
 }
@@ -157,6 +164,7 @@
     -fx-background-color: transparent;
 }
 
+/* Estilos de Campo de Data */
 .date-picker {
     -fx-background-color: transparent;
     -fx-background-radius: 20;
@@ -230,6 +238,7 @@
     -fx-border-radius: 5;
 }
 
+/* Estilos de Tabela */
 .tabela {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -283,6 +292,7 @@
     -fx-border-color: transparent;
 }
 
+/* Estilos de Células de Lembretes */
 .lembretes {
     -fx-background-color: transparent;
     -fx-border-color: transparent;

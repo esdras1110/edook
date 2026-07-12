@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+// Controlador do modal Confirmar Cadastro de Reserva. Semelhante aos outros controladores de confirmação.
+// ConfirmacaoCadastroEquipamentoControlle comentado detalhadamente.
 public class ConfirmacaoCadastroReservaController {
 
     @FXML
@@ -31,7 +33,7 @@ public class ConfirmacaoCadastroReservaController {
     @FXML
     void onClickConfirmar(ActionEvent event) {
         if (onConfirmar != null) {
-            onConfirmar.run(); // Dispara a ação de enviar para o backend
+            onConfirmar.run();
         }
         fecharJanela(event);
     }

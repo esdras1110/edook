@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+// Controlador do modal de cadastro de reservas, semelhante aos outros controladores de cadastro
+// CadastroEquipamentoController com comentários mais detalhados
 public class CadastroReservaController {
 
     @FXML
@@ -114,9 +116,7 @@ public class CadastroReservaController {
         for (MenuItem item : mbEquipamentos.getItems()) {
             if (item instanceof CustomMenuItem customItem && customItem.getContent() instanceof CheckBox cb) {
                 if (cb.isSelected()) {
-                    // Pegamos o DTO que está salvo no CheckBox
                     EquipamentoResponseDTO eq = (EquipamentoResponseDTO) cb.getUserData();
-                    // Adicionamos o objeto inteiro na lista
                     equipamentosParaEnviar.add(eq);
                 }
             }
@@ -131,7 +131,7 @@ public class CadastroReservaController {
         java.util.Map<String, Object> payload = new java.util.HashMap<>();
         payload.put("nome", txtTitulo.getText().trim());
         payload.put("localidade", cbLocal.getValue());
-        payload.put("dia", dpData.getValue().toString()); // Formato YYYY-MM-DD
+        payload.put("dia", dpData.getValue().toString());
         payload.put("horarioInicio", formatarHorario(txtHoraInicio.getText().trim()));
         payload.put("horarioFim", formatarHorario(txtHoraFim.getText().trim()));
 
@@ -201,7 +201,6 @@ public class CadastroReservaController {
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
                 Platform.runLater(() -> {
-                    // Status 201 Created é o que o seu backend retorna ao criar com sucesso
                     if (response.statusCode() == 201) {
                         Platform.runLater(() -> {
                             try {
@@ -247,7 +246,6 @@ public class CadastroReservaController {
                     } else {
                         System.out.println("Erro ao enviar reserva: " + response.statusCode() + " - " + response.body());
 
-                        // Captura a mensagem vinda do banco/servidor
                         String mensagemErro = response.body();
                         if (mensagemErro == null || mensagemErro.trim().isEmpty()) {
                             mensagemErro = "O servidor retornou o status " + response.statusCode() + " sem uma descrição.";
@@ -277,7 +275,6 @@ public class CadastroReservaController {
 
                                 javafx.scene.Scene scene = new javafx.scene.Scene(root);
                                 scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
-                                // Garante que o arquivo de estilização seja injetado no modal de erro
                                 if (getClass().getResource("/com/edook/frontend/style.css") != null) {
                                     scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
                                 }
@@ -319,7 +316,6 @@ public class CadastroReservaController {
 
                         javafx.scene.Scene scene = new javafx.scene.Scene(root);
                         scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
-                        // Garante que o arquivo de estilização seja injetado no modal de erro
                         if (getClass().getResource("/com/edook/frontend/style.css") != null) {
                             scene.getStylesheets().add(getClass().getResource("/com/edook/frontend/style.css").toExternalForm());
                         }
@@ -357,18 +353,15 @@ public class CadastroReservaController {
                         .GET()
                         .build();
 
-                // Dispara a requisição
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
                 if (response.statusCode() == 200) {
-                    // Converte o JSON recebido para a Lista de DTOs
                     ObjectMapper mapper = new ObjectMapper();
                     List<EquipamentoResponseDTO> equipamentos = mapper.readValue(
                             response.body(),
                             new TypeReference<List<EquipamentoResponseDTO>>() {}
                     );
 
-                    // Platform.runLater é OBRIGATÓRIO quando alteramos a UI a partir de outra Thread
                     Platform.runLater(() -> {
                         mbEquipamentos.setText("Selecione...");
 
