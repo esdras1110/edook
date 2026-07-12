@@ -12,7 +12,7 @@ O ecossistema é dividido em duas partes independentes e complementares:
 
 *  **Backend (API REST):** Desenvolvido em **Java 21** com **Spring Boot**, utilizando **PostgreSQL** como banco de dados e empacotado via **Docker**.
 *  **Frontend (Cliente Desktop):** Desenvolvido em **Java 25** utilizando o framework gráfico **JavaFX 21.0.6** para uma experiência nativa de desktop.
-*  Para demais integrações especificas, basta acessar o README de cada parte especificamente, como demonstra o diretório abaixo.
+* Para demais integrações específicas, basta acessar o [README do Backend](./backend/README.md) ou o [README do Frontend](./frontend/README.md) especificamente, como demonstra o diretório abaixo.
 
 
 ```text
