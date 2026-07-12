@@ -19,7 +19,6 @@ public class EmailService {
     }
 
     public void enviarConfirmacaoEmail(String para, String codigo) {
-
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -47,9 +46,7 @@ public class EmailService {
             """.formatted(codigo);
 
             helper.setText(html, true);
-
             mailSender.send(message);
-
         } catch (Exception e) {
             throw new RuntimeException("Erro ao enviar email", e);
         }
