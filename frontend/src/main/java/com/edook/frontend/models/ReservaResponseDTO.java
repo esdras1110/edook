@@ -26,6 +26,7 @@ public class ReservaResponseDTO {
 
     private String status;
     private String nomeFuncionario;
+    private String cpfFuncionario;
 
     // Uma reserva pode ter vários equipamentos
     private List<EquipamentoResponseDTO> equipamentos;
@@ -80,5 +81,13 @@ public class ReservaResponseDTO {
         return equipamentos.stream()
                 .map(EquipamentoResponseDTO::getDescricao)
                 .collect(java.util.stream.Collectors.joining(", "));
+    }
+
+    public String getCpfFuncionario() {
+        return cpfFuncionario;
+    }
+
+    public void setCpfFuncionario(String cpfFuncionario) {
+        this.cpfFuncionario = cpfFuncionario;
     }
 }

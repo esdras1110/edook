@@ -152,7 +152,8 @@ public class ReservasController implements Initializable, Filtravel {
         listaFiltrada.setPredicate(reserva -> {
             boolean passaBusca = true;
             if (!textoBusca.isEmpty()) {
-                passaBusca = (reserva.getNome() != null && reserva.getNome().toLowerCase().contains(textoBusca)) ||
+                passaBusca = (reserva.getNomeFuncionario() != null && reserva.getNomeFuncionario().toLowerCase().contains(textoBusca)) ||
+                        (reserva.getNome() != null && reserva.getNome().toLowerCase().contains(textoBusca)) ||
                         (reserva.getEquipamentosFormatados() != null && reserva.getEquipamentosFormatados().toLowerCase().contains(textoBusca)) ||
                         (reserva.getLocalidade() != null && reserva.getLocalidade().toLowerCase().contains(textoBusca)) ||
                         (reserva.getStatus() != null && reserva.getStatus().toLowerCase().contains(textoBusca));
@@ -163,7 +164,7 @@ public class ReservasController implements Initializable, Filtravel {
             // Filtro de Estado ("Minhas Reservas")
             // Se o botão estiver ativado, descarta qualquer reserva que não pertença ao usuário logado.
             if (filtrarApenasMinhas) {
-                if (reserva.getNomeFuncionario() == null || !reserva.getNomeFuncionario().equals(cpfUsuarioLogado)) {
+                if (reserva.getCpfFuncionario() == null || !reserva.getCpfFuncionario().equals(cpfUsuarioLogado)) {
                     return false;
                 }
             }
