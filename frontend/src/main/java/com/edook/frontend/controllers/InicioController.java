@@ -134,8 +134,8 @@ public class InicioController implements Initializable, Filtravel {
                                 String cpfUsuarioLogado = UserSession.getInstance().getCpf();
                                 if (cpfUsuarioLogado != null) {
                                     List<ReservaResponseDTO> lembretesDoUsuario = todasReservas.stream()
-                                            .filter(r -> r.getNomeFuncionario() != null &&
-                                                    r.getNomeFuncionario().equals(cpfUsuarioLogado) &&
+                                            .filter(r -> r.getCpfFuncionario() != null &&
+                                                    r.getCpfFuncionario().equals(cpfUsuarioLogado) &&
                                                     !r.getStatus().equalsIgnoreCase("Cancelada") &&
                                                     !r.getStatus().equalsIgnoreCase("Concluída"))
                                             .toList();
